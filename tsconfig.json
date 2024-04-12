@@ -3,6 +3,7 @@
         "baseUrl": ".",
         "paths": {
             "@nswi153-crawler/openapi-spec": ["packages/openapi-specification/lib"],
-        }
+        },
+        "strict": true,
     }
 }
