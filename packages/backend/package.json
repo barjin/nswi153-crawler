@@ -1,0 +1,12 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "generate": "npx openapi-generator-plus -o ./src -g @openapi-generator-plus/typescript-express-example-server-generator ../openapi-specification/openapi.yaml"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
