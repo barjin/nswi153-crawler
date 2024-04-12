@@ -4,7 +4,22 @@ import './App.css';
 import createClient from 'openapi-fetch';
 import { paths } from '@nswi153-crawler/openapi-spec/lib/api-types';
 
+const api = createClient<paths>({
+  baseUrl: 'http://localhost:8080/api',
+});
+
 function App() {
+
+  // Example usage of the generated client - note that the API is fully typed, so you get autocompletion and type checking
+  api.GET('/user/login', {
+    params: {
+      query: {
+        username: 'admin',
+        password: 'admin',
+      }
+    }
+  }).then(() => {});
+
   const [count, setCount] = useState(0);
 
   return (
