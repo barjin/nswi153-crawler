@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@nswi153-crawler/openapi-spec": ["packages/openapi-specification/lib"],
+        }
+    }
+}

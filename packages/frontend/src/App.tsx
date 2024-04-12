@@ -1,8 +1,11 @@
 import { useState } from 'react'
-import './App.css'
+import './App.css';
+
+import createClient from 'openapi-fetch';
+import { paths } from '@nswi153-crawler/openapi-spec/lib/api-types';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
     <>
