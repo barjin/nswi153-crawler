@@ -32,8 +32,8 @@ paths:
                 type: array
                 description: Array of all execution IDs
                 items:
-                  type: string
-                  format: uuid
+                  type: integer
+                  format: int64
       "404":
         description: There are no executions for this recordId
 
@@ -46,8 +46,8 @@ paths:
           required: true
           description: Execution identifier
           schema:
-            type: string
-            format: uuid
+            type: integer
+            format: int64
       responses:
         "200":
           description: Success
@@ -65,8 +65,8 @@ paths:
           required: true
           description: Execution identifier
           schema:
-            type: string
-            format: uuid
+            type: integer
+            format: int64
       responses:
         "200":
           description: Success
@@ -81,8 +81,8 @@ components:
       description: The execution of crawler on this URL
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
         startURL:
           type: string
         nodes:
@@ -102,15 +102,15 @@ components:
                 type: string
                 format: date-time
               links:
-                description: Links to pages that are hyperlinked from this page
+                description: List of Ids of pages that are hyperlinked from this page.
                 type: array
                 items:
-                  type: string
-                  format: uri
+                  type: integer
+                  format: int64
               sourceLinks:
-                description: List of website record that crawled this given node.
+                description: List of Ids of website records that crawled this given node.
                 type: array
                 items:
-                  type: string
-                  format: uuid
+                  type: integer
+                  format: int64
       
