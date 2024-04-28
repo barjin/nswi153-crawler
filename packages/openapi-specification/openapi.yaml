@@ -212,7 +212,7 @@ paths:
         "200":
           description: Success
           content:
-            application/jon:
+            application/json:
               schema:
                 $ref: "#/components/schemas/Execution"
         "404":
