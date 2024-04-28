@@ -1,13 +1,166 @@
 openapi: 3.1.0
 
-info:
-  title: "Web crawler"
-  version: 1.0.0
-
 servers:
-  - url: http://localhost:8080
+  - url: 'http://localhost:8080/api'
+info:
+  description: >-
+    This is the OpenAPI specification for the NSWI153 course project 'Webcrawler'.
+  version: 1.0.0
+  title: OpenAPI Webcrawler
+externalDocs:
+  description: More information about Webcrawler API
+  url: https://webik.ms.mff.cuni.cz/nswi153/seminar-project-webcrawler.html
+tags:
+  - name: website-record
+    description: Record of scheduled website crawls.
 
 paths:
+  /records:
+    get:
+      tags:
+        - website-record
+      summary: Get a list of website records
+      description: >
+        Get a list of the website records currently in the database. If additional query parameters are provided, the website records are filtered by label, 
+        tag, and/or URL, and is sorted by URL or the time of the last website crawl, in ascending or descending order. Otherwise, the list contains all the 
+        website records and is unsorted.
+      operationId: getRecordsList
+      parameters:
+        - name: label
+          in: query
+          description: Label by which the website records should be filtered.
+          required: false
+          schema:
+            type: string
+        - name: tag
+          in: query
+          description: Tag by which the website records should be filtered.
+          required: false
+          schema:
+            type: string
+        - name: url
+          in: query
+          description: URL by which the website records should be filtered.
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          description: >
+            Method by which the website records should be sorted. The website records can be sorted by URL or by the time of the execution of the last crawl, 
+            in ascending or descending order. The value of the parameter should have the format \"<sorting-field>:<sorting-direction>\".
+          required: false
+          schema:
+            type: string
+            pattern: ^(url|lastCrawl):(asc|desc)$
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WebsiteRecord'
+        '404':
+          description: Website record list not found
+
+    post:
+      tags:
+        - website-record
+      summary: Insert a new website record
+      description: Insert a new website record to the database of existing website records.
+      operationId: addRecord
+      requestBody:
+        $ref: '#/components/requestBodies/WebsiteRecord'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebsiteRecord'
+        '400':
+          description: Invalid input
+
+  /records/{recordId}:
+    get:
+      tags:
+        - website-record
+      summary: Get a website record by ID
+      description: Get the website record from the database of existing website records whose ID matches the ID provided in the path.
+      operationId: getRecord
+      parameters:
+        - name: recordId
+          in: path
+          description: The ID of the record that should be returned
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WebsiteRecord'
+        '400':
+          description: Invalid ID
+        '404':
+          description: Record not found
+
+    put:
+      tags:
+        - website-record
+      summary: Update a website record by ID
+      description: Update a website record from the database of existing website records whose ID matches the ID provided in the path.
+      operationId: updateRecord
+      parameters:
+        - name: recordId
+          in: path
+          description: The ID of the record that should be modified
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        $ref: '#/components/requestBodies/WebsiteRecord'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebsiteRecord'
+        '400':
+          description: Invalid ID
+        '404':
+          description: Record not found
+
+    delete:
+      tags:
+        - website-record
+      summary: Delete a website record by ID
+      description: Delete a website record from the database of existing website records whose ID matches the ID provided in the path.
+      operationId: deleteRecord
+      parameters:
+        - name: recordId
+          in: path
+          description: The ID of the record that should be deleted
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Invalid ID
+        '404':
+          description: Record not found
   /execution:
     get:
       summary: Get a list of all execution IDs.
@@ -75,7 +228,66 @@ paths:
 
 
 components:
+  requestBodies:
+    WebsiteRecord:
+      description: A website record object
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WebsiteRecord'
   schemas:
+    WebsiteRecord:
+      title: Website Record
+      description: A record of a website crawl
+      type: object
+      required:
+        - id
+        - url
+        - boundaryRegEx
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 0
+        url:
+          description: The URL at which the crawler should start.
+          type: string
+          format: uri
+          pattern: '^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$'
+          example: 'https://www.webik.mff.cuni.cz/~studentId'
+        boundaryRegEx:
+          description: The crawler will proceed crawling only the links that match this regular expression.
+          type: string
+          example: 'https://www.webik.mff.cuni.cz/'
+        periodicity:
+          description: How often should the site be crawled (in seconds from last execution).
+          type: integer
+          format: int64
+          example: 3600
+        label:
+          description: A user-given label
+          type: string
+        isActive:
+          description: If inactive, the site is not crawled based on the Periodicity.
+          type: boolean
+          default: true
+        tags:
+          description: A list of user-given tags.
+          type: array
+          items:
+            type: string
+        lastExecutionTime:
+          description: The time at the start of the last execution of this website crawl
+          type: string
+          format: date-time
+        lastExecutionStatus:
+          description: The status of the last execution of this website crawl
+          type: string
+          enum:
+            - succeeded
+            - ongoing
+            - failed
     execution:
       type: object
       description: The execution of crawler on this URL
@@ -113,4 +325,3 @@ components:
                 items:
                   type: integer
                   format: int64
-      
