@@ -1,6 +1,5 @@
 openapi: 3.1.0
-servers:
-  - url: 'http://petstore.swagger.io/v2'
+
 info:
   title: "Web crawler"
   version: 1.0.0
@@ -12,6 +11,18 @@ paths:
   /execution:
     get:
       summary: Get a list of all execution IDs.
+      parameters:
+        - name: recordId
+          in: query
+          description: Record by which the executions should be filtered
+          required: false
+          schema:
+            type: int64
+        - name: sort
+          in: query
+          description: >
+            Method by which the executions should be sorted by. The executions can by sorted by crawl time or recordId to which they belong to
+            in ascending or descending order. The value of the parameter should have the format \"<sorting-field>:<sorting-direction>\".
       responses:
         "200":
           description: Success
@@ -23,12 +34,15 @@ paths:
                 items:
                   type: string
                   format: uuid
+      "404":
+        description: There are no executions for this recordId
+
   /execution/{executionId}:
     get:
-      summary: Get a execution with a given executionID
+      summary: Get a execution with a given executionId
       parameters:
         - in: path
-          name: executionID
+          name: executionId
           required: true
           description: Execution identifier
           schema:
@@ -44,10 +58,10 @@ paths:
         "404":
           description: Not found.
     delete:
-      summary: Delete an execution with given executionID
+      summary: Delete an execution with given executionId
       parameters:
         - in: path
-          name: executionID
+          name: executionId
           required: true
           description: Execution identifier
           schema:
@@ -61,41 +75,42 @@ paths:
 
 
 components:
-  execution:
-    type: object
-    description: The execution of crawler on this URL
-    properties:
-      id:
-        type: string
-        format: uuid
-      startURL:
-        type: string
-      nodes:
-        description: The map of crawled pages as a graph
-        type: array
-        items:
-          type: object
-          required:
-            - url
-            - links
-          properties:
-            url:
-              type: string
-            title:
-              type: string
-            crawlTime:
-              type: string
-              format: date-time
-            links:
-              description: Links to pages that are hyperlinked from this page
-              type: array
-              items:
+  schemas:
+    execution:
+      type: object
+      description: The execution of crawler on this URL
+      properties:
+        id:
+          type: string
+          format: uuid
+        startURL:
+          type: string
+        nodes:
+          description: The map of crawled pages as a graph
+          type: array
+          items:
+            type: object
+            required:
+              - url
+              - links
+            properties:
+              url:
                 type: string
-                format: uri
-            sourceLinks:
-              description: List of website record that crawled this given node.
-              type: array
-              items:
+              title:
                 type: string
-                format: uuid
+              crawlTime:
+                type: string
+                format: date-time
+              links:
+                description: Links to pages that are hyperlinked from this page
+                type: array
+                items:
+                  type: string
+                  format: uri
+              sourceLinks:
+                description: List of website record that crawled this given node.
+                type: array
+                items:
+                  type: string
+                  format: uuid
       
