@@ -5,101 +5,101 @@
 
 
 export interface paths {
-  "/pet": {
-    /** Update an existing pet */
-    put: operations["updatePet"];
-    /** Add a new pet to the store */
-    post: operations["addPet"];
-  };
-  "/pet/findByStatus": {
+  "/records": {
     /**
-     * Finds Pets by status
-     * @description Multiple status values can be provided with comma separated strings
+     * Get a list of website records
+     * @description Get a list of the website records currently in the database. If additional query parameters are provided, the website records are filtered by label,  tag, and/or URL, and is sorted by URL or the time of the last website crawl, in ascending or descending order. Otherwise, the list contains all the  website records and is unsorted.
      */
-    get: operations["findPetsByStatus"];
-  };
-  "/pet/findByTags": {
+    get: operations["getRecordsList"];
     /**
-     * Finds Pets by tags
-     * @deprecated
-     * @description Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
+     * Insert a new website record
+     * @description Insert a new website record to the database of existing website records.
      */
-    get: operations["findPetsByTags"];
+    post: operations["addRecord"];
   };
-  "/pet/{petId}": {
+  "/records/{recordId}": {
     /**
-     * Find pet by ID
-     * @description Returns a single pet
+     * Get a website record by ID
+     * @description Get the website record from the database of existing website records whose ID matches the ID provided in the path.
      */
-    get: operations["getPetById"];
-    /** Updates a pet in the store with form data */
-    post: operations["updatePetWithForm"];
-    /** Deletes a pet */
-    delete: operations["deletePet"];
-  };
-  "/pet/{petId}/uploadImage": {
-    /** uploads an image */
-    post: operations["uploadFile"];
-  };
-  "/store/inventory": {
+    get: operations["getRecord"];
     /**
-     * Returns pet inventories by status
-     * @description Returns a map of status codes to quantities
+     * Update a website record by ID
+     * @description Update a website record from the database of existing website records whose ID matches the ID provided in the path.
      */
-    get: operations["getInventory"];
-  };
-  "/store/order": {
-    /** Place an order for a pet */
-    post: operations["placeOrder"];
-  };
-  "/store/order/{orderId}": {
+    put: operations["updateRecord"];
     /**
-     * Find purchase order by ID
-     * @description For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions
+     * Delete a website record by ID
+     * @description Delete a website record from the database of existing website records whose ID matches the ID provided in the path.
      */
-    get: operations["getOrderById"];
-    /**
-     * Delete purchase order by ID
-     * @description For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors
-     */
-    delete: operations["deleteOrder"];
+    delete: operations["deleteRecord"];
   };
-  "/user": {
-    /**
-     * Create user
-     * @description This can only be done by the logged in user.
-     */
-    post: operations["createUser"];
+  "/execution": {
+    /** Get a list of all execution IDs. */
+    get: {
+      parameters: {
+        query?: {
+          /** @description Record by which the executions should be filtered */
+          recordId?: number;
+          /** @description Method by which the executions should be sorted by. The executions can by sorted by crawl time or recordId to which they belong to in ascending or descending order. The value of the parameter should have the format \"<sorting-field>:<sorting-direction>\". */
+          sort?: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Execution"][];
+          };
+        };
+        /** @description There are no executions for this recordId */
+        404: {
+          content: never;
+        };
+      };
+    };
   };
-  "/user/createWithArray": {
-    /** Creates list of users with given input array */
-    post: operations["createUsersWithArrayInput"];
-  };
-  "/user/createWithList": {
-    /** Creates list of users with given input array */
-    post: operations["createUsersWithListInput"];
-  };
-  "/user/login": {
-    /** Logs user into the system */
-    get: operations["loginUser"];
-  };
-  "/user/logout": {
-    /** Logs out current logged in user session */
-    get: operations["logoutUser"];
-  };
-  "/user/{username}": {
-    /** Get user by user name */
-    get: operations["getUserByName"];
-    /**
-     * Updated user
-     * @description This can only be done by the logged in user.
-     */
-    put: operations["updateUser"];
-    /**
-     * Delete user
-     * @description This can only be done by the logged in user.
-     */
-    delete: operations["deleteUser"];
+  "/execution/{executionId}": {
+    /** Get a execution with a given executionId */
+    get: {
+      parameters: {
+        path: {
+          /** @description Execution identifier */
+          executionId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "application/json": components["schemas"]["Execution"];
+          };
+        };
+        /** @description Not found. */
+        404: {
+          content: never;
+        };
+      };
+    };
+    /** Delete an execution with given executionId */
+    delete: {
+      parameters: {
+        path: {
+          /** @description Execution identifier */
+          executionId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: never;
+        };
+        /** @description Not found. */
+        404: {
+          content: never;
+        };
+      };
+    };
   };
 }
 
@@ -108,107 +108,86 @@ export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
     /**
-     * Pet Order
-     * @description An order for a pets from the pet store
+     * Website Record
+     * @description A record of a website crawl
      */
-    Order: {
-      /** Format: int64 */
-      id?: number;
-      /** Format: int64 */
-      petId?: number;
-      /** Format: int32 */
-      quantity?: number;
-      /** Format: date-time */
-      shipDate?: string;
+    WebsiteRecord: {
       /**
-       * @description Order Status
+       * Format: int64
+       * @example 0
+       */
+      id: number;
+      /**
+       * Format: uri
+       * @description The URL at which the crawler should start.
+       * @example https://www.webik.mff.cuni.cz/~studentId
+       */
+      url: string;
+      /**
+       * @description The crawler will proceed crawling only the links that match this regular expression.
+       * @example https://www.webik.mff.cuni.cz/
+       */
+      boundaryRegEx: string;
+      /**
+       * Format: int64
+       * @description How often should the site be crawled (in seconds from last execution).
+       * @example 3600
+       */
+      periodicity?: number;
+      /** @description A user-given label */
+      label?: string;
+      /**
+       * @description If inactive, the site is not crawled based on the Periodicity.
+       * @default true
+       */
+      isActive?: boolean;
+      /** @description A list of user-given tags. */
+      tags?: string[];
+      /**
+       * Format: date-time
+       * @description The time at the start of the last execution of this website crawl
+       */
+      lastExecutionTime?: string;
+      /**
+       * @description The status of the last execution of this website crawl
        * @enum {string}
        */
-      status?: "placed" | "approved" | "delivered";
-      /** @default false */
-      complete?: boolean;
+      lastExecutionStatus?: "succeeded" | "ongoing" | "failed";
     };
     /**
-     * Pet category
-     * @description A category for a pet
+     * Execution record
+     * @description The execution of crawler on this URL
      */
-    Category: {
+    Execution: {
       /** Format: int64 */
       id?: number;
-      name?: string;
-    };
-    /**
-     * a User
-     * @description A User who is purchasing from the pet store
-     */
-    User: {
-      /** Format: int64 */
-      id?: number;
-      username?: string;
-      firstName?: string;
-      lastName?: string;
-      email?: string;
-      password?: string;
-      phone?: string;
-      /**
-       * Format: int32
-       * @description User Status
-       */
-      userStatus?: number;
-    };
-    /**
-     * Pet Tag
-     * @description A tag for a pet
-     */
-    Tag: {
-      /** Format: int64 */
-      id?: number;
-      name?: string;
-    };
-    /**
-     * a Pet
-     * @description A pet for sale in the pet store
-     */
-    Pet: {
-      /** Format: int64 */
-      id?: number;
-      category?: components["schemas"]["Category"];
-      /** @example doggie */
-      name: string;
-      photoUrls: string[];
-      tags?: components["schemas"]["Tag"][];
-      /**
-       * @deprecated
-       * @description pet status in the store
-       * @enum {string}
-       */
-      status?: "available" | "pending" | "sold";
-    };
-    /**
-     * An uploaded response
-     * @description Describes the result of uploading an image resource
-     */
-    ApiResponse: {
-      /** Format: int32 */
-      code?: number;
-      type?: string;
-      message?: string;
+      startURL?: string;
+      /** @description The map of crawled pages as a graph */
+      nodes?: {
+          url: string;
+          title?: string;
+          /** Format: date-time */
+          crawlTime?: string;
+          /** @description List of Ids of pages that are hyperlinked from this page. */
+          links: number[];
+          /** @description List of Ids of website records that crawled this given node. */
+          sourceLinks?: number[];
+        }[];
     };
   };
   responses: never;
   parameters: never;
   requestBodies: {
-    /** @description List of user object */
-    UserArray: {
+    /** @description A website record object */
+    WebsiteRecord: {
       content: {
-        "application/json": components["schemas"]["User"][];
+        "application/json": components["schemas"]["WebsiteRecord"];
       };
     };
-    /** @description Pet object that needs to be added to the store */
-    Pet: {
+    /** @description An execution record object */
+    Execution: {
       content: {
-        "application/json": components["schemas"]["Pet"];
-        "application/xml": components["schemas"]["Pet"];
+        "application/json": components["schemas"]["Execution"];
       };
     };
   };
@@ -222,443 +201,133 @@ export type external = Record<string, never>;
 
 export interface operations {
 
-  /** Update an existing pet */
-  updatePet: {
-    requestBody: components["requestBodies"]["Pet"];
+  /**
+   * Get a list of website records
+   * @description Get a list of the website records currently in the database. If additional query parameters are provided, the website records are filtered by label,  tag, and/or URL, and is sorted by URL or the time of the last website crawl, in ascending or descending order. Otherwise, the list contains all the  website records and is unsorted.
+   */
+  getRecordsList: {
+    parameters: {
+      query?: {
+        /** @description Label by which the website records should be filtered. */
+        label?: string;
+        /** @description Tag by which the website records should be filtered. */
+        tag?: string;
+        /** @description URL by which the website records should be filtered. */
+        url?: string;
+        /** @description Method by which the website records should be sorted. The website records can be sorted by URL or by the time of the execution of the last crawl,  in ascending or descending order. The value of the parameter should have the format \"<sorting-field>:<sorting-direction>\". */
+        sort?: string;
+      };
+    };
     responses: {
-      /** @description successful operation */
+      /** @description Success */
       200: {
         content: {
-          "application/xml": components["schemas"]["Pet"];
-          "application/json": components["schemas"]["Pet"];
+          "application/json": components["schemas"]["WebsiteRecord"][];
         };
       };
-      /** @description Invalid ID supplied */
-      400: {
-        content: never;
-      };
-      /** @description Pet not found */
+      /** @description Website record list not found */
       404: {
-        content: never;
-      };
-      /** @description Validation exception */
-      405: {
         content: never;
       };
     };
   };
-  /** Add a new pet to the store */
-  addPet: {
-    requestBody: components["requestBodies"]["Pet"];
+  /**
+   * Insert a new website record
+   * @description Insert a new website record to the database of existing website records.
+   */
+  addRecord: {
+    requestBody: components["requestBodies"]["WebsiteRecord"];
     responses: {
-      /** @description successful operation */
+      /** @description Success */
       200: {
         content: {
-          "application/xml": components["schemas"]["Pet"];
-          "application/json": components["schemas"]["Pet"];
+          "application/json": components["schemas"]["WebsiteRecord"];
         };
       };
       /** @description Invalid input */
-      405: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Finds Pets by status
-   * @description Multiple status values can be provided with comma separated strings
-   */
-  findPetsByStatus: {
-    parameters: {
-      query: {
-        /**
-         * @deprecated
-         * @description Status values that need to be considered for filter
-         */
-        status: ("available" | "pending" | "sold")[];
-      };
-    };
-    responses: {
-      /** @description successful operation */
-      200: {
-        content: {
-          "application/xml": components["schemas"]["Pet"][];
-          "application/json": components["schemas"]["Pet"][];
-        };
-      };
-      /** @description Invalid status value */
       400: {
         content: never;
       };
     };
   };
   /**
-   * Finds Pets by tags
-   * @deprecated
-   * @description Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
+   * Get a website record by ID
+   * @description Get the website record from the database of existing website records whose ID matches the ID provided in the path.
    */
-  findPetsByTags: {
+  getRecord: {
     parameters: {
-      query: {
-        /** @description Tags to filter by */
-        tags: string[];
+      path: {
+        /** @description The ID of the record that should be returned */
+        recordId: number;
       };
     };
     responses: {
-      /** @description successful operation */
+      /** @description Success */
       200: {
         content: {
-          "application/xml": components["schemas"]["Pet"][];
-          "application/json": components["schemas"]["Pet"][];
+          "application/json": components["schemas"]["WebsiteRecord"][];
         };
       };
-      /** @description Invalid tag value */
+      /** @description Invalid ID */
       400: {
         content: never;
       };
-    };
-  };
-  /**
-   * Find pet by ID
-   * @description Returns a single pet
-   */
-  getPetById: {
-    parameters: {
-      path: {
-        /** @description ID of pet to return */
-        petId: number;
-      };
-    };
-    responses: {
-      /** @description successful operation */
-      200: {
-        content: {
-          "application/xml": components["schemas"]["Pet"];
-          "application/json": components["schemas"]["Pet"];
-        };
-      };
-      /** @description Invalid ID supplied */
-      400: {
-        content: never;
-      };
-      /** @description Pet not found */
-      404: {
-        content: never;
-      };
-    };
-  };
-  /** Updates a pet in the store with form data */
-  updatePetWithForm: {
-    parameters: {
-      path: {
-        /** @description ID of pet that needs to be updated */
-        petId: number;
-      };
-    };
-    requestBody?: {
-      content: {
-        "application/x-www-form-urlencoded": {
-          /** @description Updated name of the pet */
-          name?: string;
-          /** @description Updated status of the pet */
-          status?: string;
-        };
-      };
-    };
-    responses: {
-      /** @description Invalid input */
-      405: {
-        content: never;
-      };
-    };
-  };
-  /** Deletes a pet */
-  deletePet: {
-    parameters: {
-      header?: {
-        api_key?: string;
-      };
-      path: {
-        /** @description Pet id to delete */
-        petId: number;
-      };
-    };
-    responses: {
-      /** @description Invalid pet value */
-      400: {
-        content: never;
-      };
-    };
-  };
-  /** uploads an image */
-  uploadFile: {
-    parameters: {
-      path: {
-        /** @description ID of pet to update */
-        petId: number;
-      };
-    };
-    requestBody?: {
-      content: {
-        "multipart/form-data": {
-          /** @description Additional data to pass to server */
-          additionalMetadata?: string;
-          /**
-           * Format: binary
-           * @description file to upload
-           */
-          file?: string;
-        };
-      };
-    };
-    responses: {
-      /** @description successful operation */
-      200: {
-        content: {
-          "application/json": components["schemas"]["ApiResponse"];
-        };
-      };
-    };
-  };
-  /**
-   * Returns pet inventories by status
-   * @description Returns a map of status codes to quantities
-   */
-  getInventory: {
-    responses: {
-      /** @description successful operation */
-      200: {
-        content: {
-          "application/json": {
-            [key: string]: number;
-          };
-        };
-      };
-    };
-  };
-  /** Place an order for a pet */
-  placeOrder: {
-    /** @description order placed for purchasing the pet */
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["Order"];
-      };
-    };
-    responses: {
-      /** @description successful operation */
-      200: {
-        content: {
-          "application/xml": components["schemas"]["Order"];
-          "application/json": components["schemas"]["Order"];
-        };
-      };
-      /** @description Invalid Order */
-      400: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Find purchase order by ID
-   * @description For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions
-   */
-  getOrderById: {
-    parameters: {
-      path: {
-        /** @description ID of pet that needs to be fetched */
-        orderId: number;
-      };
-    };
-    responses: {
-      /** @description successful operation */
-      200: {
-        content: {
-          "application/xml": components["schemas"]["Order"];
-          "application/json": components["schemas"]["Order"];
-        };
-      };
-      /** @description Invalid ID supplied */
-      400: {
-        content: never;
-      };
-      /** @description Order not found */
+      /** @description Record not found */
       404: {
         content: never;
       };
     };
   };
   /**
-   * Delete purchase order by ID
-   * @description For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors
+   * Update a website record by ID
+   * @description Update a website record from the database of existing website records whose ID matches the ID provided in the path.
    */
-  deleteOrder: {
+  updateRecord: {
     parameters: {
       path: {
-        /** @description ID of the order that needs to be deleted */
-        orderId: string;
+        /** @description The ID of the record that should be modified */
+        recordId: number;
       };
     };
+    requestBody: components["requestBodies"]["WebsiteRecord"];
     responses: {
-      /** @description Invalid ID supplied */
-      400: {
-        content: never;
-      };
-      /** @description Order not found */
-      404: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Create user
-   * @description This can only be done by the logged in user.
-   */
-  createUser: {
-    /** @description Created user object */
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["User"];
-      };
-    };
-    responses: {
-      /** @description successful operation */
-      default: {
-        content: never;
-      };
-    };
-  };
-  /** Creates list of users with given input array */
-  createUsersWithArrayInput: {
-    requestBody: components["requestBodies"]["UserArray"];
-    responses: {
-      /** @description successful operation */
-      default: {
-        content: never;
-      };
-    };
-  };
-  /** Creates list of users with given input array */
-  createUsersWithListInput: {
-    requestBody: components["requestBodies"]["UserArray"];
-    responses: {
-      /** @description successful operation */
-      default: {
-        content: never;
-      };
-    };
-  };
-  /** Logs user into the system */
-  loginUser: {
-    parameters: {
-      query: {
-        /** @description The user name for login */
-        username: string;
-        /** @description The password for login in clear text */
-        password: string;
-      };
-    };
-    responses: {
-      /** @description successful operation */
-      200: {
-        headers: {
-          /** @description Cookie authentication key for use with the `api_key` apiKey authentication. */
-          "Set-Cookie"?: string;
-          /** @description calls per hour allowed by the user */
-          "X-Rate-Limit"?: number;
-          /** @description date in UTC when token expires */
-          "X-Expires-After"?: string;
-        };
-        content: {
-          "application/xml": string;
-          "application/json": string;
-        };
-      };
-      /** @description Invalid username/password supplied */
-      400: {
-        content: never;
-      };
-    };
-  };
-  /** Logs out current logged in user session */
-  logoutUser: {
-    responses: {
-      /** @description successful operation */
-      default: {
-        content: never;
-      };
-    };
-  };
-  /** Get user by user name */
-  getUserByName: {
-    parameters: {
-      path: {
-        /** @description The name that needs to be fetched. Use user1 for testing. */
-        username: string;
-      };
-    };
-    responses: {
-      /** @description successful operation */
+      /** @description Success */
       200: {
         content: {
-          "application/xml": components["schemas"]["User"];
-          "application/json": components["schemas"]["User"];
+          "application/json": components["schemas"]["WebsiteRecord"];
         };
       };
-      /** @description Invalid username supplied */
+      /** @description Invalid ID */
       400: {
         content: never;
       };
-      /** @description User not found */
+      /** @description Record not found */
       404: {
         content: never;
       };
     };
   };
   /**
-   * Updated user
-   * @description This can only be done by the logged in user.
+   * Delete a website record by ID
+   * @description Delete a website record from the database of existing website records whose ID matches the ID provided in the path.
    */
-  updateUser: {
+  deleteRecord: {
     parameters: {
       path: {
-        /** @description name that need to be deleted */
-        username: string;
-      };
-    };
-    /** @description Updated user object */
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["User"];
+        /** @description The ID of the record that should be deleted */
+        recordId: number;
       };
     };
     responses: {
-      /** @description Invalid user supplied */
+      /** @description Success */
+      200: {
+        content: never;
+      };
+      /** @description Invalid ID */
       400: {
         content: never;
       };
-      /** @description User not found */
-      404: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Delete user
-   * @description This can only be done by the logged in user.
-   */
-  deleteUser: {
-    parameters: {
-      path: {
-        /** @description The name that needs to be deleted */
-        username: string;
-      };
-    };
-    responses: {
-      /** @description Invalid username supplied */
-      400: {
-        content: never;
-      };
-      /** @description User not found */
+      /** @description Record not found */
       404: {
         content: never;
       };
