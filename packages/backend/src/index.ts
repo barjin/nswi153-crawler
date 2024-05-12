@@ -1,6 +1,6 @@
 import express from 'express'
 import getopts from 'getopts'
-import { components } from 'packages/openapi-specification/lib/api-types';
+import { components } from '@nswi153-crawler/openapi-spec';
 
 const app = express();
 
