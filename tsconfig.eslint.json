@@ -1,12 +1,9 @@
 {
-    "extends": "./tsconfig.json",
-    "compilerOptions": {
-      "noEmit": true,
-    },
-    "include": [
-      "packages/*/src/**/*.ts",
-      "packages/*/src/**/*.tsx",
-      "packages/*/src/**/*.js",
-      "packages/*/src/**/*.jsx",
-    ],
-  }
+	"extends": "./tsconfig.json",
+	"include": [
+		"packages/**/src/**/*.js",
+		"packages/**/src/**/*.jsx",
+		"packages/**/src/**/*.ts",
+		"packages/**/src/**/*.tsx",
+	]
+}
