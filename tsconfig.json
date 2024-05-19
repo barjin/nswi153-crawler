@@ -4,7 +4,16 @@
         "paths": {
             "@nswi153-crawler/openapi-spec": ["packages/openapi-specification/lib"],
         },
+        "alwaysStrict": true,
         "strict": true,
-        "esModuleInterop": true
-    }
+        "esModuleInterop": true,
+    },
+    "references": [
+        {
+          "path": "packages/backend/tsconfig.json"
+        },
+        {
+          "path": "packages/frontend/tsconfig.json"
+        }
+    ],
 }
