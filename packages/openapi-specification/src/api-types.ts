@@ -265,7 +265,7 @@ export interface operations {
       /** @description Success */
       200: {
         content: {
-          "application/json": components["schemas"]["WebsiteRecord"][];
+          "application/json": components["schemas"]["WebsiteRecord"];
         };
       };
       /** @description Invalid ID */

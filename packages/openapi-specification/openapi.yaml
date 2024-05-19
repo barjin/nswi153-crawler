@@ -104,9 +104,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/WebsiteRecord'
+                $ref: '#/components/schemas/WebsiteRecord'
         '400':
           description: Invalid ID
         '404':
