@@ -2,18 +2,14 @@
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {
-            "@nswi153-crawler/openapi-spec": ["packages/openapi-specification/lib"],
+            "@nswi153-crawler/openapi-spec": ["packages/openapi-specification/"],
         },
         "alwaysStrict": true,
         "strict": true,
         "esModuleInterop": true,
+        "incremental": false,
     },
-    "references": [
-        {
-          "path": "packages/backend/tsconfig.json"
-        },
-        {
-          "path": "packages/frontend/tsconfig.json"
-        }
+    "include": [
+        "./packages/*/src/**/*"
     ],
 }
