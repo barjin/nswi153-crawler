@@ -51,7 +51,6 @@
         "quote-props": ["error", "consistent"],
         "import/no-extraneous-dependencies": "off",
         "max-classes-per-file": 0,
-        "no-console": "error",
         "no-underscore-dangle": 0,
         "no-void": 0,
         "max-len": ["error", {

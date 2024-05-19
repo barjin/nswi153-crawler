@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import './App.css';
-
-import createClient from 'openapi-fetch';
 import { paths } from '@nswi153-crawler/openapi-spec/lib/api-types';
+import createClient from 'openapi-fetch';
+import { useState } from 'react';
+
+import './App.css';
 
 const api = createClient<paths>({
     baseUrl: 'http://localhost:8080/api',
@@ -10,14 +10,13 @@ const api = createClient<paths>({
 
 function App() {
     // Example usage of the generated client - note that the API is fully typed, so you get autocompletion and type checking
-    api.GET('/user/login', {
+    api.GET('/execution/{executionId}', {
         params: {
-            query: {
-                username: 'admin',
-                password: 'admin',
+            path: {
+                executionId: 123,
             },
         },
-    }).then(() => {});
+    }).then(() => {}).catch(() => {});
 
     const [count, setCount] = useState(0);
 
@@ -28,7 +27,7 @@ function App() {
         So far, there is nothing much here.
             </p>
             <div className="card">
-                <button onClick={() => setCount((count) => count + 1)}>
+                <button onClick={() => setCount(() => count + 1)}>
           count is {count}
                 </button>
             </div>
