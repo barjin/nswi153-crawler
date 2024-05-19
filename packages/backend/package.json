@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "tsx ./src/index.ts",
     "generate": "npx openapi-generator-plus -o ./src -g @openapi-generator-plus/typescript-express-example-server-generator ../openapi-specification/openapi.yaml"
   },
   "keywords": [],
@@ -13,5 +14,8 @@
     "@types/express": "^4.17.21",
     "express": "^4.19.2",
     "getopts": "^2.3.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.10.5"
   }
 }
