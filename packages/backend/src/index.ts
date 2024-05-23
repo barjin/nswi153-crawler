@@ -4,6 +4,15 @@ import getopts from 'getopts';
 
 const app = express();
 
+// TODO: remove before release
+app.all('*', (req, res, next) => {
+    console.log(`Serving ${req.method} ${req.path}`);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', '*');
+    res.setHeader('Access-Control-Allow-Headers', '*');
+    next();
+});
+
 let executions: components['schemas']['Execution'][] = [
     {
         id: 1,

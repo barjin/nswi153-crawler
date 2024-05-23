@@ -2,12 +2,12 @@
   "name": "@nswi153-crawler/openapi-spec",
   "version": "1.0.0",
   "description": "The OpenAPI specification for the API used between the frontend and backend lives here. This also contains all code generated from the OpenAPI specification (in the `lib` directory).",
-  "main": "lib/index.js",
-  "directories": {
-    "lib": "lib"
-  },
+  "main": "dist/api-types.js",
+  "types": "dist/api-types.d.ts",
   "scripts": {
-    "generate": "npx openapi-typescript ./openapi.yaml --output ./lib/api-types.ts"
+    "generate": "npx openapi-typescript ./openapi.yaml --output ./src/api-types.ts",
+    "generate-and-build": "rimraf ./src/ ./dist/ && npm run generate && npm run build",
+    "build": "rimraf ./dist/ && tsc -p ./tsconfig.json"
   },
   "keywords": [],
   "author": "",

@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsx ./src/index.ts",
+    "build": "rimraf ./dist && tsc -p ./tsconfig.json",
+    "dev": "tsx ./src/index.ts",
+    "start": "node ./dist/index.js",
     "generate": "npx openapi-generator-plus -o ./src -g @openapi-generator-plus/typescript-express-example-server-generator ../openapi-specification/openapi.yaml"
   },
   "keywords": [],
