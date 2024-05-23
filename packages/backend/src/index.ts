@@ -1,42 +1,120 @@
+import type { components } from '@nswi153-crawler/openapi-spec';
 import express from 'express';
 import getopts from 'getopts';
 
 const app = express();
 
+let executions: components['schemas']['Execution'][] = [
+    {
+        id: 1,
+        startURL: 'https://example.com',
+        nodes: [
+            {
+                url: 'https://example.com',
+                links: [
+                    3,
+                    4,
+                ],
+                crawlTime: new Date().toISOString(),
+                title: 'Example Domain',
+            },
+        ],
+    },
+    {
+        id: 2,
+        startURL: 'https://wikipedia.org',
+        nodes: [
+            {
+                url: 'https://wikipedia.org',
+                links: [
+                    5,
+                    6,
+                ],
+                crawlTime: new Date(Date.now() - 10e2).toISOString(),
+                title: 'Wikipedia',
+            },
+        ],
+    },
+];
+
 /* Execution */
 app.delete('/execution/:executionId', (req, res) => {
-    // TODO
-    res.status(503).send('Unimplemented');
-});
-app.get('/execution', (req, res) => {
-    // TODO
-    res.status(503).send('Unimplemented');
-});
-app.get('/execution/:executionId', (req, res) => {
-    // TODO
-    res.status(503).send('Unimplemented');
+    const executionId = parseInt(req.params.executionId, 10);
+    executions = executions.filter(({ id }) => id !== executionId);
+
+    return res.status(204).send();
 });
 
-/* WebsiteRecord */
+app.get('/execution', (req, res) => {
+    return res.json(executions);
+});
+app.get('/execution/:executionId', (req, res) => {
+    const executionId = parseInt(req.params.executionId, 10);
+    const execution = executions.find(({ id }) => id === executionId);
+
+    if (!execution) {
+        return res.status(404).send();
+    }
+
+    return res.json(execution);
+});
+
+let websiteRecords: components['schemas']['WebsiteRecord'][] = [
+    {
+        id: 1,
+        url: 'https://example.com',
+        boundaryRegEx: '^https://example.com/.*',
+        isActive: true,
+        periodicity: 3600,
+        label: 'Example Domain',
+    },
+    {
+        id: 2,
+        url: 'https://cs.wikipedia.org',
+        boundaryRegEx: '^https://cs.wikipedia.org/wiki/.*',
+        isActive: false,
+        periodicity: 86400,
+        label: 'Czech Wikipedia | scraping disabled',
+    },
+];
+
 app.post('/records', (req, res) => {
-    // TODO
-    res.status(503).send('Unimplemented');
+    const record = req.body as components['schemas']['WebsiteRecord'];
+    const recordId = websiteRecords.push(record) - 1;
+
+    return res.status(201).json({ id: recordId });
 });
 app.delete('/records/:recordId', (req, res) => {
-    // TODO
-    res.status(503).send('Unimplemented');
+    const recordId = parseInt(req.params.recordId, 10);
+    websiteRecords = websiteRecords.filter(({ id }) => id !== recordId);
+
+    return res.status(204).send();
 });
 app.get('/records/:recordId', (req, res) => {
-    // TODO
-    res.status(503).send('Unimplemented');
+    const recordId = parseInt(req.params.recordId, 10);
+    const record = websiteRecords.find(({ id }) => id === recordId);
+
+    if (!record) {
+        return res.status(404).send();
+    }
+
+    return res.json(record);
 });
 app.get('/records', (req, res) => {
-    // TODO
-    res.status(503).send('Unimplemented');
+    return res.json(websiteRecords);
 });
 app.put('/records/:recordId', (req, res) => {
-    // TODO
-    res.status(503).send('Unimplemented');
+    const recordId = parseInt(req.params.recordId, 10);
+
+    websiteRecords.find((record, index) => {
+        if (record.id === recordId) {
+            websiteRecords[index] = { ...websiteRecords[index], ...record };
+            return true;
+        }
+        return false;
+    });
+
+    return res.status(204).send();
 });
 
 const options = getopts(process.argv.slice(2), {
