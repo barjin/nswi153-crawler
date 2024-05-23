@@ -18,6 +18,7 @@ export function WebsiteRecordEditor() {
         }).then((response) => {
             setRecord({
                 loading: false,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 data: response.data ?? ({} as any),
             });
         }).catch((error) => {
