@@ -259,6 +259,10 @@ components:
         - id
         - url
         - boundaryRegEx
+        - periodicity
+        - label
+        - isActive
+        - tags
       properties:
         id:
           type: integer
@@ -302,6 +306,7 @@ components:
             - succeeded
             - ongoing
             - failed
+            - waiting
     Execution:
       title: Execution record
       type: object

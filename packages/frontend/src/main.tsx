@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 
 import './index.css';
-import { WebsiteRecordEditor } from './components/WebsiteRecordEditor.tsx';
+import { WebsiteRecordView } from './routes/WebsiteRecordView.tsx';
 import { Executions } from './routes/Executions.tsx';
 import { Home } from './routes/Home.tsx';
 import Root from './routes/Root.tsx';
@@ -27,7 +27,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/website-records/:id',
-                element: <WebsiteRecordEditor />,
+                element: <WebsiteRecordView />,
             },
             {
                 path: '/executions',
