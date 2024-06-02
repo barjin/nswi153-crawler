@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 
 import { CreateRecordPopup } from '../components/CreateRecordPopup';
 import { FilterBar } from '../components/FilterBar';
@@ -7,29 +7,32 @@ import { SortBar } from '../components/SortBar';
 import { WebsiteRecordList } from '../components/WebsiteRecordList';
 import { useClient } from '../utils/ApiContext';
 
+const RECORDS_PAGE_LIMIT = 10;
+
 export function WebsiteRecords() {
     // Create New Record Window
     const [showCreateWindow, setCreateWindow] = useState(false);
-    const createNewRecord = (formData: FormData) => {
-        const api = useClient();
+    const api = useClient();
 
-        useEffect(() => {
-            api?.POST('/records', {
-                body: {
-                    id: 0,
-                    url: formData.get('url') as string,
-                    boundaryRegEx: formData.get('regex') as string,
-                    periodicity: 0,
-                    label: formData.get('label') as string,
-                    isActive: formData.has('active'),
-                    tags: (formData.get('tags') as string).split(',').map((tag) => tag.trim()),
-                    lastExecutionTime: undefined,
-                    lastExecutionStatus: undefined,
-                },
+    const createNewRecord = useCallback((formData: FormData) => {
+        api?.POST('/records', {
+            body: {
+                id: 0,
+                url: formData.get('url') as string,
+                boundaryRegEx: formData.get('regex') as string,
+                periodicity: 0,
+                label: formData.get('label') as string,
+                isActive: formData.has('active'),
+                tags: (formData.get('tags') as string).split(',').map((tag) => tag.trim()),
+                lastExecutionTime: undefined,
+                lastExecutionStatus: undefined,
             },
-            );
-        }, [api]);
-    };
+        }).then((response) => {
+            console.log(response);
+        }).catch((error) => {
+            console.error(error);
+        });
+    }, [api]);
 
     // Filter
     const [filterPhrase, setFilterPhrase] = useState('');
@@ -44,9 +47,8 @@ export function WebsiteRecords() {
 
     // Pagination
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage, _] = useState(10);
-    const lastRecordIndex = currentPage * recordsPerPage;
-    const firstRecordIndex = lastRecordIndex - recordsPerPage;
+    const lastRecordIndex = currentPage * RECORDS_PAGE_LIMIT;
+    const firstRecordIndex = lastRecordIndex - RECORDS_PAGE_LIMIT;
 
     return (
         <>
@@ -68,14 +70,26 @@ export function WebsiteRecords() {
                     <SortBar sortType={sortType} setSortType={setSortType} sortDirection={sortDirection} setSortDirection={setSortDirection}/>
                 </div>
                 <div className='col-span-2 justify-self-stretch'>
-                    { recordList === null ? 'Loading...' : recordList.slice(firstRecordIndex, lastRecordIndex)}
+                    { recordList?.slice(firstRecordIndex, lastRecordIndex) || 'Loading...' }
                 </div>
                 <div className='col-span-2 justify-self-stretch static'>
-                    { recordList === null ? '' : <PaginationBar recordsPerPage={recordsPerPage} totalRecords={recordList.length} currentPage={currentPage} switchPage={(n: number) => setCurrentPage(n)} /> }
+                    { !recordList
+                        ? ''
+                        : <PaginationBar
+                            recordsPerPage={RECORDS_PAGE_LIMIT}
+                            totalRecords={recordList.length}
+                            currentPage={currentPage}
+                            switchPage={(n: number) => setCurrentPage(n)}
+                        />
+                    }
                 </div>
             </div>
 
-            <CreateRecordPopup showPopup={showCreateWindow} closePopup={() => setCreateWindow(false)} createNewRecord={(data: FormData) => createNewRecord(data)} />
+            <CreateRecordPopup
+                showPopup={showCreateWindow}
+                closePopup={() => setCreateWindow(false)}
+                createNewRecord={(data: FormData) => createNewRecord(data)}
+            />
         </>
     );
 }

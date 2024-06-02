@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, JSX } from 'react';
 
 import { ExecutionRow } from './ExecutionRow';
 import { Execution, Loading, useClient } from '../utils/ApiContext';
 
-export function ExecutionList({ sort, filter, id, limit }: { sort: string, filter?: {[filter: string]: string}, id?: number, limit?: number }) : JSX.Element[] | null {
+export function ExecutionList({ sort, filter, id, limit }:
+    { sort: string, filter?: {[filter: string]: string}, id?: number, limit?: number },
+) : JSX.Element[] | null {
     const [executions, setExecutions] = useState<Loading<Execution[]>>({ loading: true, data: null });
     const api = useClient();
 

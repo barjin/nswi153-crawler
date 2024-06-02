@@ -5,6 +5,8 @@ import { FilterBar } from '../components/FilterBar';
 import { PaginationBar } from '../components/PaginationBar';
 import { SortBar } from '../components/SortBar';
 
+const RECORDS_PAGE_LIMIT = 10;
+
 export function Executions() {
     // Filter
     const [filterPhrase, setFilterPhrase] = useState('');
@@ -19,9 +21,8 @@ export function Executions() {
 
     // Pagination
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage, _] = useState(10);
-    const lastRecordIndex = currentPage * recordsPerPage;
-    const firstRecordIndex = lastRecordIndex - recordsPerPage;
+    const lastRecordIndex = currentPage * RECORDS_PAGE_LIMIT;
+    const firstRecordIndex = lastRecordIndex - RECORDS_PAGE_LIMIT;
 
     return (
         <>
@@ -38,10 +39,18 @@ export function Executions() {
                     <SortBar sortType={sortType} setSortType={setSortType} sortDirection={sortDirection} setSortDirection={setSortDirection}/>
                 </div>
                 <div className='col-span-2 justify-self-stretch'>
-                    { executions === null ? 'Loading...' : executions.slice(firstRecordIndex, lastRecordIndex)}
+                    { executions?.slice(firstRecordIndex, lastRecordIndex) || 'Loading...' }
                 </div>
                 <div className='col-span-2 justify-self-stretch static'>
-                    { executions === null ? '' : <PaginationBar recordsPerPage={recordsPerPage} totalRecords={executions.length} currentPage={currentPage} switchPage={(n: number) => setCurrentPage(n)} /> }
+                    { executions
+                        ? <PaginationBar
+                            recordsPerPage={RECORDS_PAGE_LIMIT}
+                            totalRecords={executions.length}
+                            currentPage={currentPage}
+                            switchPage={(n: number) => setCurrentPage(n)}
+                        />
+                        : ''
+                    }
                 </div>
             </div>
         </>

@@ -5,18 +5,19 @@ import { ExecutionList } from '../components/ExecutionList';
 import { PaginationBar } from '../components/PaginationBar';
 import { WebsiteRecordData } from '../components/WebsiteRecordData';
 
+const RECORDS_PAGE_LIMIT = 5;
+
 export function WebsiteRecordView() {
     const { recordId } = useParams();
 
     // Get executions
     const record = WebsiteRecordData();
-    const executions = typeof record === null ? [] : ExecutionList({ sort: 'lastCrawl:dsc', id: Number(recordId) });
+    const executions = record ? ExecutionList({ sort: 'lastCrawl:dsc', id: Number(recordId) }) : null;
 
     // Pagination
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage, _] = useState(5);
-    const lastRecordIndex = currentPage * recordsPerPage;
-    const firstRecordIndex = lastRecordIndex - recordsPerPage;
+    const lastRecordIndex = currentPage * RECORDS_PAGE_LIMIT;
+    const firstRecordIndex = lastRecordIndex - RECORDS_PAGE_LIMIT;
 
     return (
         <>
@@ -37,7 +38,12 @@ export function WebsiteRecordView() {
                                     { executions === null ? 'Loading...' : executions.slice(firstRecordIndex, lastRecordIndex)}
 
                                     <div className='col-span-2 justify-self-stretch static'>
-                                        <PaginationBar recordsPerPage={recordsPerPage} totalRecords={executions.length} currentPage={currentPage} switchPage={(n: number) => setCurrentPage(n)} />
+                                        <PaginationBar
+                                            recordsPerPage={RECORDS_PAGE_LIMIT}
+                                            totalRecords={executions.length}
+                                            currentPage={currentPage}
+                                            switchPage={(n: number) => setCurrentPage(n)}
+                                        />
                                     </div>
                                 </>
                             }
