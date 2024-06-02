@@ -1,23 +1,21 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import { FilterBar } from "../components/FilterBar"
-import { SortBar } from "../components/SortBar"
-import { PaginationBar } from "../components/PaginationBar"
-import { ExecutionList } from "../components/ExecutionList"
-
+import { ExecutionList } from '../components/ExecutionList';
+import { FilterBar } from '../components/FilterBar';
+import { PaginationBar } from '../components/PaginationBar';
+import { SortBar } from '../components/SortBar';
 
 export function Executions() {
-
     // Filter
-    const [ filterPhrase, setFilterPhrase ] = useState('')
-    const [ filterType, setFilterType ] = useState('url')
+    const [filterPhrase, setFilterPhrase] = useState('');
+    const [filterType, setFilterType] = useState('url');
 
     // Sort
-    const [ sortType, setSortType ] = useState("url")
-    const [ sortDirection, setSortDirection ] = useState("asc")
+    const [sortType, setSortType] = useState('url');
+    const [sortDirection, setSortDirection] = useState('asc');
 
     // Get executions
-    const executions = ExecutionList({ sort: `${sortType}:${sortDirection}`, filter: {[filterType]: filterPhrase} })
+    const executions = ExecutionList({ sort: `${sortType}:${sortDirection}`, filter: { [filterType]: filterPhrase } });
 
     // Pagination
     const [currentPage, setCurrentPage] = useState(1);
@@ -47,5 +45,5 @@ export function Executions() {
                 </div>
             </div>
         </>
-    )
+    );
 }

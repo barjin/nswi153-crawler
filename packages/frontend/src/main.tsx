@@ -6,11 +6,11 @@ import {
 } from 'react-router-dom';
 
 import './index.css';
-import { WebsiteRecordView } from './routes/WebsiteRecordView.tsx';
 import { Executions } from './routes/Executions.tsx';
 import { Home } from './routes/Home.tsx';
 import Root from './routes/Root.tsx';
 import { WebsiteRecords } from './routes/WebsiteRecords.tsx';
+import { WebsiteRecordView } from './routes/WebsiteRecordView.tsx';
 
 const router = createBrowserRouter([
     {

@@ -14,7 +14,7 @@ export function Home() {
                 <div className='w-full flex flex-col'>
                     <WebsiteRecordList sort={'url:dsc'} limit={5}/>
                 </div>
-                
+
                 <div className='w-full text-center text-xs text-blue-600 underline py-2'>
                     <Link to='/website-records'>View all website records</Link>
                 </div>

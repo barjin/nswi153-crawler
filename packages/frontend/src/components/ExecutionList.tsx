@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { ExecutionRow } from './ExecutionRow'
+
+import { ExecutionRow } from './ExecutionRow';
 import { Execution, Loading, useClient } from '../utils/ApiContext';
 
 export function ExecutionList({ sort, filter, id, limit }: { sort: string, filter?: {[filter: string]: string}, id?: number, limit?: number }) : JSX.Element[] | null {
@@ -10,12 +11,12 @@ export function ExecutionList({ sort, filter, id, limit }: { sort: string, filte
         api?.GET('/execution', {
             params: {
                 query: {
-                    sort: sort,
-                    ...(id !== null && id !== undefined && {recordId: id}),
-                    ...(filter !== null && filter !== undefined && 'url' in filter && filter['url'].length > 0 && {url: filter['url']}),
-                    ...(filter !== null && filter !== undefined && 'label' in filter && filter['label'].length > 0 && {label: filter['label']})
-                }
-            }
+                    sort,
+                    ...(id !== null && id !== undefined && { recordId: id }),
+                    ...(filter !== null && filter !== undefined && 'url' in filter && filter.url.length > 0 && { url: filter.url }),
+                    ...(filter !== null && filter !== undefined && 'label' in filter && filter.label.length > 0 && { label: filter.label }),
+                },
+            },
         }).then((response) => {
             setExecutions({
                 loading: false,

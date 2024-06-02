@@ -1,16 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
-import { CreateRecordPopup } from "../components/CreateRecordPopup"
-import { FilterBar } from "../components/FilterBar"
-import { SortBar } from "../components/SortBar"
-import { WebsiteRecordList } from "../components/WebsiteRecordList"
-import { PaginationBar } from "../components/PaginationBar"
-import { useClient } from "../utils/ApiContext"
+import { CreateRecordPopup } from '../components/CreateRecordPopup';
+import { FilterBar } from '../components/FilterBar';
+import { PaginationBar } from '../components/PaginationBar';
+import { SortBar } from '../components/SortBar';
+import { WebsiteRecordList } from '../components/WebsiteRecordList';
+import { useClient } from '../utils/ApiContext';
 
 export function WebsiteRecords() {
-
     // Create New Record Window
-    const [ showCreateWindow, setCreateWindow ] = useState(false);
+    const [showCreateWindow, setCreateWindow] = useState(false);
     const createNewRecord = (formData: FormData) => {
         const api = useClient();
 
@@ -25,23 +24,23 @@ export function WebsiteRecords() {
                     isActive: formData.has('active'),
                     tags: (formData.get('tags') as string).split(',').map((tag) => tag.trim()),
                     lastExecutionTime: undefined,
-                    lastExecutionStatus: undefined
-                }
-            }
-        )}, [api]);
-    
-    }
+                    lastExecutionStatus: undefined,
+                },
+            },
+            );
+        }, [api]);
+    };
 
     // Filter
-    const [ filterPhrase, setFilterPhrase ] = useState('')
-    const [ filterType, setFilterType ] = useState('url')
+    const [filterPhrase, setFilterPhrase] = useState('');
+    const [filterType, setFilterType] = useState('url');
 
     // Sort
-    const [ sortType, setSortType ] = useState("url")
-    const [ sortDirection, setSortDirection ] = useState("asc")
+    const [sortType, setSortType] = useState('url');
+    const [sortDirection, setSortDirection] = useState('asc');
 
     // Get records
-    const recordList = WebsiteRecordList({ sort: `${sortType}:${sortDirection}`, filter: {[filterType]: filterPhrase} })
+    const recordList = WebsiteRecordList({ sort: `${sortType}:${sortDirection}`, filter: { [filterType]: filterPhrase } });
 
     // Pagination
     const [currentPage, setCurrentPage] = useState(1);
@@ -78,5 +77,5 @@ export function WebsiteRecords() {
 
             <CreateRecordPopup showPopup={showCreateWindow} closePopup={() => setCreateWindow(false)} createNewRecord={(data: FormData) => createNewRecord(data)} />
         </>
-    )
+    );
 }

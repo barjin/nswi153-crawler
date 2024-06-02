@@ -76,7 +76,7 @@ let websiteRecords: components['schemas']['WebsiteRecord'][] = [
         isActive: true,
         periodicity: 3600,
         label: 'Example Domain',
-        tags: ['example, test']
+        tags: ['example, test'],
     },
     {
         id: 2,
@@ -85,7 +85,7 @@ let websiteRecords: components['schemas']['WebsiteRecord'][] = [
         isActive: false,
         periodicity: 86400,
         label: 'Czech Wikipedia | scraping disabled',
-        tags: ['wikipedia']
+        tags: ['wikipedia'],
     },
 ];
 

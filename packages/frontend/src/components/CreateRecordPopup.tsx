@@ -1,11 +1,11 @@
-export function CreateRecordPopup( { showPopup, closePopup, createNewRecord } : { showPopup: boolean, closePopup: Function, createNewRecord: Function } ) {
-    return ( !showPopup ? '' :
-        <>
+export function CreateRecordPopup({ showPopup, closePopup, createNewRecord } : { showPopup: boolean, closePopup: Function, createNewRecord: Function }) {
+    return (!showPopup ? ''
+        : <>
             <div className='flex justify-center items-center fixed top-0 left-0 w-full h-screen bg-black/50'>
                 <form className='relative p-8 w-full max-w-2xl bg-white rounded' onSubmit={(e) => {
-                    e.preventDefault()
-                    createNewRecord(new FormData(e.currentTarget))
-                    closePopup()
+                    e.preventDefault();
+                    createNewRecord(new FormData(e.currentTarget));
+                    closePopup();
                 }}>
                     <div className='mb-4'>
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="url">
@@ -59,5 +59,5 @@ export function CreateRecordPopup( { showPopup, closePopup, createNewRecord } : 
                 </form>
             </div>
         </>
-    )
+    );
 }

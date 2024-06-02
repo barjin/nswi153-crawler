@@ -1,6 +1,6 @@
 export function RecordRow({ label, tags, periodicity, lastExecutionTime, lastExecutionStatus, isActive, onClick }: { label: string; tags: string; periodicity: string; lastExecutionTime: string, lastExecutionStatus: string, isActive: boolean, onClick: () => void }) {
     return (
-        <div className={`flex flex-row items-center py-2 pb-3 px-4 mb-2 ${ isActive ? 'bg-green-200 hover:bg-green-400' : 'bg-slate-200 hover:bg-slate-400' } cursor-pointer rounded`} onClick={onClick}>
+        <div className={`flex flex-row items-center py-2 pb-3 px-4 mb-2 ${isActive ? 'bg-green-200 hover:bg-green-400' : 'bg-slate-200 hover:bg-slate-400'} cursor-pointer rounded`} onClick={onClick}>
             <div className='flex flex-col flex-1'>
                 <span>
                     <span className='font-bold'>{label}</span>

@@ -13,20 +13,19 @@ export function WebsiteRecordList({ sort, filter, limit }: { sort: string, filte
         api?.GET('/records', {
             params: {
                 query: {
-                    sort: sort,
-                    ...(filter !== null && filter !== undefined && 'url' in filter && filter['url'].length > 0 && {url: filter['url']}),
-                    ...(filter !== null && filter !== undefined && 'label' in filter && filter['label'].length > 0 && {label: filter['label']}),
-                    ...(filter !== null && filter !== undefined && 'tag' in filter && filter['tag'].length > 0 && {tag: filter['tag']})
-                }
-            }
-        }
-    ).then((response) => {
+                    sort,
+                    ...(filter !== null && filter !== undefined && 'url' in filter && filter.url.length > 0 && { url: filter.url }),
+                    ...(filter !== null && filter !== undefined && 'label' in filter && filter.label.length > 0 && { label: filter.label }),
+                    ...(filter !== null && filter !== undefined && 'tag' in filter && filter.tag.length > 0 && { tag: filter.tag }),
+                },
+            },
+        },
+        ).then((response) => {
             setRecords({ loading: false, data: response.data ?? [] });
         }).catch((error) => {
             console.error(error);
         });
     }, [api]);
-
 
     return (
         records.loading
