@@ -5,7 +5,7 @@ interface RecordRowProps {
     lastExecutionTime: string,
     lastExecutionStatus: string,
     isActive: boolean,
-    onClick: () => void,
+    onClick?: () => void,
 }
 
 export function RecordRow({ label, tags, periodicity, lastExecutionTime, lastExecutionStatus, isActive, onClick }: RecordRowProps) {

@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { RecordRow } from './RecordRow';
 import { Loading, WebsiteRecord, useClient } from '../utils/ApiContext';
 
 export function WebsiteRecordList({ sort, filter, limit }: { sort: string, filter?: {[filter: string]: string}, limit?: number }) : JSX.Element[] | null {
     const [records, setRecords] = useState<Loading<WebsiteRecord[]>>({ loading: true, data: null });
-    const navigate = useNavigate();
     const api = useClient();
 
     useEffect(() => {
@@ -25,7 +24,7 @@ export function WebsiteRecordList({ sort, filter, limit }: { sort: string, filte
         }).catch((error) => {
             console.error(error);
         });
-    }, [api]);
+    }, [api, sort]);
 
     return (
         records.loading
@@ -33,16 +32,17 @@ export function WebsiteRecordList({ sort, filter, limit }: { sort: string, filte
             : records.data
                 .slice(0, limit ?? records.data.length)
                 .map((execution, i) => (
-                    <RecordRow
-                        key={i}
-                        label={execution.label ?? ''}
-                        tags={execution.tags?.join(', ') ?? ''}
-                        periodicity={execution.periodicity?.toString() ?? ''}
-                        lastExecutionTime={execution.lastExecutionTime?.toString() ?? ''}
-                        lastExecutionStatus={execution.lastExecutionStatus ?? ''}
-                        isActive={execution.isActive ?? false}
-                        onClick={() => navigate(`/website-records/${execution.id}`)}
-                    />
+                    <Link to={`/website-records/${execution.id}`} key={i}>
+                        <RecordRow
+                            key={i}
+                            label={execution.label ?? ''}
+                            tags={execution.tags?.join(', ') ?? ''}
+                            periodicity={execution.periodicity?.toString() ?? ''}
+                            lastExecutionTime={execution.lastExecutionTime?.toString() ?? ''}
+                            lastExecutionStatus={execution.lastExecutionStatus ?? ''}
+                            isActive={execution.isActive ?? false}
+                        />
+                    </Link>
                 ))
     );
 }

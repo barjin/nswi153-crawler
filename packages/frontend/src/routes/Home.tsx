@@ -26,7 +26,7 @@ export function Home() {
                 </h1>
 
                 <div className='w-full flex flex-col'>
-                    <ExecutionList limit={5}/>
+                    <ExecutionList sort="url:asc" limit={5}/>
                 </div>
 
                 <div className='w-full text-center text-xs text-blue-600 underline py-2'>

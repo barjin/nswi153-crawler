@@ -1,17 +1,19 @@
 import { useState, useCallback } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 
 import { CreateRecordPopup } from '../components/CreateRecordPopup';
 import { FilterBar } from '../components/FilterBar';
-import { PaginationBar } from '../components/PaginationBar';
 import { SortBar } from '../components/SortBar';
 import { WebsiteRecordList } from '../components/WebsiteRecordList';
 import { useClient } from '../utils/ApiContext';
 
-const RECORDS_PAGE_LIMIT = 10;
-
 export function WebsiteRecords() {
-    // Create New Record Window
-    const [showCreateWindow, setCreateWindow] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const showCreateWindow = searchParams.get('create') === 'true';
+
+    const sortType = searchParams.get('sort')?.split(':')[0] ?? 'url';
+    const sortDirection = searchParams.get('sort')?.split(':')[1] ?? 'asc';
+
     const api = useClient();
 
     const createNewRecord = useCallback((formData: FormData) => {
@@ -38,18 +40,6 @@ export function WebsiteRecords() {
     const [filterPhrase, setFilterPhrase] = useState('');
     const [filterType, setFilterType] = useState('url');
 
-    // Sort
-    const [sortType, setSortType] = useState('url');
-    const [sortDirection, setSortDirection] = useState('asc');
-
-    // Get records
-    const recordList = WebsiteRecordList({ sort: `${sortType}:${sortDirection}`, filter: { [filterType]: filterPhrase } });
-
-    // Pagination
-    const [currentPage, setCurrentPage] = useState(1);
-    const lastRecordIndex = currentPage * RECORDS_PAGE_LIMIT;
-    const firstRecordIndex = lastRecordIndex - RECORDS_PAGE_LIMIT;
-
     return (
         <>
             <div className="h-full grid grid-cols-2 grid-rows-[auto_auto_1fr_auto] gap-4">
@@ -59,35 +49,26 @@ export function WebsiteRecords() {
                     </h1>
                 </div>
                 <div className='col-span-1 justify-self-end'>
-                    <button className='bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-2xl' onClick={() => setCreateWindow(true)}>
-                        Create New Record
-                    </button>
+                    <Link to='/website-records?create=true' replace={true}>
+                        <button className='bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-2xl'>
+                            Create New Record
+                        </button>
+                    </Link>
                 </div>
                 <div className='col-span-1 justify-self-stretch'>
                     <FilterBar setFilterPhrase={setFilterPhrase} setFilterType={setFilterType} optionTag={true} />
                 </div>
                 <div className='col-span-1 justify-self-end'>
-                    <SortBar sortType={sortType} setSortType={setSortType} sortDirection={sortDirection} setSortDirection={setSortDirection}/>
+                    <SortBar />
                 </div>
                 <div className='col-span-2 justify-self-stretch'>
-                    { recordList?.slice(firstRecordIndex, lastRecordIndex) || 'Loading...' }
-                </div>
-                <div className='col-span-2 justify-self-stretch static'>
-                    { !recordList
-                        ? ''
-                        : <PaginationBar
-                            recordsPerPage={RECORDS_PAGE_LIMIT}
-                            totalRecords={recordList.length}
-                            currentPage={currentPage}
-                            switchPage={(n: number) => setCurrentPage(n)}
-                        />
-                    }
+                    <WebsiteRecordList sort={`${sortType}:${sortDirection}`} filter={{ [filterType]: filterPhrase } } />
                 </div>
             </div>
 
             <CreateRecordPopup
                 showPopup={showCreateWindow}
-                closePopup={() => setCreateWindow(false)}
+                closePopup={() => setSearchParams((p) => ({ ...p, create: 'false' }), { replace: true })}
                 createNewRecord={(data: FormData) => createNewRecord(data)}
             />
         </>

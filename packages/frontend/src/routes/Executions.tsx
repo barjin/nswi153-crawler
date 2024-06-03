@@ -2,27 +2,11 @@ import { useState } from 'react';
 
 import { ExecutionList } from '../components/ExecutionList';
 import { FilterBar } from '../components/FilterBar';
-import { PaginationBar } from '../components/PaginationBar';
 import { SortBar } from '../components/SortBar';
 
-const RECORDS_PAGE_LIMIT = 10;
-
 export function Executions() {
-    // Filter
-    const [filterPhrase, setFilterPhrase] = useState('');
-    const [filterType, setFilterType] = useState('url');
-
-    // Sort
-    const [sortType, setSortType] = useState('url');
-    const [sortDirection, setSortDirection] = useState('asc');
-
-    // Get executions
-    const executions = ExecutionList({ sort: `${sortType}:${sortDirection}`, filter: { [filterType]: filterPhrase } });
-
-    // Pagination
-    const [currentPage, setCurrentPage] = useState(1);
-    const lastRecordIndex = currentPage * RECORDS_PAGE_LIMIT;
-    const firstRecordIndex = lastRecordIndex - RECORDS_PAGE_LIMIT;
+    const setFilterPhrase = useState('')[1];
+    const setFilterType = useState('url')[1];
 
     return (
         <>
@@ -36,21 +20,11 @@ export function Executions() {
                     <FilterBar setFilterPhrase={setFilterPhrase} setFilterType={setFilterType} optionTag={true} />
                 </div>
                 <div className='col-span-1 justify-self-end'>
-                    <SortBar sortType={sortType} setSortType={setSortType} sortDirection={sortDirection} setSortDirection={setSortDirection}/>
+                    <SortBar />
                 </div>
                 <div className='col-span-2 justify-self-stretch'>
-                    { executions?.slice(firstRecordIndex, lastRecordIndex) || 'Loading...' }
-                </div>
-                <div className='col-span-2 justify-self-stretch static'>
-                    { executions
-                        ? <PaginationBar
-                            recordsPerPage={RECORDS_PAGE_LIMIT}
-                            totalRecords={executions.length}
-                            currentPage={currentPage}
-                            switchPage={(n: number) => setCurrentPage(n)}
-                        />
-                        : ''
-                    }
+                    <ExecutionList sort='url:asc' />
+
                 </div>
             </div>
         </>

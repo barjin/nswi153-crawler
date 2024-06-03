@@ -52,7 +52,11 @@ paths:
           required: false
           schema:
             type: string
-            pattern: ^(url|lastCrawl):(asc|desc)$
+            enum:
+              - url:asc
+              - url:desc
+              - lastCrawl:asc
+              - lastCrawl:desc
       responses:
         '200':
           description: Success
