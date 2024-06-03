@@ -1,4 +1,4 @@
-import type { components } from '@nswi153-crawler/openapi-spec';
+import type { components, paths } from '@nswi153-crawler/openapi-spec';
 import express from 'express';
 import getopts from 'getopts';
 
@@ -76,6 +76,8 @@ let websiteRecords: components['schemas']['WebsiteRecord'][] = [
         isActive: true,
         periodicity: 3600,
         label: 'Example Domain',
+        tags: ['example, test'],
+        lastExecutionTime: new Date(Date.now() - 10e2).toISOString(),
     },
     {
         id: 2,
@@ -84,6 +86,8 @@ let websiteRecords: components['schemas']['WebsiteRecord'][] = [
         isActive: false,
         periodicity: 86400,
         label: 'Czech Wikipedia | scraping disabled',
+        tags: ['wikipedia'],
+        lastExecutionTime: new Date().toISOString(),
     },
 ];
 
@@ -110,7 +114,23 @@ app.get('/records/:recordId', (req, res) => {
     return res.json(record);
 });
 app.get('/records', (req, res) => {
-    return res.json(websiteRecords);
+    const q = req.query as paths['/records']['get']['parameters']['query'];
+
+    if (!q?.sort) {
+        return res.json(websiteRecords);
+    }
+
+    const [sortKey, sortDirection] = q.sort.split(':') as [keyof components['schemas']['WebsiteRecord'], 'asc' | 'dsc'];
+
+    return res.json(websiteRecords.sort((a, b) => {
+        if ((a[sortKey] ?? 0) < (b[sortKey] ?? 0)) {
+            return sortDirection === 'asc' ? -1 : 1;
+        }
+        if ((a[sortKey] ?? 0) > (b[sortKey] ?? 0)) {
+            return sortDirection === 'asc' ? 1 : -1;
+        }
+        return 0;
+    }));
 });
 app.put('/records/:recordId', (req, res) => {
     const recordId = parseInt(req.params.recordId, 10);
