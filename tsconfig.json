@@ -1,15 +1,13 @@
 {
-    "compilerOptions": {
-        "baseUrl": ".",
-        "paths": {
-            "@nswi153-crawler/openapi-spec": ["packages/openapi-specification/"],
-        },
-        "alwaysStrict": true,
-        "strict": true,
-        "esModuleInterop": true,
-        "incremental": false,
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@nswi153-crawler/openapi-spec": ["packages/openapi-specification/"]
     },
-    "include": [
-        "./packages/*/src/**/*"
-    ],
+    "alwaysStrict": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "incremental": false
+  },
+  "include": ["./packages/*/src/**/*"]
 }

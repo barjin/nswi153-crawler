@@ -1,48 +1,82 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import type { paths } from "packages/openapi-specification/dist/api-types";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-import { RecordRow } from './RecordRow';
-import { Loading, WebsiteRecord, useClient } from '../utils/ApiContext';
+import { PaginationBar } from "./PaginationBar";
+import { RecordRow } from "./RecordRow";
+import { Loading, useClient } from "../utils/ApiContext";
 
-export function WebsiteRecordList({ sort, filter, limit }: { sort: string, filter?: {[filter: string]: string}, limit?: number }) : JSX.Element[] | null {
-    const [records, setRecords] = useState<Loading<WebsiteRecord[]>>({ loading: true, data: null });
-    const api = useClient();
+type WebsiteRecordListProps =
+  paths["/records"]["get"]["parameters"]["query"] & { pagination?: boolean };
+type WebsiteRecordsResponse =
+  paths["/records"]["get"]["responses"]["200"]["content"]["application/json"];
 
-    useEffect(() => {
-        api?.GET('/records', {
-            params: {
-                query: {
-                    sort,
-                    ...(filter !== null && filter !== undefined && 'url' in filter && filter.url.length > 0 && { url: filter.url }),
-                    ...(filter !== null && filter !== undefined && 'label' in filter && filter.label.length > 0 && { label: filter.label }),
-                    ...(filter !== null && filter !== undefined && 'tag' in filter && filter.tag.length > 0 && { tag: filter.tag }),
-                },
-            },
+export function WebsiteRecordList(props: WebsiteRecordListProps) {
+  const { sort, filter, filterBy, limit, offset } = props || {};
+
+  const [records, setRecords] = useState<Loading<WebsiteRecordsResponse>>({
+    loading: true,
+    data: null,
+  });
+  const api = useClient();
+
+  useEffect(() => {
+    api
+      ?.GET("/records", {
+        params: {
+          query: {
+            sort: sort ?? "url:asc",
+            filter: filter ?? "",
+            filterBy: filterBy ?? "url",
+            limit: limit ?? 10,
+            offset: offset ?? 0,
+          },
         },
-        ).then((response) => {
-            setRecords({ loading: false, data: response.data ?? [] });
-        }).catch((error) => {
-            console.error(error);
+      })
+      .then((response) => {
+        setRecords({
+          loading: false,
+          data: response.data ?? {
+            limit: 0,
+            offset: 0,
+            total: 0,
+            records: [],
+          },
         });
-    }, [api, sort]);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [api, props]);
 
-    return (
-        records.loading
-            ? null
-            : records.data
-                .slice(0, limit ?? records.data.length)
-                .map((execution, i) => (
-                    <Link to={`/website-records/${execution.id}`} key={i}>
-                        <RecordRow
-                            key={i}
-                            label={execution.label ?? ''}
-                            tags={execution.tags?.join(', ') ?? ''}
-                            periodicity={execution.periodicity?.toString() ?? ''}
-                            lastExecutionTime={execution.lastExecutionTime?.toString() ?? ''}
-                            lastExecutionStatus={execution.lastExecutionStatus ?? ''}
-                            isActive={execution.isActive ?? false}
-                        />
-                    </Link>
-                ))
-    );
+  console.log(records.data);
+
+  return (
+    <>
+      {!records.data?.records
+        ? "Loading..."
+        : records.data.records.map((execution, i) => (
+            <Link to={`/website-records/${execution.id}`} key={i}>
+              <RecordRow
+                key={i}
+                label={execution.label ?? ""}
+                tags={execution.tags?.join(", ") ?? ""}
+                periodicity={execution.periodicity ?? 0}
+                lastExecutionTime={
+                  execution.lastExecutionTime?.toString() ?? ""
+                }
+                lastExecutionStatus={execution.lastExecutionStatus ?? ""}
+                isActive={execution.isActive ?? false}
+              />
+            </Link>
+          ))}
+      {props.pagination && records.data ? (
+        <PaginationBar
+          totalPages={Math.ceil(records.data.total! / records.data.limit!)}
+        />
+      ) : (
+        ""
+      )}
+    </>
+  );
 }
