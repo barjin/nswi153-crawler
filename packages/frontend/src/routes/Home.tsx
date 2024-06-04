@@ -12,7 +12,7 @@ export function Home() {
                 </h1>
 
                 <div className='w-full flex flex-col'>
-                    <WebsiteRecordList sort={'url:dsc'} limit={5}/>
+                    <WebsiteRecordList sort="url:dsc" limit={5}/>
                 </div>
 
                 <div className='w-full text-center text-xs text-blue-600 underline py-2'>
@@ -24,11 +24,9 @@ export function Home() {
                 <h1 className='text-2xl font-bold text-slate-900 mb-4'>
                     Executions
                 </h1>
-
                 <div className='w-full flex flex-col'>
                     <ExecutionList sort="url:asc" limit={5}/>
                 </div>
-
                 <div className='w-full text-center text-xs text-blue-600 underline py-2'>
                     <Link to='/executions'>View all executions</Link>
                 </div>

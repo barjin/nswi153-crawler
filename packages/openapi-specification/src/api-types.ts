@@ -132,16 +132,16 @@ export interface components {
        * @description How often should the site be crawled (in seconds from last execution).
        * @example 3600
        */
-      periodicity?: number;
+      periodicity: number;
       /** @description A user-given label */
-      label?: string;
+      label: string;
       /**
        * @description If inactive, the site is not crawled based on the Periodicity.
        * @default true
        */
-      isActive?: boolean;
+      isActive: boolean;
       /** @description A list of user-given tags. */
-      tags?: string[];
+      tags: string[];
       /**
        * Format: date-time
        * @description The time at the start of the last execution of this website crawl
@@ -151,7 +151,7 @@ export interface components {
        * @description The status of the last execution of this website crawl
        * @enum {string}
        */
-      lastExecutionStatus?: 'succeeded' | 'ongoing' | 'failed';
+      lastExecutionStatus?: 'succeeded' | 'ongoing' | 'failed' | 'waiting';
     };
     /**
      * Execution record
@@ -207,14 +207,19 @@ export interface operations {
   getRecordsList: {
     parameters: {
       query?: {
-        /** @description Label by which the website records should be filtered. */
-        label?: string;
-        /** @description Tag by which the website records should be filtered. */
-        tag?: string;
-        /** @description URL by which the website records should be filtered. */
-        url?: string;
+        /** @description Query string by which the website records should be filtered. */
+        filter?: string;
+        /** @description Field by which the website records should be filtered. */
+        filterBy?: 'label' | 'tags' | 'url';
         /** @description Method by which the website records should be sorted. The website records can be sorted by URL or by the time of the execution of the last crawl,  in ascending or descending order. The value of the parameter should have the format \"<sorting-field>:<sorting-direction>\". */
-        sort?: string;
+        sort?: 'url:asc' | 'url:dsc' | 'lastExecutionTime:asc' | 'lastExecutionTime:dsc';
+        /**
+         * @description Number of website records to return.
+         * @default 10
+         */
+        limit?: number;
+        /** @description Number of website records to skip before returning the remaining records. */
+        offset?: number;
       };
     };
     responses: {

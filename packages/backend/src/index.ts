@@ -1,8 +1,11 @@
 import type { components, paths } from '@nswi153-crawler/openapi-spec';
+import bodyParser from 'body-parser';
 import express from 'express';
 import getopts from 'getopts';
 
 const app = express();
+
+app.use(bodyParser.json());
 
 // TODO: remove before release
 app.all('*', (req, res, next) => {
@@ -93,6 +96,9 @@ let websiteRecords: components['schemas']['WebsiteRecord'][] = [
 
 app.post('/records', (req, res) => {
     const record = req.body as components['schemas']['WebsiteRecord'];
+
+    console.log(record);
+
     const recordId = websiteRecords.push(record) - 1;
 
     return res.status(201).json({ id: recordId });
@@ -121,16 +127,25 @@ app.get('/records', (req, res) => {
     }
 
     const [sortKey, sortDirection] = q.sort.split(':') as [keyof components['schemas']['WebsiteRecord'], 'asc' | 'dsc'];
+    const [filterQuery, filterField] = [q.filter, q.filterBy];
 
-    return res.json(websiteRecords.sort((a, b) => {
-        if ((a[sortKey] ?? 0) < (b[sortKey] ?? 0)) {
-            return sortDirection === 'asc' ? -1 : 1;
-        }
-        if ((a[sortKey] ?? 0) > (b[sortKey] ?? 0)) {
-            return sortDirection === 'asc' ? 1 : -1;
-        }
-        return 0;
-    }));
+    return res.json(
+        websiteRecords.sort((a, b) => {
+            if ((a[sortKey] ?? 0) < (b[sortKey] ?? 0)) {
+                return sortDirection === 'asc' ? -1 : 1;
+            }
+            if ((a[sortKey] ?? 0) > (b[sortKey] ?? 0)) {
+                return sortDirection === 'asc' ? 1 : -1;
+            }
+            return 0;
+        })
+            .filter((record) => {
+                if (!filterQuery || !filterField) {
+                    return true;
+                }
+                return record[filterField].includes(filterQuery);
+            }),
+    );
 });
 app.put('/records/:recordId', (req, res) => {
     const recordId = parseInt(req.params.recordId, 10);

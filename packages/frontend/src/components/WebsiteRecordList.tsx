@@ -1,10 +1,15 @@
+import type { paths } from 'packages/openapi-specification/dist/api-types';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { RecordRow } from './RecordRow';
 import { Loading, WebsiteRecord, useClient } from '../utils/ApiContext';
 
-export function WebsiteRecordList({ sort, filter, limit }: { sort: string, filter?: {[filter: string]: string}, limit?: number }) : JSX.Element[] | null {
+export function WebsiteRecordList(props: paths['/records']['get']['parameters']['query']) {
+    const { sort, filter, filterBy, limit, offset } = props || {};
+
+    console.log(props);
+
     const [records, setRecords] = useState<Loading<WebsiteRecord[]>>({ loading: true, data: null });
     const api = useClient();
 
@@ -12,10 +17,11 @@ export function WebsiteRecordList({ sort, filter, limit }: { sort: string, filte
         api?.GET('/records', {
             params: {
                 query: {
-                    sort,
-                    ...(filter !== null && filter !== undefined && 'url' in filter && filter.url.length > 0 && { url: filter.url }),
-                    ...(filter !== null && filter !== undefined && 'label' in filter && filter.label.length > 0 && { label: filter.label }),
-                    ...(filter !== null && filter !== undefined && 'tag' in filter && filter.tag.length > 0 && { tag: filter.tag }),
+                    sort: sort ?? 'url:asc',
+                    filter: filter ?? '',
+                    filterBy: filterBy ?? 'url',
+                    limit: limit ?? 10,
+                    offset: offset ?? 0,
                 },
             },
         },
@@ -24,11 +30,11 @@ export function WebsiteRecordList({ sort, filter, limit }: { sort: string, filte
         }).catch((error) => {
             console.error(error);
         });
-    }, [api, sort]);
+    }, [api, props]);
 
     return (
         records.loading
-            ? null
+            ? 'Loading...'
             : records.data
                 .slice(0, limit ?? records.data.length)
                 .map((execution, i) => (

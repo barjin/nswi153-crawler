@@ -1,13 +1,8 @@
-import { useState } from 'react';
-
 import { ExecutionList } from '../components/ExecutionList';
 import { FilterBar } from '../components/FilterBar';
 import { SortBar } from '../components/SortBar';
 
 export function Executions() {
-    const setFilterPhrase = useState('')[1];
-    const setFilterType = useState('url')[1];
-
     return (
         <>
             <div className="h-full grid grid-cols-2 grid-rows-[auto_auto_1fr_auto] gap-4">
@@ -17,7 +12,9 @@ export function Executions() {
                     </h1>
                 </div>
                 <div className='col-span-1 justify-self-stretch'>
-                    <FilterBar setFilterPhrase={setFilterPhrase} setFilterType={setFilterType} optionTag={true} />
+                    <FilterBar
+                        categories={['url', 'label', 'tags']}
+                    />
                 </div>
                 <div className='col-span-1 justify-self-end'>
                     <SortBar />

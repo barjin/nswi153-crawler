@@ -33,7 +33,10 @@ export function SortBar() {
                                     return p;
                                 }, { replace: true })}
                             />
-                            <label className='ml-1'>{sort.label}</label>
+                            <label
+                                className='ml-1'
+                                htmlFor={`${sort.sortType}-sort`}
+                            >{sort.label}</label>
                         </div>
                     );
                 })}

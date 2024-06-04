@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 
 import { CreateRecordPopup } from '../components/CreateRecordPopup';
@@ -13,6 +13,8 @@ export function WebsiteRecords() {
 
     const sortType = searchParams.get('sort')?.split(':')[0] ?? 'url';
     const sortDirection = searchParams.get('sort')?.split(':')[1] ?? 'asc';
+    const filterQuery = searchParams.get('filter') ?? '';
+    const filterBy = searchParams.get('filterBy') ?? 'url';
 
     const api = useClient();
 
@@ -36,10 +38,6 @@ export function WebsiteRecords() {
         });
     }, [api]);
 
-    // Filter
-    const [filterPhrase, setFilterPhrase] = useState('');
-    const [filterType, setFilterType] = useState('url');
-
     return (
         <>
             <div className="h-full grid grid-cols-2 grid-rows-[auto_auto_1fr_auto] gap-4">
@@ -56,13 +54,21 @@ export function WebsiteRecords() {
                     </Link>
                 </div>
                 <div className='col-span-1 justify-self-stretch'>
-                    <FilterBar setFilterPhrase={setFilterPhrase} setFilterType={setFilterType} optionTag={true} />
+                    <FilterBar
+                        categories={['url', 'label', 'tags']}
+                    />
                 </div>
                 <div className='col-span-1 justify-self-end'>
                     <SortBar />
                 </div>
                 <div className='col-span-2 justify-self-stretch'>
-                    <WebsiteRecordList sort={`${sortType}:${sortDirection}`} filter={{ [filterType]: filterPhrase } } />
+                    <WebsiteRecordList
+                        sort={`${sortType}:${sortDirection}` as 'url:asc' | 'url:dsc' | 'lastExecutionTime:asc' | 'lastExecutionTime:dsc'}
+                        filter={filterQuery}
+                        filterBy={filterBy as unknown as 'url' | 'label' | 'tags'}
+                        limit={10}
+                        offset={0}
+                    />
                 </div>
             </div>
 

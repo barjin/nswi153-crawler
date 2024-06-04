@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { ExecutionList } from '../components/ExecutionList';
 import { WebsiteRecordData } from '../components/WebsiteRecordData';
 
-export function WebsiteRecordView() {
+export function WebsiteRecord() {
     const { id: recordId } = useParams<{ id: string }>();
 
     return (

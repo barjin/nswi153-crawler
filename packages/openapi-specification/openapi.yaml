@@ -26,24 +26,22 @@ paths:
         website records and is unsorted.
       operationId: getRecordsList
       parameters:
-        - name: label
+        - name: filter
           in: query
-          description: Label by which the website records should be filtered.
+          description: Query string by which the website records should be filtered.
           required: false
           schema:
             type: string
-        - name: tag
+        - name: filterBy
           in: query
-          description: Tag by which the website records should be filtered.
+          description: Field by which the website records should be filtered.
           required: false
           schema:
             type: string
-        - name: url
-          in: query
-          description: URL by which the website records should be filtered.
-          required: false
-          schema:
-            type: string
+            enum:
+              - label
+              - tags
+              - url
         - name: sort
           in: query
           description: >
@@ -54,9 +52,25 @@ paths:
             type: string
             enum:
               - url:asc
-              - url:desc
-              - lastCrawl:asc
-              - lastCrawl:desc
+              - url:dsc
+              - lastExecutionTime:asc
+              - lastExecutionTime:dsc
+        - name: limit
+          in: query
+          description: Number of website records to return.
+          required: false
+          schema:
+            type: integer
+            format: int64
+          default: 10
+        - name: offset
+          in: query
+          description: Number of website records to skip before returning the remaining records.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            default: 0
       responses:
         '200':
           description: Success
