@@ -1,6 +1,4 @@
 import { ExecutionList } from '../components/ExecutionList';
-import { FilterBar } from '../components/FilterBar';
-import { SortBar } from '../components/SortBar';
 
 export function Executions() {
     return (
@@ -11,17 +9,8 @@ export function Executions() {
                         Executions
                     </h1>
                 </div>
-                <div className='col-span-1 justify-self-stretch'>
-                    <FilterBar
-                        categories={['url', 'label', 'tags']}
-                    />
-                </div>
-                <div className='col-span-1 justify-self-end'>
-                    <SortBar />
-                </div>
                 <div className='col-span-2 justify-self-stretch'>
-                    <ExecutionList sort='url:asc' />
-
+                    <ExecutionList sort='url:asc' pagination={true} />
                 </div>
             </div>
         </>

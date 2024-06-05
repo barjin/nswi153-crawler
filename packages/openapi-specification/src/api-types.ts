@@ -41,8 +41,13 @@ export interface paths {
         query?: {
           /** @description Record by which the executions should be filtered */
           recordId?: number;
-          /** @description Method by which the executions should be sorted by. The executions can by sorted by crawl time or recordId to which they belong to in ascending or descending order. The value of the parameter should have the format \"<sorting-field>:<sorting-direction>\". */
-          sort?: string;
+          /**
+           * @description Number of executions to return.
+           * @default 10
+           */
+          limit?: number;
+          /** @description Number of executions to skip before returning the remaining records. */
+          offset?: number;
         };
       };
       responses: {
@@ -65,7 +70,7 @@ export interface paths {
                * @example 10
                */
               limit?: number;
-              /** @description Array of all execution IDs */
+              /** @description Array of all execution records */
               records?: components["schemas"]["Execution"][];
             };
           };

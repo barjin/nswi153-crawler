@@ -1,22 +1,28 @@
-import { useEffect, useState, JSX } from 'react';
+import { paths } from 'packages/openapi-specification/dist/api-types';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import { ExecutionRow } from './ExecutionRow';
+import { PaginationBar } from './PaginationBar';
 import { Execution, Loading, useClient } from '../utils/ApiContext';
 
-export function ExecutionList({ sort, filter, id, limit }:
-    { sort: string, filter?: {[filter: string]: string}, id?: number, limit?: number },
-) : JSX.Element[] | null {
+type ExecutionListProps = paths['/records']['get']['parameters']['query'] & { pagination?: boolean };
+
+export function ExecutionList(props: ExecutionListProps) {
+    const {
+        limit = 10,
+    } = props ?? {};
+
     const [executions, setExecutions] = useState<Loading<Execution[]>>({ loading: true, data: null });
+    const [searchParams] = useSearchParams();
     const api = useClient();
 
     useEffect(() => {
         api?.GET('/execution', {
             params: {
                 query: {
-                    sort,
-                    ...(id !== null && id !== undefined && { recordId: id }),
-                    ...(filter !== null && filter !== undefined && 'url' in filter && filter.url.length > 0 && { url: filter.url }),
-                    ...(filter !== null && filter !== undefined && 'label' in filter && filter.label.length > 0 && { label: filter.label }),
+                    limit,
+                    offset: (parseInt(searchParams.get('page') ?? '1', 10) - 1) * limit,
                 },
             },
         }).then((response) => {
@@ -27,16 +33,23 @@ export function ExecutionList({ sort, filter, id, limit }:
         }).catch((error) => {
             console.error(error);
         });
-    }, [api]);
+    }, [api, searchParams]);
 
     return (
-        executions.loading
-            ? null
-            : executions.data.slice(0, limit).map((execution, i) => (
-                <ExecutionRow
-                    key={i}
-                    label={execution.startURL ?? ''}
-                />
-            ))
+        <>
+            {executions.loading
+                ? 'Loading...'
+                : executions.data.slice(0, limit).map((execution, i) => (
+                    <ExecutionRow
+                        key={i}
+                        label={execution.startURL ?? ''}
+                    />
+                ))}
+            {
+                props.pagination && executions.data
+                    ? <PaginationBar totalPages={Math.ceil(executions.data.length / limit)} />
+                    : null
+            }
+        </>
     );
 }

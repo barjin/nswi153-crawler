@@ -205,15 +205,23 @@ paths:
           schema:
             type: integer
             format: int64
-        - name: sort
+        - name: limit
           in: query
+          description: Number of executions to return.
           required: false
-          description: >
-            Method by which the executions should be sorted by. The executions can by sorted by crawl time or recordId to which they belong to
-            in ascending or descending order. The value of the parameter should have the format \"<sorting-field>:<sorting-direction>\".
-          schema: 
-            type: string
-            pattern: ^(recordId|crawlTime):(asc|desc)$
+          schema:
+            type: integer
+            format: int64
+          default: 10
+        - name: offset
+          in: query
+          description: Number of executions to skip before returning the remaining records.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            default: 0
+        
       responses:
         "200":
           description: Success
@@ -236,7 +244,7 @@ paths:
                       example: 10
                     records:
                       type: array
-                      description: Array of all execution IDs
+                      description: Array of all execution records
                       items:
                         $ref: '#/components/schemas/Execution'
         "404":
