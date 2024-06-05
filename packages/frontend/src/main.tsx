@@ -7,6 +7,7 @@ import {
 
 import './index.css';
 import { Executions } from './routes/Executions.tsx';
+import { GoBack } from './routes/GoBack.tsx';
 import { Home } from './routes/Home.tsx';
 import Root from './routes/Root.tsx';
 import { WebsiteRecord } from './routes/WebsiteRecord.tsx';
@@ -22,16 +23,22 @@ const router = createBrowserRouter([
                 element: <Home />,
             },
             {
-                path: '/website-records',
-                element: <WebsiteRecords />,
-            },
-            {
-                path: '/website-records/:id',
-                element: <WebsiteRecord />,
-            },
-            {
-                path: '/executions',
-                element: <Executions />,
+                path: '/',
+                element: <GoBack />,
+                children: [
+                    {
+                        path: '/website-records',
+                        element: <WebsiteRecords />,
+                    },
+                    {
+                        path: '/website-records/:id',
+                        element: <WebsiteRecord />,
+                    },
+                    {
+                        path: '/executions',
+                        element: <Executions />,
+                    },
+                ],
             },
         ],
     },
