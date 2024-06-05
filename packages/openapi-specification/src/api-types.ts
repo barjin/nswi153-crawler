@@ -3,38 +3,37 @@
  * Do not make direct changes to the file.
  */
 
-
 export interface paths {
-  "/records": {
+  '/records': {
     /**
      * Get a list of website records
      * @description Get a list of the website records currently in the database. If additional query parameters are provided, the website records are filtered by label,  tag, and/or URL, and is sorted by URL or the time of the last website crawl, in ascending or descending order. Otherwise, the list contains all the  website records and is unsorted.
      */
-    get: operations["getRecordsList"];
+    get: operations['getRecordsList'];
     /**
      * Insert a new website record
      * @description Insert a new website record to the database of existing website records.
      */
-    post: operations["addRecord"];
+    post: operations['addRecord'];
   };
-  "/records/{recordId}": {
+  '/records/{recordId}': {
     /**
      * Get a website record by ID
      * @description Get the website record from the database of existing website records whose ID matches the ID provided in the path.
      */
-    get: operations["getRecord"];
+    get: operations['getRecord'];
     /**
      * Update a website record by ID
      * @description Update a website record from the database of existing website records whose ID matches the ID provided in the path.
      */
-    put: operations["updateRecord"];
+    put: operations['updateRecord'];
     /**
      * Delete a website record by ID
      * @description Delete a website record from the database of existing website records whose ID matches the ID provided in the path.
      */
-    delete: operations["deleteRecord"];
+    delete: operations['deleteRecord'];
   };
-  "/execution": {
+  '/execution': {
     /** Get a list of all execution IDs. */
     get: {
       parameters: {
@@ -54,7 +53,7 @@ export interface paths {
         /** @description Success */
         200: {
           content: {
-            "application/json": {
+            'application/json': {
               /**
                * Format: int64
                * @example 1
@@ -71,7 +70,7 @@ export interface paths {
                */
               limit?: number;
               /** @description Array of all execution records */
-              records?: components["schemas"]["Execution"][];
+              records?: components['schemas']['Execution'][];
             };
           };
         };
@@ -82,7 +81,7 @@ export interface paths {
       };
     };
   };
-  "/execution/{executionId}": {
+  '/execution/{executionId}': {
     /** Get a execution with a given executionId */
     get: {
       parameters: {
@@ -95,7 +94,7 @@ export interface paths {
         /** @description Success */
         200: {
           content: {
-            "application/json": components["schemas"]["Execution"];
+            'application/json': components['schemas']['Execution'];
           };
         };
         /** @description Not found. */
@@ -175,7 +174,7 @@ export interface components {
        * @description The status of the last execution of this website crawl
        * @enum {string}
        */
-      lastExecutionStatus?: "succeeded" | "ongoing" | "failed" | "waiting";
+      lastExecutionStatus?: 'succeeded' | 'ongoing' | 'failed' | 'waiting';
     };
     /**
      * Execution record
@@ -204,13 +203,13 @@ export interface components {
     /** @description A website record object */
     WebsiteRecord: {
       content: {
-        "application/json": components["schemas"]["WebsiteRecord"];
+        'application/json': components['schemas']['WebsiteRecord'];
       };
     };
     /** @description An execution record object */
     Execution: {
       content: {
-        "application/json": components["schemas"]["Execution"];
+        'application/json': components['schemas']['Execution'];
       };
     };
   };
@@ -234,9 +233,9 @@ export interface operations {
         /** @description Query string by which the website records should be filtered. */
         filter?: string;
         /** @description Field by which the website records should be filtered. */
-        filterBy?: "label" | "tags" | "url";
+        filterBy?: 'label' | 'tags' | 'url';
         /** @description Method by which the website records should be sorted. The website records can be sorted by URL or by the time of the execution of the last crawl,  in ascending or descending order. The value of the parameter should have the format \"<sorting-field>:<sorting-direction>\". */
-        sort?: "url:asc" | "url:dsc" | "lastExecutionTime:asc" | "lastExecutionTime:dsc";
+        sort?: 'url:asc' | 'url:dsc' | 'lastExecutionTime:asc' | 'lastExecutionTime:dsc';
         /**
          * @description Number of website records to return.
          * @default 10
@@ -250,7 +249,7 @@ export interface operations {
       /** @description Success */
       200: {
         content: {
-          "application/json": {
+          'application/json': {
             /**
              * Format: int64
              * @example 1
@@ -266,7 +265,7 @@ export interface operations {
              * @example 10
              */
             limit?: number;
-            records?: components["schemas"]["WebsiteRecord"][];
+            records?: components['schemas']['WebsiteRecord'][];
           };
         };
       };
@@ -281,12 +280,12 @@ export interface operations {
    * @description Insert a new website record to the database of existing website records.
    */
   addRecord: {
-    requestBody: components["requestBodies"]["WebsiteRecord"];
+    requestBody: components['requestBodies']['WebsiteRecord'];
     responses: {
       /** @description Success */
       200: {
         content: {
-          "application/json": components["schemas"]["WebsiteRecord"];
+          'application/json': components['schemas']['WebsiteRecord'];
         };
       };
       /** @description Invalid input */
@@ -310,7 +309,7 @@ export interface operations {
       /** @description Success */
       200: {
         content: {
-          "application/json": components["schemas"]["WebsiteRecord"];
+          'application/json': components['schemas']['WebsiteRecord'];
         };
       };
       /** @description Invalid ID */
@@ -334,12 +333,12 @@ export interface operations {
         recordId: number;
       };
     };
-    requestBody: components["requestBodies"]["WebsiteRecord"];
+    requestBody: components['requestBodies']['WebsiteRecord'];
     responses: {
       /** @description Success */
       200: {
         content: {
-          "application/json": components["schemas"]["WebsiteRecord"];
+          'application/json': components['schemas']['WebsiteRecord'];
         };
       };
       /** @description Invalid ID */

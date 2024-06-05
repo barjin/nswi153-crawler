@@ -30,7 +30,7 @@ export function SortBar() {
                                 defaultChecked={sortType === sort.sortType}
                                 onClick={() => setSearchParams((p) => {
                                     p.set('sort', `${sort.sortType}:${sortDirection}`);
-                                    p.set('page', '1')
+                                    p.set('page', '1');
                                     return p;
                                 }, { replace: true })}
                             />
