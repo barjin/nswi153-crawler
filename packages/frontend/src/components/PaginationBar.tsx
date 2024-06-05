@@ -1,82 +1,49 @@
+import { useSearchParams } from 'react-router-dom';
+
 interface PaginationBarProps {
-    recordsPerPage: number,
-    totalRecords: number,
-    currentPage: number,
-    switchPage: (n: number) => void,
+    totalPages: number;
 }
 
-export function PaginationBar({ recordsPerPage, totalRecords, currentPage, switchPage }: PaginationBarProps) {
-    const pageLinks = [];
+export function PaginationBar({ totalPages }: PaginationBarProps) {
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    for (let i = 1; i <= Math.ceil(totalRecords / recordsPerPage); i++) {
-        pageLinks.push(
-            <div
-                key={i}
-                className={`
-                    inline-block
-                    text-black
-                    float-left
-                    px-4
-                    py-2
-                    m-1
-                    border-2
-                    hover:cursor-pointer
-                    ${i === currentPage ? 'bg-blue-200' : 'hover:bg-slate-200'}`
-                }
-                onClick={() => switchPage(i)}
-            >
-                {i}
-            </div>,
-        );
-    }
+    const currentPage = parseInt(searchParams.get('page') ?? '1', 10);
+
+    const switchPage = (page: number) => {
+        setSearchParams((p) => {
+            p.set('page', page.toString());
+            return p;
+        }, { replace: true });
+    };
 
     return (
         <>
             <div className="w-full flex justify-center items-center">
-                <div>
-                    { currentPage === 1 ? ''
-                        : <div
-                            className={`
-                                inline-block
-                                text-black
-                                float-left
-                                px-4
-                                py-2
-                                m-1
-                                border-2
-                                hover:cursor-pointer
-                                hover:bg-slate-200
-                            `}
-                            onClick={() => switchPage(currentPage - 1)}
-                        >
-                            {'<'}
-                        </div>
-                    }
+                <button
+                    className={`${
+                        currentPage === 1
+                            ? 'bg-blue-400 cursor-not-allowed'
+                            : 'bg-blue-700 hover:bg-blue-900'
+                    } text-white font-bold py-2 px-4 rounded-l-2xl cursor-pointer`}
+                    onClick={() => switchPage(currentPage - 1)}
+                    disabled={currentPage === 1}
+                >
+                    Previous
+                </button>
+                <div className="bg-blue-700 text-white font-bold py-2 px-4">
+                    {currentPage} of {totalPages}
                 </div>
-                <div>
-                    {pageLinks}
-                </div>
-                <div>
-                    { currentPage === Math.ceil(totalRecords / recordsPerPage) ? ''
-                        : <div
-                            className={`
-                            inline-block
-                            text-black
-                            float-left
-                            px-4
-                            py-2
-                            m-1
-                            border-2
-                            hover:cursor-pointer
-                            hover:bg-slate-200
-                        `}
-                            onClick={() => switchPage(currentPage + 1)}
-                        >
-                            {'>'}
-                        </div>
-                    }
-                </div>
-
+                <button
+                    className={`${
+                        currentPage === totalPages
+                            ? 'bg-blue-400 cursor-not-allowed'
+                            : 'bg-blue-700 hover:bg-blue-900'
+                    } text-white font-bold py-2 px-4 rounded-r-2xl`}
+                    onClick={() => switchPage(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                >
+                    Next
+                </button>
             </div>
         </>
     );

@@ -77,9 +77,24 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/WebsiteRecord'
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    format: int64
+                    example: 1
+                  offset:
+                    type: integer
+                    format: int64
+                    example: 0
+                  limit:
+                    type: integer
+                    format: int64
+                    example: 10
+                  records:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WebsiteRecord'
         '404':
           description: Website record list not found
 
@@ -205,10 +220,25 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                description: Array of all execution IDs
-                items:
-                  $ref: '#/components/schemas/Execution'
+                  type: object
+                  properties:
+                    total:
+                      type: integer
+                      format: int64
+                      example: 1
+                    offset:
+                      type: integer
+                      format: int64
+                      example: 0
+                    limit:
+                      type: integer
+                      format: int64
+                      example: 10
+                    records:
+                      type: array
+                      description: Array of all execution IDs
+                      items:
+                        $ref: '#/components/schemas/Execution'
         "404":
           description: There are no executions for this recordId
   /execution/{executionId}:

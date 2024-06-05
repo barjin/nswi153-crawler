@@ -7,6 +7,8 @@ import { SortBar } from '../components/SortBar';
 import { WebsiteRecordList } from '../components/WebsiteRecordList';
 import { useClient } from '../utils/ApiContext';
 
+const PAGE_SIZE = 10;
+
 export function WebsiteRecords() {
     const [searchParams, setSearchParams] = useSearchParams();
     const showCreateWindow = searchParams.get('create') === 'true';
@@ -15,6 +17,7 @@ export function WebsiteRecords() {
     const sortDirection = searchParams.get('sort')?.split(':')[1] ?? 'asc';
     const filterQuery = searchParams.get('filter') ?? '';
     const filterBy = searchParams.get('filterBy') ?? 'url';
+    const offset = (parseInt(searchParams.get('page') ?? '1', 10) - 1) * PAGE_SIZE;
 
     const api = useClient();
 
@@ -67,7 +70,8 @@ export function WebsiteRecords() {
                         filter={filterQuery}
                         filterBy={filterBy as unknown as 'url' | 'label' | 'tags'}
                         limit={10}
-                        offset={0}
+                        offset={offset}
+                        pagination={true}
                     />
                 </div>
             </div>

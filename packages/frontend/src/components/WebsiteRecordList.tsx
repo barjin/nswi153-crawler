@@ -2,15 +2,17 @@ import type { paths } from 'packages/openapi-specification/dist/api-types';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { PaginationBar } from './PaginationBar';
 import { RecordRow } from './RecordRow';
-import { Loading, WebsiteRecord, useClient } from '../utils/ApiContext';
+import { Loading, useClient } from '../utils/ApiContext';
 
-export function WebsiteRecordList(props: paths['/records']['get']['parameters']['query']) {
+type WebsiteRecordListProps = paths['/records']['get']['parameters']['query'] & { pagination?: boolean };
+type WebsiteRecordsResponse = paths['/records']['get']['responses']['200']['content']['application/json'];
+
+export function WebsiteRecordList(props: WebsiteRecordListProps) {
     const { sort, filter, filterBy, limit, offset } = props || {};
 
-    console.log(props);
-
-    const [records, setRecords] = useState<Loading<WebsiteRecord[]>>({ loading: true, data: null });
+    const [records, setRecords] = useState<Loading<WebsiteRecordsResponse>>({ loading: true, data: null });
     const api = useClient();
 
     useEffect(() => {
@@ -26,29 +28,45 @@ export function WebsiteRecordList(props: paths['/records']['get']['parameters'][
             },
         },
         ).then((response) => {
-            setRecords({ loading: false, data: response.data ?? [] });
+            setRecords({
+                loading: false,
+                data: response.data ?? {
+                    limit: 0,
+                    offset: 0,
+                    total: 0,
+                    records: [],
+                },
+            });
         }).catch((error) => {
             console.error(error);
         });
     }, [api, props]);
 
     return (
-        records.loading
-            ? 'Loading...'
-            : records.data
-                .slice(0, limit ?? records.data.length)
-                .map((execution, i) => (
-                    <Link to={`/website-records/${execution.id}`} key={i}>
-                        <RecordRow
-                            key={i}
-                            label={execution.label ?? ''}
-                            tags={execution.tags?.join(', ') ?? ''}
-                            periodicity={execution.periodicity?.toString() ?? ''}
-                            lastExecutionTime={execution.lastExecutionTime?.toString() ?? ''}
-                            lastExecutionStatus={execution.lastExecutionStatus ?? ''}
-                            isActive={execution.isActive ?? false}
-                        />
-                    </Link>
-                ))
+        <>
+            {
+                !records.data?.records
+                    ? 'Loading...'
+                    : records.data.records
+                        .map((execution, i) => (
+                            <Link to={`/website-records/${execution.id}`} key={i}>
+                                <RecordRow
+                                    key={i}
+                                    label={execution.label ?? ''}
+                                    tags={execution.tags?.join(', ') ?? ''}
+                                    periodicity={execution.periodicity?.toString() ?? ''}
+                                    lastExecutionTime={execution.lastExecutionTime?.toString() ?? ''}
+                                    lastExecutionStatus={execution.lastExecutionStatus ?? ''}
+                                    isActive={execution.isActive ?? false}
+                                />
+                            </Link>
+                        ))
+            }
+            {
+                props.pagination && records.data
+                    ? <PaginationBar totalPages={Math.ceil(records.data.total! / records.data.limit!)} />
+                    : ''
+            }
+        </>
     );
 }

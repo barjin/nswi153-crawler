@@ -92,12 +92,200 @@ let websiteRecords: components['schemas']['WebsiteRecord'][] = [
         tags: ['wikipedia'],
         lastExecutionTime: new Date().toISOString(),
     },
+    {
+        id: 2,
+        url: 'https://cs.wikipedia.org',
+        boundaryRegEx: '^https://cs.wikipedia.org/wiki/.*',
+        isActive: false,
+        periodicity: 86400,
+        label: 'Czech Wikipedia | scraping disabled',
+        tags: ['wikipedia'],
+        lastExecutionTime: new Date().toISOString(),
+    },
+    {
+        id: 2,
+        url: 'https://cs.wikipedia.org',
+        boundaryRegEx: '^https://cs.wikipedia.org/wiki/.*',
+        isActive: false,
+        periodicity: 86400,
+        label: 'Czech Wikipedia | scraping disabled',
+        tags: ['wikipedia'],
+        lastExecutionTime: new Date().toISOString(),
+    },
+    {
+        id: 2,
+        url: 'https://cs.wikipedia.org',
+        boundaryRegEx: '^https://cs.wikipedia.org/wiki/.*',
+        isActive: false,
+        periodicity: 86400,
+        label: 'Czech Wikipedia | scraping disabled',
+        tags: ['wikipedia'],
+        lastExecutionTime: new Date().toISOString(),
+    },
+    {
+        id: 2,
+        url: 'https://cs.wikipedia.org',
+        boundaryRegEx: '^https://cs.wikipedia.org/wiki/.*',
+        isActive: false,
+        periodicity: 86400,
+        label: 'Czech Wikipedia | scraping disabled',
+        tags: ['wikipedia'],
+        lastExecutionTime: new Date().toISOString(),
+    },
+    {
+        id: 2,
+        url: 'https://cs.wikipedia.org',
+        boundaryRegEx: '^https://cs.wikipedia.org/wiki/.*',
+        isActive: false,
+        periodicity: 86400,
+        label: 'Czech Wikipedia | scraping disabled',
+        tags: ['wikipedia'],
+        lastExecutionTime: new Date().toISOString(),
+    },
+    {
+        id: 2,
+        url: 'https://cs.wikipedia.org',
+        boundaryRegEx: '^https://cs.wikipedia.org/wiki/.*',
+        isActive: false,
+        periodicity: 86400,
+        label: 'Czech Wikipedia | scraping disabled',
+        tags: ['wikipedia'],
+        lastExecutionTime: new Date().toISOString(),
+    },
+    {
+        id: 2,
+        url: 'https://cs.wikipedia.org',
+        boundaryRegEx: '^https://cs.wikipedia.org/wiki/.*',
+        isActive: false,
+        periodicity: 86400,
+        label: 'Czech Wikipedia | scraping disabled',
+        tags: ['wikipedia'],
+        lastExecutionTime: new Date().toISOString(),
+    },
+    {
+        id: 2,
+        url: 'https://cs.wikipedia.org',
+        boundaryRegEx: '^https://cs.wikipedia.org/wiki/.*',
+        isActive: false,
+        periodicity: 86400,
+        label: 'Czech Wikipedia | scraping disabled',
+        tags: ['wikipedia'],
+        lastExecutionTime: new Date().toISOString(),
+    },
+    {
+        id: 2,
+        url: 'https://cs.wikipedia.org',
+        boundaryRegEx: '^https://cs.wikipedia.org/wiki/.*',
+        isActive: false,
+        periodicity: 86400,
+        label: 'Czech Wikipedia | scraping disabled',
+        tags: ['wikipedia'],
+        lastExecutionTime: new Date().toISOString(),
+    },
+    {
+        id: 2,
+        url: 'https://cs.wikipedia.org',
+        boundaryRegEx: '^https://cs.wikipedia.org/wiki/.*',
+        isActive: false,
+        periodicity: 86400,
+        label: 'Czech Wikipedia | scraping disabled',
+        tags: ['wikipedia'],
+        lastExecutionTime: new Date().toISOString(),
+    },
+    {
+        id: 2,
+        url: 'https://cs.wikipedia.org',
+        boundaryRegEx: '^https://cs.wikipedia.org/wiki/.*',
+        isActive: false,
+        periodicity: 86400,
+        label: 'Czech Wikipedia | scraping disabled',
+        tags: ['wikipedia'],
+        lastExecutionTime: new Date().toISOString(),
+    },
+    {
+        id: 2,
+        url: 'https://cs.wikipedia.org',
+        boundaryRegEx: '^https://cs.wikipedia.org/wiki/.*',
+        isActive: false,
+        periodicity: 86400,
+        label: 'Czech Wikipedia | scraping disabled',
+        tags: ['wikipedia'],
+        lastExecutionTime: new Date().toISOString(),
+    },
+    {
+        id: 2,
+        url: 'https://cs.wikipedia.org',
+        boundaryRegEx: '^https://cs.wikipedia.org/wiki/.*',
+        isActive: false,
+        periodicity: 86400,
+        label: 'Czech Wikipedia | scraping disabled',
+        tags: ['wikipedia'],
+        lastExecutionTime: new Date().toISOString(),
+    },
+    {
+        id: 2,
+        url: 'https://cs.wikipedia.org',
+        boundaryRegEx: '^https://cs.wikipedia.org/wiki/.*',
+        isActive: false,
+        periodicity: 86400,
+        label: 'Czech Wikipedia | scraping disabled',
+        tags: ['wikipedia'],
+        lastExecutionTime: new Date().toISOString(),
+    },
+    {
+        id: 2,
+        url: 'https://cs.wikipedia.org',
+        boundaryRegEx: '^https://cs.wikipedia.org/wiki/.*',
+        isActive: false,
+        periodicity: 86400,
+        label: 'Czech Wikipedia | scraping disabled',
+        tags: ['wikipedia'],
+        lastExecutionTime: new Date().toISOString(),
+    },
+    {
+        id: 2,
+        url: 'https://cs.wikipedia.org',
+        boundaryRegEx: '^https://cs.wikipedia.org/wiki/.*',
+        isActive: false,
+        periodicity: 86400,
+        label: 'Czech Wikipedia | scraping disabled',
+        tags: ['wikipedia'],
+        lastExecutionTime: new Date().toISOString(),
+    },
+    {
+        id: 2,
+        url: 'https://cs.wikipedia.org',
+        boundaryRegEx: '^https://cs.wikipedia.org/wiki/.*',
+        isActive: false,
+        periodicity: 86400,
+        label: 'Czech Wikipedia | scraping disabled',
+        tags: ['wikipedia'],
+        lastExecutionTime: new Date().toISOString(),
+    },
+    {
+        id: 2,
+        url: 'https://cs.wikipedia.org',
+        boundaryRegEx: '^https://cs.wikipedia.org/wiki/.*',
+        isActive: false,
+        periodicity: 86400,
+        label: 'Czech Wikipedia | scraping disabled',
+        tags: ['wikipedia'],
+        lastExecutionTime: new Date().toISOString(),
+    },
+    {
+        id: 2,
+        url: 'https://cs.wikipedia.org',
+        boundaryRegEx: '^https://cs.wikipedia.org/wiki/.*',
+        isActive: false,
+        periodicity: 86400,
+        label: 'Czech Wikipedia | scraping disabled',
+        tags: ['wikipedia'],
+        lastExecutionTime: new Date().toISOString(),
+    },
 ];
 
 app.post('/records', (req, res) => {
     const record = req.body as components['schemas']['WebsiteRecord'];
-
-    console.log(record);
 
     const recordId = websiteRecords.push(record) - 1;
 
@@ -128,9 +316,16 @@ app.get('/records', (req, res) => {
 
     const [sortKey, sortDirection] = q.sort.split(':') as [keyof components['schemas']['WebsiteRecord'], 'asc' | 'dsc'];
     const [filterQuery, filterField] = [q.filter, q.filterBy];
+    const limit = parseInt(q.limit ?? '10', 10) ?? 10;
+    const offset = parseInt(q.offset ?? '0', 10) ?? 0;
 
-    return res.json(
-        websiteRecords.sort((a, b) => {
+    const records = websiteRecords
+        .filter((record) => {
+            if (!filterQuery || !filterField) {
+                return true;
+            }
+            return record[filterField].toLowerCase().includes(filterQuery.toLowerCase());
+        }).sort((a, b) => {
             if ((a[sortKey] ?? 0) < (b[sortKey] ?? 0)) {
                 return sortDirection === 'asc' ? -1 : 1;
             }
@@ -138,14 +333,16 @@ app.get('/records', (req, res) => {
                 return sortDirection === 'asc' ? 1 : -1;
             }
             return 0;
-        })
-            .filter((record) => {
-                if (!filterQuery || !filterField) {
-                    return true;
-                }
-                return record[filterField].includes(filterQuery);
-            }),
-    );
+        });
+
+    const response: paths['/records']['get']['responses']['200']['content']['application/json'] = {
+        limit,
+        offset,
+        total: records.length,
+        records: records.slice(offset, offset + limit),
+    };
+
+    return res.json(response);
 });
 app.put('/records/:recordId', (req, res) => {
     const recordId = parseInt(req.params.recordId, 10);
