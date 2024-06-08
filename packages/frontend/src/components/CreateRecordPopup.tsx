@@ -5,9 +5,10 @@ interface InputFieldProps {
     placeholder: string,
     required: boolean,
     className: string,
+    minValue?: string
 }
 
-function InputField({ label, name, type, placeholder, required, className } : InputFieldProps) {
+function InputField({ label, name, type, placeholder, required, className, minValue } : InputFieldProps) {
     return (
         <div className={className}>
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={name}>
@@ -20,6 +21,7 @@ function InputField({ label, name, type, placeholder, required, className } : In
                 type={type}
                 placeholder={placeholder}
                 required={required}
+                min={minValue}
             />
         </div>
     );
@@ -45,8 +47,19 @@ export function CreateRecordPopup({ showPopup, closePopup, createNewRecord } : C
                     <InputField label='Label' name='label' type='text' placeholder='Label' required={true} className='mb-4' />
                     <InputField label='Tags' name='tags' type='text' placeholder='Tags' required={true} className='mb-4' />
 
-                    <div className="grid grid-cols-2 gaps-4">
-                        <InputField label='Periodicity' name='periodicity' type='text' placeholder='Periodicity' required={true} className='mb-6' />
+                    <div className="grid grid-cols-3 gaps-4">
+                        <InputField label='Periodicity' name='periodicity-number' type='number' minValue='0' placeholder='Number' required={true} className='mb-6' />
+                        
+                        <div className="py-7">
+                            <select
+                                className="ml-1 bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-2xl"
+                                name='periodicity-type'
+                            >
+                                <option value='minutes'>minutes</option>
+                                <option value='hours'>hours</option>
+                                <option value='days'>days</option>
+                            </select>
+                        </div>
                         <div className="flex items-center mb-6 pt-6">
                             <div className="w-1/3"></div>
                             <label className="w-2/3 block font-bold">

@@ -78,6 +78,7 @@ let websiteRecords: components['schemas']['WebsiteRecord'][] = [
         label: 'Example Domain',
         tags: ['example, test'],
         lastExecutionTime: new Date(Date.now() - 10e2).toISOString(),
+        lastExecutionStatus: 'succeeded',
     },
     {
         id: 2,
@@ -88,6 +89,7 @@ let websiteRecords: components['schemas']['WebsiteRecord'][] = [
         label: 'Czech Wikipedia | scraping disabled',
         tags: ['wikipedia'],
         lastExecutionTime: new Date().toISOString(),
+        lastExecutionStatus: 'ongoing',
     },
 ];
 

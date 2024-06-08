@@ -8,6 +8,7 @@ export function WebsiteRecordData() : JSX.Element {
     const api = useClient();
     const { id } = useParams();
 
+
     useEffect(() => {
         api?.GET('/records/{recordId}', {
             params: {
@@ -26,6 +27,21 @@ export function WebsiteRecordData() : JSX.Element {
         });
     }, [api]);
 
+    const periodicity = record.data?.periodicity ?? 0
+    let periodicityText = ''
+    if (periodicity >= 86400) {
+        const number = periodicity / 86400
+        periodicityText = `every ${number > 1 ? number : ''} day${number > 1 ? 's' : ''}`
+    }
+    else if (periodicity >= 3600) {
+        const number = periodicity / 3600
+        periodicityText = `every ${number > 1 ? number : ''} hour${number > 1 ? 's' : ''}`
+    }
+    else if (periodicity >= 60) {
+        const number = periodicity / 60
+        periodicityText = `every ${number > 1 ? number : ''} minute${number > 1 ? 's' : ''}`
+    }
+
     return (
         <>
             <h1 className='text-2xl font-bold text-slate-900 mb-8'>
@@ -37,7 +53,7 @@ export function WebsiteRecordData() : JSX.Element {
                 <div className='col-span-1 text-l font-bold text-slate-800 mb-2'>Boundary regular expression</div>
                 <div className='col-span-2 mb-2'>{record.data?.boundaryRegEx}</div>
                 <div className='col-span-1 text-l font-bold text-slate-800 mb-2'>Periodicity</div>
-                <div className='col-span-2 mb-2'>{record.data?.periodicity}</div>
+                <div className='col-span-2 mb-2'>{periodicityText}</div>
                 <div className='col-span-1 text-l font-bold text-slate-800 mb-2'>Tags</div>
                 <div className='col-span-2 mb-2'>{record.data?.tags?.join(', ')}</div>
                 <div className='col-span-1 text-l font-bold text-slate-800 mb-2'>Is Active?</div>

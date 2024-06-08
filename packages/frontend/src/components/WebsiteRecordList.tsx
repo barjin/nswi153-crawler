@@ -26,23 +26,27 @@ export function WebsiteRecordList({ sort, filter, limit }: { sort: string, filte
         });
     }, [api, sort]);
 
+    console.log(records.data)
+
     return (
         records.loading
             ? null
             : records.data
                 .slice(0, limit ?? records.data.length)
                 .map((execution, i) => (
-                    <Link to={`/website-records/${execution.id}`} key={i}>
-                        <RecordRow
-                            key={i}
-                            label={execution.label ?? ''}
-                            tags={execution.tags?.join(', ') ?? ''}
-                            periodicity={execution.periodicity?.toString() ?? ''}
-                            lastExecutionTime={execution.lastExecutionTime?.toString() ?? ''}
-                            lastExecutionStatus={execution.lastExecutionStatus ?? ''}
-                            isActive={execution.isActive ?? false}
-                        />
-                    </Link>
+                    execution !== null 
+                        ? <Link to={`/website-records/${execution.id}`} key={i}>
+                            <RecordRow
+                                key={i}
+                                label={execution.label ?? ''}
+                                tags={execution.tags?.join(', ') ?? ''}
+                                periodicity={execution.periodicity ?? 0}
+                                lastExecutionTime={execution.lastExecutionTime?.toString() ?? ''}
+                                lastExecutionStatus={execution.lastExecutionStatus ?? ''}
+                                isActive={execution.isActive ?? false}
+                            />
+                        </Link>
+                        : <></>
                 ))
     );
 }

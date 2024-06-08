@@ -1,7 +1,7 @@
 interface RecordRowProps {
     label: string,
     tags: string,
-    periodicity: string,
+    periodicity: number,
     lastExecutionTime: string,
     lastExecutionStatus: string,
     isActive: boolean,
@@ -9,6 +9,24 @@ interface RecordRowProps {
 }
 
 export function RecordRow({ label, tags, periodicity, lastExecutionTime, lastExecutionStatus, isActive, onClick }: RecordRowProps) {
+
+    let periodicityText = ''
+    if (periodicity >= 86400) {
+        const number = periodicity / 86400
+        periodicityText = `every ${number > 1 ? number : ''} day${number > 1 ? 's' : ''}`
+    }
+    else if (periodicity >= 3600) {
+        const number = periodicity / 3600
+        periodicityText = `every ${number > 1 ? number : ''} hour${number > 1 ? 's' : ''}`
+    }
+    else if (periodicity >= 60) {
+        const number = periodicity / 60
+        periodicityText = `every ${number > 1 ? number : ''} minute${number > 1 ? 's' : ''}`
+    }
+
+    const time = lastExecutionTime.split('T')
+    const lastExecutionTimeText = `${time[0]} ${time[1].split('.')[0]}`
+
     return (
         <div
             className={`
@@ -34,11 +52,9 @@ export function RecordRow({ label, tags, periodicity, lastExecutionTime, lastExe
                     <span className='px-2 text-xs'>(tags: {tags})</span>
                 </span>
                 <span className='text-xs'>
-                    <span>{periodicity}</span>
+                    <span>{periodicityText}</span>
                     &nbsp;|&nbsp;
-                    <span>{lastExecutionTime}</span>
-                    &nbsp;|&nbsp;
-                    <span>{lastExecutionStatus}</span>
+                    <span>Last Execution: {lastExecutionTimeText} ({lastExecutionStatus})</span>
                 </span>
             </div>
         </div>
