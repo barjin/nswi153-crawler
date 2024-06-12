@@ -3,6 +3,7 @@
  * Do not make direct changes to the file.
  */
 
+
 export interface paths {
   "/records": {
     /**
@@ -184,17 +185,19 @@ export interface components {
       /** Format: int64 */
       id?: number;
       startURL?: string;
+      /** Format: int64 */
+      websiteRecordId?: number;
       /** @description The map of crawled pages as a graph */
       nodes?: {
-        url: string;
-        title?: string;
-        /** Format: date-time */
-        crawlTime?: string;
-        /** @description List of Ids of pages that are hyperlinked from this page. */
-        links: number[];
-        /** @description List of Ids of website records that crawled this given node. */
-        sourceLinks?: number[];
-      }[];
+          url: string;
+          title?: string;
+          /** Format: date-time */
+          crawlTime?: string;
+          /** @description List of Ids of pages that are hyperlinked from this page. */
+          links: number[];
+          /** @description List of Ids of website records that crawled this given node. */
+          sourceLinks?: number[];
+        }[];
     };
   };
   responses: never;
@@ -222,6 +225,7 @@ export type $defs = Record<string, never>;
 export type external = Record<string, never>;
 
 export interface operations {
+
   /**
    * Get a list of website records
    * @description Get a list of the website records currently in the database. If additional query parameters are provided, the website records are filtered by label,  tag, and/or URL, and is sorted by URL or the time of the last website crawl, in ascending or descending order. Otherwise, the list contains all the  website records and is unsorted.
@@ -234,11 +238,7 @@ export interface operations {
         /** @description Field by which the website records should be filtered. */
         filterBy?: "label" | "tags" | "url";
         /** @description Method by which the website records should be sorted. The website records can be sorted by URL or by the time of the execution of the last crawl,  in ascending or descending order. The value of the parameter should have the format \"<sorting-field>:<sorting-direction>\". */
-        sort?:
-          | "url:asc"
-          | "url:dsc"
-          | "lastExecutionTime:asc"
-          | "lastExecutionTime:dsc";
+        sort?: "url:asc" | "url:dsc" | "lastExecutionTime:asc" | "lastExecutionTime:dsc";
         /**
          * @description Number of website records to return.
          * @default 10

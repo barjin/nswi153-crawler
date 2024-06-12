@@ -372,6 +372,9 @@ components:
           format: int64
         startURL:
           type: string
+        websiteRecordId:
+          type: integer
+          format: int64
         nodes:
           description: The map of crawled pages as a graph
           type: array
