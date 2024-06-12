@@ -2,8 +2,6 @@ import { useParams } from 'react-router-dom';
 
 import { ExecutionList } from '../components/ExecutionList';
 import { WebsiteRecordData } from '../components/WebsiteRecordData';
-import { useClient } from '../utils/ApiContext';
-
 
 export function WebsiteRecordView() {
     const { id: recordId } = useParams<{ id: string }>();

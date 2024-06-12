@@ -17,24 +17,20 @@ export function WebsiteRecords() {
     const api = useClient();
 
     const createNewRecord = useCallback((formData: FormData) => {
+        const number = parseInt(formData.get('periodicity-number') as string, 10);
+        const type = formData.get('periodicity-type');
 
-        const number = parseInt(formData.get('periodicity-number') as string)
-        const type = formData.get('periodicity-type')
-
-        let periodicity = 0
-        if (type === 'minutes')
-            periodicity = number * 60
-        else if (type === 'hours')
-            periodicity = number * 3600
-        else if (type === 'days')
-            periodicity = number * 86400
+        let periodicity = 0;
+        if (type === 'minutes') periodicity = number * 60;
+        else if (type === 'hours') periodicity = number * 3600;
+        else if (type === 'days') periodicity = number * 86400;
 
         api?.POST('/records', {
             body: {
                 id: 0,
                 url: formData.get('url') as string,
                 boundaryRegEx: formData.get('regex') as string,
-                periodicity: periodicity,
+                periodicity,
                 label: formData.get('label') as string,
                 isActive: formData.has('active'),
                 tags: (formData.get('tags') as string).split(',').map((tag) => tag.trim()),

@@ -8,7 +8,6 @@ export function WebsiteRecordData() : JSX.Element {
     const api = useClient();
     const { id } = useParams();
 
-
     useEffect(() => {
         api?.GET('/records/{recordId}', {
             params: {
@@ -27,19 +26,17 @@ export function WebsiteRecordData() : JSX.Element {
         });
     }, [api]);
 
-    const periodicity = record.data?.periodicity ?? 0
-    let periodicityText = ''
+    const periodicity = record.data?.periodicity ?? 0;
+    let periodicityText = '';
     if (periodicity >= 86400) {
-        const number = periodicity / 86400
-        periodicityText = `every ${number > 1 ? number : ''} day${number > 1 ? 's' : ''}`
-    }
-    else if (periodicity >= 3600) {
-        const number = periodicity / 3600
-        periodicityText = `every ${number > 1 ? number : ''} hour${number > 1 ? 's' : ''}`
-    }
-    else if (periodicity >= 60) {
-        const number = periodicity / 60
-        periodicityText = `every ${number > 1 ? number : ''} minute${number > 1 ? 's' : ''}`
+        const number = periodicity / 86400;
+        periodicityText = `every ${number > 1 ? number : ''} day${number > 1 ? 's' : ''}`;
+    } else if (periodicity >= 3600) {
+        const number = periodicity / 3600;
+        periodicityText = `every ${number > 1 ? number : ''} hour${number > 1 ? 's' : ''}`;
+    } else if (periodicity >= 60) {
+        const number = periodicity / 60;
+        periodicityText = `every ${number > 1 ? number : ''} minute${number > 1 ? 's' : ''}`;
     }
 
     return (

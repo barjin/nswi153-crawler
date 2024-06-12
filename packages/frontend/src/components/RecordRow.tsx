@@ -9,23 +9,20 @@ interface RecordRowProps {
 }
 
 export function RecordRow({ label, tags, periodicity, lastExecutionTime, lastExecutionStatus, isActive, onClick }: RecordRowProps) {
-
-    let periodicityText = ''
+    let periodicityText = '';
     if (periodicity >= 86400) {
-        const number = periodicity / 86400
-        periodicityText = `every ${number > 1 ? number : ''} day${number > 1 ? 's' : ''}`
-    }
-    else if (periodicity >= 3600) {
-        const number = periodicity / 3600
-        periodicityText = `every ${number > 1 ? number : ''} hour${number > 1 ? 's' : ''}`
-    }
-    else if (periodicity >= 60) {
-        const number = periodicity / 60
-        periodicityText = `every ${number > 1 ? number : ''} minute${number > 1 ? 's' : ''}`
+        const number = periodicity / 86400;
+        periodicityText = `every ${number > 1 ? number : ''} day${number > 1 ? 's' : ''}`;
+    } else if (periodicity >= 3600) {
+        const number = periodicity / 3600;
+        periodicityText = `every ${number > 1 ? number : ''} hour${number > 1 ? 's' : ''}`;
+    } else if (periodicity >= 60) {
+        const number = periodicity / 60;
+        periodicityText = `every ${number > 1 ? number : ''} minute${number > 1 ? 's' : ''}`;
     }
 
-    const time = lastExecutionTime.split('T')
-    const lastExecutionTimeText = `${time[0]} ${time[1].split('.')[0]}`
+    const time = lastExecutionTime.split('T');
+    const lastExecutionTimeText = `${time[0]} ${time[1].split('.')[0]}`;
 
     return (
         <div

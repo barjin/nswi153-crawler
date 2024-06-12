@@ -48,8 +48,16 @@ export function CreateRecordPopup({ showPopup, closePopup, createNewRecord } : C
                     <InputField label='Tags' name='tags' type='text' placeholder='Tags' required={true} className='mb-4' />
 
                     <div className="grid grid-cols-3 gaps-4">
-                        <InputField label='Periodicity' name='periodicity-number' type='number' minValue='0' placeholder='Number' required={true} className='mb-6' />
-                        
+                        <InputField
+                            label='Periodicity'
+                            name='periodicity-number'
+                            type='number'
+                            minValue='0'
+                            placeholder='Number'
+                            required={true}
+                            className='mb-6'
+                        />
+
                         <div className="py-7">
                             <select
                                 className="ml-1 bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-2xl"

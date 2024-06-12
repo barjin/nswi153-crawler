@@ -26,7 +26,7 @@ export function WebsiteRecordList({ sort, filter, limit }: { sort: string, filte
         });
     }, [api, sort]);
 
-    console.log(records.data)
+    console.log(records.data);
 
     return (
         records.loading
@@ -34,7 +34,7 @@ export function WebsiteRecordList({ sort, filter, limit }: { sort: string, filte
             : records.data
                 .slice(0, limit ?? records.data.length)
                 .map((execution, i) => (
-                    execution !== null 
+                    execution !== null
                         ? <Link to={`/website-records/${execution.id}`} key={i}>
                             <RecordRow
                                 key={i}
