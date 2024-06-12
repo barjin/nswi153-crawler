@@ -61,9 +61,7 @@ export function ExecutionList(props: ExecutionListProps) {
               <ExecutionRow key={i} label={execution.startURL ?? ""} />
             ))}
       {props.pagination && executions.data ? (
-        <PaginationBar
-          totalPages={Math.ceil((executions.data.total!) / limit)}
-        />
+        <PaginationBar totalPages={Math.ceil(executions.data.total! / limit)} />
       ) : null}
     </>
   );

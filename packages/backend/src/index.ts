@@ -55,7 +55,7 @@ app.delete("/execution/:executionId", (req, res) => {
 
 app.get("/execution", (req, res) => {
   const q = req.query as Record<
-  keyof Exclude<paths["/execution"]["get"]["parameters"]["query"], undefined>,
+    keyof Exclude<paths["/execution"]["get"]["parameters"]["query"], undefined>,
     string | undefined
   >;
 
@@ -64,15 +64,17 @@ app.get("/execution", (req, res) => {
   const offset = parseInt(q.offset ?? "0", 10) ?? 0;
 
   const filteredExecutions = executions.filter(
-    (execution) => !recordId || execution.websiteRecordId === parseInt(recordId, 10),
+    (execution) =>
+      !recordId || execution.websiteRecordId === parseInt(recordId, 10),
   );
 
-  const response: paths["/execution"]["get"]["responses"]["200"]["content"]["application/json"] = {
-    limit,
-    offset,
-    total: filteredExecutions.length,
-    records: filteredExecutions.slice(offset, offset + limit),
-  }
+  const response: paths["/execution"]["get"]["responses"]["200"]["content"]["application/json"] =
+    {
+      limit,
+      offset,
+      total: filteredExecutions.length,
+      records: filteredExecutions.slice(offset, offset + limit),
+    };
 
   return res.json(response);
 });
