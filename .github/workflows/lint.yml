@@ -33,6 +33,9 @@ jobs:
       - name: Lint project
         run: npm run lint
 
+      - name: Check formatting with Prettier
+        run: npm run format:check
+
   test-build:
     name: run-test-build
     runs-on: ubuntu-latest

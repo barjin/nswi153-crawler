@@ -11,7 +11,7 @@ type ExecutionListProps = paths["/execution"]["get"]["parameters"]["query"] & {
 };
 
 export function ExecutionList(props: ExecutionListProps) {
-  const { limit = 10 } = props ?? {};
+  const { limit = 10, recordId } = props ?? {};
 
   const [executions, setExecutions] = useState<
     Loading<
@@ -30,6 +30,7 @@ export function ExecutionList(props: ExecutionListProps) {
         params: {
           query: {
             limit,
+            recordId,
             offset: (parseInt(searchParams.get("page") ?? "1", 10) - 1) * limit,
           },
         },
@@ -60,9 +61,7 @@ export function ExecutionList(props: ExecutionListProps) {
               <ExecutionRow key={i} label={execution.startURL ?? ""} />
             ))}
       {props.pagination && executions.data ? (
-        <PaginationBar
-          totalPages={Math.ceil((executions.data?.total ?? 1000) / limit)}
-        />
+        <PaginationBar totalPages={Math.ceil(executions.data.total! / limit)} />
       ) : null}
     </>
   );

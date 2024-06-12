@@ -184,6 +184,8 @@ export interface components {
       /** Format: int64 */
       id?: number;
       startURL?: string;
+      /** Format: int64 */
+      websiteRecordId?: number;
       /** @description The map of crawled pages as a graph */
       nodes?: {
         url: string;

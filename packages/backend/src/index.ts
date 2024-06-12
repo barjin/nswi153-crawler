@@ -19,6 +19,7 @@ app.all("*", (req, res, next) => {
 let executions: components["schemas"]["Execution"][] = [
   {
     id: 1,
+    websiteRecordId: 1,
     startURL: "https://example.com",
     nodes: [
       {
@@ -31,6 +32,7 @@ let executions: components["schemas"]["Execution"][] = [
   },
   {
     id: 2,
+    websiteRecordId: 2,
     startURL: "https://wikipedia.org",
     nodes: [
       {
@@ -52,8 +54,31 @@ app.delete("/execution/:executionId", (req, res) => {
 });
 
 app.get("/execution", (req, res) => {
-  return res.json(Array(10).fill(executions).flat());
+  const q = req.query as Record<
+    keyof Exclude<paths["/execution"]["get"]["parameters"]["query"], undefined>,
+    string | undefined
+  >;
+
+  const { recordId } = q;
+  const limit = parseInt(q.limit ?? "10", 10) ?? 10;
+  const offset = parseInt(q.offset ?? "0", 10) ?? 0;
+
+  const filteredExecutions = executions.filter(
+    (execution) =>
+      !recordId || execution.websiteRecordId === parseInt(recordId, 10),
+  );
+
+  const response: paths["/execution"]["get"]["responses"]["200"]["content"]["application/json"] =
+    {
+      limit,
+      offset,
+      total: filteredExecutions.length,
+      records: filteredExecutions.slice(offset, offset + limit),
+    };
+
+  return res.json(response);
 });
+
 app.get("/execution/:executionId", (req, res) => {
   const executionId = parseInt(req.params.executionId, 10);
   const execution = executions.find(({ id }) => id === executionId);
