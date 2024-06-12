@@ -1,6 +1,6 @@
 # nswi153-crawler
 
-Semestral project for the NSWI153 class. 
+Semestral project for the NSWI153 class.
 
 ## dev setup
 
@@ -27,6 +27,6 @@ to start the backend server and
 
 to start the frontend server.
 
---- 
+---
 
 Made by Viktória Hurtišová, Viktorija Panovska and Jindřich Bär. 2024

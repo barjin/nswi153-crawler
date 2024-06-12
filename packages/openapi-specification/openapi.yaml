@@ -1,7 +1,7 @@
 openapi: 3.0.0
 
 servers:
-  - url: 'http://localhost:8080/api'
+  - url: "http://localhost:8080/api"
 info:
   description: >-
     This is the OpenAPI specification for the NSWI153 course project 'Webcrawler'.
@@ -58,15 +58,15 @@ paths:
               - lastCrawl:asc
               - lastCrawl:desc
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/WebsiteRecord'
-        '404':
+                  $ref: "#/components/schemas/WebsiteRecord"
+        "404":
           description: Website record list not found
 
     post:
@@ -76,15 +76,15 @@ paths:
       description: Insert a new website record to the database of existing website records.
       operationId: addRecord
       requestBody:
-        $ref: '#/components/requestBodies/WebsiteRecord'
+        $ref: "#/components/requestBodies/WebsiteRecord"
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WebsiteRecord'
-        '400':
+                $ref: "#/components/schemas/WebsiteRecord"
+        "400":
           description: Invalid input
 
   /records/{recordId}:
@@ -103,15 +103,15 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WebsiteRecord'
-        '400':
+                $ref: "#/components/schemas/WebsiteRecord"
+        "400":
           description: Invalid ID
-        '404':
+        "404":
           description: Record not found
 
     put:
@@ -129,17 +129,17 @@ paths:
             type: integer
             format: int64
       requestBody:
-        $ref: '#/components/requestBodies/WebsiteRecord'
+        $ref: "#/components/requestBodies/WebsiteRecord"
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WebsiteRecord'
-        '400':
+                $ref: "#/components/schemas/WebsiteRecord"
+        "400":
           description: Invalid ID
-        '404':
+        "404":
           description: Record not found
 
     delete:
@@ -157,11 +157,11 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: Success
-        '400':
+        "400":
           description: Invalid ID
-        '404':
+        "404":
           description: Record not found
   /execution:
     get:
@@ -182,7 +182,7 @@ paths:
           description: >
             Method by which the executions should be sorted by. The executions can by sorted by crawl time or recordId to which they belong to
             in ascending or descending order. The value of the parameter should have the format \"<sorting-field>:<sorting-direction>\".
-          schema: 
+          schema:
             type: string
             pattern: ^(recordId|crawlTime):(asc|desc)$
       responses:
@@ -194,7 +194,7 @@ paths:
                 type: array
                 description: Array of all execution IDs
                 items:
-                  $ref: '#/components/schemas/Execution'
+                  $ref: "#/components/schemas/Execution"
         "404":
           description: There are no executions for this recordId
   /execution/{executionId}:
@@ -237,7 +237,6 @@ paths:
         "404":
           description: Not found.
 
-
 components:
   requestBodies:
     WebsiteRecord:
@@ -246,14 +245,14 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/WebsiteRecord'
+            $ref: "#/components/schemas/WebsiteRecord"
     Execution:
       description: An execution record object
       required: true
       content:
         application/json:
-          schema: 
-           $ref: '#/components/schemas/Execution'
+          schema:
+            $ref: "#/components/schemas/Execution"
   schemas:
     WebsiteRecord:
       title: Website Record
@@ -277,11 +276,11 @@ components:
           type: string
           format: uri
           pattern: '^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$'
-          example: 'https://www.webik.mff.cuni.cz/~studentId'
+          example: "https://www.webik.mff.cuni.cz/~studentId"
         boundaryRegEx:
           description: The crawler will proceed crawling only the links that match this regular expression.
           type: string
-          example: 'https://www.webik.mff.cuni.cz/'
+          example: "https://www.webik.mff.cuni.cz/"
         periodicity:
           description: How often should the site be crawled (in seconds from last execution).
           type: integer
