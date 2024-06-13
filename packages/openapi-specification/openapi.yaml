@@ -163,7 +163,7 @@ paths:
           description: Invalid ID
         '404':
           description: Record not found
-  /execution:
+  /executions:
     get:
       tags:
         - execution
@@ -197,7 +197,7 @@ paths:
                   $ref: '#/components/schemas/Execution'
         "404":
           description: There are no executions for this recordId
-  /execution/{executionId}:
+  /executions/{executionId}:
     get:
       tags:
         - execution
@@ -339,12 +339,6 @@ components:
                 format: date-time
               links:
                 description: List of Ids of pages that are hyperlinked from this page.
-                type: array
-                items:
-                  type: integer
-                  format: int64
-              sourceLinks:
-                description: List of Ids of website records that crawled this given node.
                 type: array
                 items:
                   type: integer
