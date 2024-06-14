@@ -7,7 +7,7 @@ export type WebsiteRecord = Exclude<
   undefined
 >[number];
 export type Execution = Exclude<
-  paths["/execution"]["get"]["responses"]["200"]["content"]["application/json"]["records"],
+  paths["/executions"]["get"]["responses"]["200"]["content"]["application/json"]["records"],
   undefined
 >[number];
 

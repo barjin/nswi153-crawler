@@ -33,7 +33,7 @@ export interface paths {
      */
     delete: operations["deleteRecord"];
   };
-  "/execution": {
+  "/executions": {
     /** Get a list of all execution IDs. */
     get: {
       parameters: {
@@ -81,7 +81,7 @@ export interface paths {
       };
     };
   };
-  "/execution/{executionId}": {
+  "/executions/{executionId}": {
     /** Get a execution with a given executionId */
     get: {
       parameters: {
@@ -194,8 +194,6 @@ export interface components {
         crawlTime?: string;
         /** @description List of Ids of pages that are hyperlinked from this page. */
         links: number[];
-        /** @description List of Ids of website records that crawled this given node. */
-        sourceLinks?: number[];
       }[];
     };
   };

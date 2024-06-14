@@ -1,13 +1,14 @@
+import { EntityManager, MikroORM } from "@mikro-orm/sqlite";
 import type { components, paths } from "@nswi153-crawler/openapi-spec";
-import bodyParser from "body-parser";
 import express from "express";
 import getopts from "getopts";
 
+import { Execution } from "./entities/Execution";
+import { WebsiteRecord } from "./entities/WebsiteRecord";
+import config from "./mikro-orm.config";
+
 const app = express();
 
-app.use(bodyParser.json());
-
-// TODO: remove before release
 app.all("*", (req, res, next) => {
   console.log(`Serving ${req.method} ${req.path}`);
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -16,114 +17,86 @@ app.all("*", (req, res, next) => {
   next();
 });
 
-let executions: components["schemas"]["Execution"][] = [
-  {
-    id: 1,
-    websiteRecordId: 1,
-    startURL: "https://example.com",
-    nodes: [
-      {
-        url: "https://example.com",
-        links: [3, 4],
-        crawlTime: new Date().toISOString(),
-        title: "Example Domain",
-      },
-    ],
-  },
-  {
-    id: 2,
-    websiteRecordId: 2,
-    startURL: "https://wikipedia.org",
-    nodes: [
-      {
-        url: "https://wikipedia.org",
-        links: [5, 6],
-        crawlTime: new Date(Date.now() - 10e2).toISOString(),
-        title: "Wikipedia",
-      },
-    ],
-  },
-];
+const initORM = async () => {
+  const orm = await MikroORM.init(config);
+  return orm;
+};
 
-/* Execution */
-app.delete("/execution/:executionId", (req, res) => {
-  const executionId = parseInt(req.params.executionId, 10);
-  executions = executions.filter(({ id }) => id !== executionId);
+const startServer = async () => {
+  const orm = await initORM();
 
-  return res.status(204).send();
+  /* Execution */
+  app.get("/executions", async (req, res) => {
+    const executionRepo = orm.em.getRepository(Execution);
+    const executions = await executionRepo.findAll();
+
+    return res.json(executions);
+  });
+
+  app.get("/executions/:executionId", async (req, res) => {
+    const executionRepo = orm.em.getRepository(Execution);
+    const execution = await executionRepo.findOne({
+      id: parseInt(req.params.executionId, 10),
+    });
+
+    if (!execution) {
+      return res.status(404).send();
+    }
+
+    return res.status(204).json(execution).send();
+  });
+
+  app.delete("/executions/:executionId", async (req, res) => {
+    const executionId = parseInt(req.params.executionId, 10);
+    const executionRef = orm.em.getReference(Execution, executionId);
+    await orm.em.remove(executionRef).flush();
+
+    return res.status(204).send();
+  });
+
+  /* THINGS FROM HERE DOWN ARE NOT IMPLEMENTED */
+
+  /* RECORDS */
+  app.get("/records", (req, res) => {
+    const recordsRepo = orm.em.getRepository(WebsiteRecord);
+
+    const q = req.query as paths["/records"]["get"]["parameters"]["query"];
+
+    if (!q?.sort) {
+      const records = recordsRepo.findAll();
+      return res.json(records);
+    }
+
+    const [sortKey, sortDirection] = q.sort.split(":") as [
+      keyof components["schemas"]["WebsiteRecord"],
+      "ASC" | "DSC",
+    ];
+
+    // TODO: here we need to get the execution status
+    return res.json(
+      websiteRecords.sort((a, b) => {
+        if ((a[sortKey] ?? 0) < (b[sortKey] ?? 0)) {
+          return sortDirection === "asc" ? -1 : 1;
+        }
+        if ((a[sortKey] ?? 0) > (b[sortKey] ?? 0)) {
+          return sortDirection === "asc" ? 1 : -1;
+        }
+        return 0;
+      }),
+    );
+  });
+};
+
+app.post("/records", async (req, res) => {
+  const recordRepo = (await initORM()).em.getRepository(WebsiteRecord);
+  const newRecord = recordRepo.create({
+    ...req.body,
+  });
+  await recordRepo.getEntityManager().persist(newRecord).flush();
+
+  return res.status(201).json({ id: newRecord.id });
 });
 
-app.get("/execution", (req, res) => {
-  const q = req.query as Record<
-    keyof Exclude<paths["/execution"]["get"]["parameters"]["query"], undefined>,
-    string | undefined
-  >;
-
-  const { recordId } = q;
-  const limit = parseInt(q.limit ?? "10", 10) ?? 10;
-  const offset = parseInt(q.offset ?? "0", 10) ?? 0;
-
-  const filteredExecutions = executions.filter(
-    (execution) =>
-      !recordId || execution.websiteRecordId === parseInt(recordId, 10),
-  );
-
-  const response: paths["/execution"]["get"]["responses"]["200"]["content"]["application/json"] =
-    {
-      limit,
-      offset,
-      total: filteredExecutions.length,
-      records: filteredExecutions.slice(offset, offset + limit),
-    };
-
-  return res.json(response);
-});
-
-app.get("/execution/:executionId", (req, res) => {
-  const executionId = parseInt(req.params.executionId, 10);
-  const execution = executions.find(({ id }) => id === executionId);
-
-  if (!execution) {
-    return res.status(404).send();
-  }
-
-  return res.json(execution);
-});
-
-let websiteRecords: components["schemas"]["WebsiteRecord"][] = Array(10)
-  .fill([
-    {
-      id: 1,
-      url: "https://example.com",
-      boundaryRegEx: "^https://example.com/.*",
-      isActive: true,
-      periodicity: 3600,
-      label: "Example Domain",
-      tags: ["example, test"],
-      lastExecutionTime: new Date(Date.now() - 10e2).toISOString(),
-      lastExecutionStatus: "succeeded",
-    },
-    {
-      id: 2,
-      url: "https://cs.wikipedia.org",
-      boundaryRegEx: "^https://cs.wikipedia.org/wiki/.*",
-      isActive: false,
-      periodicity: 86400,
-      label: "Czech Wikipedia | scraping disabled",
-      tags: ["wikipedia"],
-      lastExecutionTime: new Date().toISOString(),
-      lastExecutionStatus: "ongoing",
-    },
-  ])
-  .flat();
-
-app.post("/records", (req, res) => {
-  const record = req.body as components["schemas"]["WebsiteRecord"];
-
-  const recordId = websiteRecords.push(record) - 1;
-
-  return res.status(201).json({ id: recordId });
-});
 app.delete("/records/:recordId", (req, res) => {
   const recordId = parseInt(req.params.recordId, 10);
   websiteRecords = websiteRecords.filter(({ id }) => id !== recordId);
@@ -140,42 +113,17 @@ app.get("/records/:recordId", (req, res) => {
 
   return res.json(record);
 });
-app.get("/records", (req, res) => {
-  const q = req.query as Record<
-    keyof Exclude<paths["/records"]["get"]["parameters"]["query"], undefined>,
-    string | undefined
-  >;
 
-  if (!q?.sort) {
-    return res.json(websiteRecords);
-  }
+app.put("/records/:recordId", (req, res) => {
+  const recordId = parseInt(req.params.recordId, 10);
 
-  const [sortKey, sortDirection] = (q.sort?.split(":") ?? ["url", "asc"]) as [
-    keyof components["schemas"]["WebsiteRecord"],
-    "asc" | "dsc",
-  ];
-  const [filterQuery, filterField] = [q.filter, q.filterBy] as [string, "url"];
-  const limit = parseInt(q.limit ?? "10", 10) ?? 10;
-  const offset = parseInt(q.offset ?? "0", 10) ?? 0;
-
-  const records = websiteRecords
-    .filter((record) => {
-      if (!filterQuery || !filterField) {
-        return true;
-      }
-      return record[filterField]
-        .toLowerCase()
-        .includes(filterQuery.toLowerCase());
-    })
-    .sort((a, b) => {
-      if ((a[sortKey] ?? 0) < (b[sortKey] ?? 0)) {
-        return sortDirection === "asc" ? -1 : 1;
-      }
-      if ((a[sortKey] ?? 0) > (b[sortKey] ?? 0)) {
-        return sortDirection === "asc" ? 1 : -1;
-      }
-      return 0;
-    });
+  websiteRecords.find((record, index) => {
+    if (record.id === recordId) {
+      websiteRecords[index] = { ...websiteRecords[index], ...record };
+      return true;
+    }
+    return false;
+  });
 
   const response: paths["/records"]["get"]["responses"]["200"]["content"]["application/json"] =
     {
