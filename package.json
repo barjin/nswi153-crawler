@@ -34,9 +34,5 @@
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.6.0",
     "vite": "^5.2.0"
-  },
-  "dependencies": {
-    "@mikro-orm/core": "^6.2.9",
-    "@mikro-orm/sqlite": "^6.2.9"
   }
 }
