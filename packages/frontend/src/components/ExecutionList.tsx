@@ -6,7 +6,7 @@ import { ExecutionRow } from "./ExecutionRow";
 import { PaginationBar } from "./PaginationBar";
 import { Loading, useClient } from "../utils/ApiContext";
 
-type ExecutionListProps = paths["/execution"]["get"]["parameters"]["query"] & {
+type ExecutionListProps = paths["/executions"]["get"]["parameters"]["query"] & {
   pagination?: boolean;
 };
 
@@ -15,7 +15,7 @@ export function ExecutionList(props: ExecutionListProps) {
 
   const [executions, setExecutions] = useState<
     Loading<
-      paths["/execution"]["get"]["responses"]["200"]["content"]["application/json"]
+      paths["/executions"]["get"]["responses"]["200"]["content"]["application/json"]
     >
   >({
     loading: true,
@@ -26,7 +26,7 @@ export function ExecutionList(props: ExecutionListProps) {
 
   useEffect(() => {
     api
-      ?.GET("/execution", {
+      ?.GET("/executions", {
         params: {
           query: {
             limit,

@@ -9,6 +9,14 @@ import config from "./mikro-orm.config";
 
 const app = express();
 
+app.all('*', (req, res, next) => {
+  console.log(`Serving ${req.method} ${req.path}`);
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', '*');
+  res.setHeader('Access-Control-Allow-Headers', '*');
+  next();
+});
+
 const initORM = async () => {
   const orm = await MikroORM.init(config);
   return orm;
@@ -38,7 +46,7 @@ const startServer = async () => {
     return res.status(204).json(execution).send();
   });
 
-  app.delete("/execution/:executionId", async (req, res) => {
+  app.delete("/executions/:executionId", async (req, res) => {
     const executionId = parseInt(req.params.executionId, 10);
     const executionRef = orm.em.getReference(Execution, executionId);
     await orm.em.remove(executionRef).flush();
