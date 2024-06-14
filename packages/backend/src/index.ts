@@ -9,11 +9,11 @@ import config from "./mikro-orm.config";
 
 const app = express();
 
-app.all('*', (req, res, next) => {
+app.all("*", (req, res, next) => {
   console.log(`Serving ${req.method} ${req.path}`);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', '*');
-  res.setHeader('Access-Control-Allow-Headers', '*');
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "*");
+  res.setHeader("Access-Control-Allow-Headers", "*");
   next();
 });
 

@@ -1,5 +1,5 @@
 import { TsMorphMetadataProvider } from "@mikro-orm/reflection";
-import type { Options} from "@mikro-orm/sqlite";
+import type { Options } from "@mikro-orm/sqlite";
 import { SqliteDriver } from "@mikro-orm/sqlite";
 
 const config: Options = {
