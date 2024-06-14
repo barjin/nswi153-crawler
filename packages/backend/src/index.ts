@@ -87,17 +87,17 @@ app.delete('/records/:recordId', (req, res) => {
     const recordId = parseInt(req.params.recordId, 10);
     websiteRecords = websiteRecords.filter(({ id }) => id !== recordId);
 
-    return res.status(204).send();
+  return res.status(204).send();
 });
-app.get('/records/:recordId', (req, res) => {
-    const recordId = parseInt(req.params.recordId, 10);
-    const record = websiteRecords.find(({ id }) => id === recordId);
+app.get("/records/:recordId", (req, res) => {
+  const recordId = parseInt(req.params.recordId, 10);
+  const record = websiteRecords.find(({ id }) => id === recordId);
 
-    if (!record) {
-        return res.status(404).send();
-    }
+  if (!record) {
+    return res.status(404).send();
+  }
 
-    return res.json(record);
+  return res.json(record);
 });
 
 app.put('/records/:recordId', (req, res) => {
@@ -111,25 +111,46 @@ app.put('/records/:recordId', (req, res) => {
         return false;
     });
 
-    return res.status(204).send();
+  const response: paths["/records"]["get"]["responses"]["200"]["content"]["application/json"] =
+    {
+      limit,
+      offset,
+      total: records.length,
+      records: records.slice(offset, offset + limit),
+    };
+
+  return res.json(response);
+});
+app.put("/records/:recordId", (req, res) => {
+  const recordId = parseInt(req.params.recordId, 10);
+
+  websiteRecords.find((record, index) => {
+    if (record.id === recordId) {
+      websiteRecords[index] = { ...websiteRecords[index], ...record };
+      return true;
+    }
+    return false;
+  });
+
+  return res.status(204).send();
 });
 
 const options = getopts(process.argv.slice(2), {
-    alias: {
-        port: 'p',
-    },
-    unknown: (option) => {
-        console.log(`Unknown option: ${option}`);
-        return false;
-    },
+  alias: {
+    port: "p",
+  },
+  unknown: (option) => {
+    console.log(`Unknown option: ${option}`);
+    return false;
+  },
 });
 
 const port = options.port || 3000;
 const server = app.listen(port, () => {
-    const address = server.address();
-    if (typeof address === 'string') {
-        console.log(`Listening on ${address}`);
-    } else if (address) {
-        console.log(`Listening on ${address.port}`);
-    }
+  const address = server.address();
+  if (typeof address === "string") {
+    console.log(`Listening on ${address}`);
+  } else if (address) {
+    console.log(`Listening on ${address.port}`);
+  }
 });

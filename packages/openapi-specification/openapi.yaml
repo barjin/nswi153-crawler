@@ -1,7 +1,7 @@
 openapi: 3.0.0
 
 servers:
-  - url: 'http://localhost:8080/api'
+  - url: "http://localhost:8080/api"
 info:
   description: >-
     This is the OpenAPI specification for the NSWI153 course project 'Webcrawler'.
@@ -26,24 +26,22 @@ paths:
         website records and is unsorted.
       operationId: getRecordsList
       parameters:
-        - name: label
+        - name: filter
           in: query
-          description: Label by which the website records should be filtered.
+          description: Query string by which the website records should be filtered.
           required: false
           schema:
             type: string
-        - name: tag
+        - name: filterBy
           in: query
-          description: Tag by which the website records should be filtered.
+          description: Field by which the website records should be filtered.
           required: false
           schema:
             type: string
-        - name: url
-          in: query
-          description: URL by which the website records should be filtered.
-          required: false
-          schema:
-            type: string
+            enum:
+              - label
+              - tags
+              - url
         - name: sort
           in: query
           description: >
@@ -54,19 +52,50 @@ paths:
             type: string
             enum:
               - url:asc
-              - url:desc
-              - lastCrawl:asc
-              - lastCrawl:desc
+              - url:dsc
+              - lastExecutionTime:asc
+              - lastExecutionTime:dsc
+        - name: limit
+          in: query
+          description: Number of website records to return.
+          required: false
+          schema:
+            type: integer
+            format: int64
+          default: 10
+        - name: offset
+          in: query
+          description: Number of website records to skip before returning the remaining records.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            default: 0
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/WebsiteRecord'
-        '404':
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    format: int64
+                    example: 1
+                  offset:
+                    type: integer
+                    format: int64
+                    example: 0
+                  limit:
+                    type: integer
+                    format: int64
+                    example: 10
+                  records:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/WebsiteRecord"
+        "404":
           description: Website record list not found
 
     post:
@@ -76,15 +105,15 @@ paths:
       description: Insert a new website record to the database of existing website records.
       operationId: addRecord
       requestBody:
-        $ref: '#/components/requestBodies/WebsiteRecord'
+        $ref: "#/components/requestBodies/WebsiteRecord"
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WebsiteRecord'
-        '400':
+                $ref: "#/components/schemas/WebsiteRecord"
+        "400":
           description: Invalid input
 
   /records/{recordId}:
@@ -103,15 +132,15 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WebsiteRecord'
-        '400':
+                $ref: "#/components/schemas/WebsiteRecord"
+        "400":
           description: Invalid ID
-        '404':
+        "404":
           description: Record not found
 
     put:
@@ -129,17 +158,17 @@ paths:
             type: integer
             format: int64
       requestBody:
-        $ref: '#/components/requestBodies/WebsiteRecord'
+        $ref: "#/components/requestBodies/WebsiteRecord"
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WebsiteRecord'
-        '400':
+                $ref: "#/components/schemas/WebsiteRecord"
+        "400":
           description: Invalid ID
-        '404':
+        "404":
           description: Record not found
 
     delete:
@@ -157,11 +186,11 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: Success
-        '400':
+        "400":
           description: Invalid ID
-        '404':
+        "404":
           description: Record not found
   /executions:
     get:
@@ -176,25 +205,48 @@ paths:
           schema:
             type: integer
             format: int64
-        - name: sort
+        - name: limit
           in: query
+          description: Number of executions to return.
           required: false
-          description: >
-            Method by which the executions should be sorted by. The executions can by sorted by crawl time or recordId to which they belong to
-            in ascending or descending order. The value of the parameter should have the format \"<sorting-field>:<sorting-direction>\".
-          schema: 
-            type: string
-            pattern: ^(recordId|crawlTime):(asc|desc)$
+          schema:
+            type: integer
+            format: int64
+          default: 10
+        - name: offset
+          in: query
+          description: Number of executions to skip before returning the remaining records.
+          required: false
+          schema:
+            type: integer
+            format: int64
+            default: 0
+
       responses:
         "200":
           description: Success
           content:
             application/json:
               schema:
-                type: array
-                description: Array of all execution IDs
-                items:
-                  $ref: '#/components/schemas/Execution'
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    format: int64
+                    example: 1
+                  offset:
+                    type: integer
+                    format: int64
+                    example: 0
+                  limit:
+                    type: integer
+                    format: int64
+                    example: 10
+                  records:
+                    type: array
+                    description: Array of all execution records
+                    items:
+                      $ref: "#/components/schemas/Execution"
         "404":
           description: There are no executions for this recordId
   /executions/{executionId}:
@@ -237,7 +289,6 @@ paths:
         "404":
           description: Not found.
 
-
 components:
   requestBodies:
     WebsiteRecord:
@@ -246,14 +297,14 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/WebsiteRecord'
+            $ref: "#/components/schemas/WebsiteRecord"
     Execution:
       description: An execution record object
       required: true
       content:
         application/json:
-          schema: 
-           $ref: '#/components/schemas/Execution'
+          schema:
+            $ref: "#/components/schemas/Execution"
   schemas:
     WebsiteRecord:
       title: Website Record
@@ -277,11 +328,11 @@ components:
           type: string
           format: uri
           pattern: '^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$'
-          example: 'https://www.webik.mff.cuni.cz/~studentId'
+          example: "https://www.webik.mff.cuni.cz/~studentId"
         boundaryRegEx:
           description: The crawler will proceed crawling only the links that match this regular expression.
           type: string
-          example: 'https://www.webik.mff.cuni.cz/'
+          example: "https://www.webik.mff.cuni.cz/"
         periodicity:
           description: How often should the site be crawled (in seconds from last execution).
           type: integer
@@ -321,6 +372,9 @@ components:
           format: int64
         startURL:
           type: string
+        websiteRecordId:
+          type: integer
+          format: int64
         nodes:
           description: The map of crawled pages as a graph
           type: array
