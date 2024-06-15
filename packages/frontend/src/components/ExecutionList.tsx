@@ -10,8 +10,10 @@ type ExecutionListProps = paths["/executions"]["get"]["parameters"]["query"] & {
   pagination?: boolean;
 };
 
+const PAGE_SIZE = 5;
+
 export function ExecutionList(props: ExecutionListProps) {
-  const { limit = 10, recordId } = props ?? {};
+  const { limit = PAGE_SIZE, recordId } = props ?? {};
 
   const [executions, setExecutions] = useState<
     Loading<

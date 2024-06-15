@@ -7,7 +7,7 @@ import { SortBar } from "../components/SortBar";
 import { WebsiteRecordList } from "../components/WebsiteRecordList";
 import { useClient } from "../utils/ApiContext";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 5;
 
 export function WebsiteRecords() {
   const [searchParams, setSearchParams] = useSearchParams();
