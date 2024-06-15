@@ -1,6 +1,7 @@
 import type { paths } from "@nswi153-crawler/openapi-spec";
-import { Entity, PrimaryGeneratedColumn, OneToOne, ManyToOne, JoinColumn, Column } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, OneToOne, ManyToOne, JoinColumn, Column, OneToMany } from "typeorm"
 
+import { CrawledPage } from "./CrawledPage";
 import { WebsiteRecord } from "./WebsiteRecord";
 
 @Entity()
@@ -11,6 +12,10 @@ export class Execution {
   @ManyToOne(() => WebsiteRecord, { onDelete: 'CASCADE' })
   @JoinColumn() 
   record: WebsiteRecord;
+
+  @OneToMany(() => CrawledPage, (crawledPage) => crawledPage.execution, { onDelete: 'CASCADE' })
+  @JoinColumn()
+  crawledPages: CrawledPage[]
 
   @Column({ type: 'text', default: 'waiting' })
   status: paths['/executions/{executionId}']['get']['responses']['200']['content']['application/json']['status'];

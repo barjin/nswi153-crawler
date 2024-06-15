@@ -12,8 +12,8 @@ export function getRecordsRouter(orm: EntityManager) {
   router.route("/")
     .get(async (req, res) => {
       const query = req.query as QueryParamsType<'/records', 'get'>;
-      const { limit = 10, offset = 0, filter = null, filterBy = 'url', sort = 'url:desc' } = query;
-      const [sortField, sortOrder] = sort.split(':');
+      const { limit = 10, offset = 0, filter = null, filterBy = 'url', sort = 'url:asc' } = query;
+      const [sortField, sortOrder] = ['url', sort.split(':')[1]]; // TODO: sorting by lastExecutionTime (requires JOIN)
 
       const websiteRecordRepo = orm.getRepository(WebsiteRecord);
       const [records, total] = await websiteRecordRepo.findAndCount({
