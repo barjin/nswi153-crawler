@@ -17,6 +17,6 @@ export class WebsiteRecordTag {
   @Column()
   tag: string;
 
-  @ManyToMany(() => WebsiteRecord, (record) => record.id)
+  @ManyToMany(() => WebsiteRecord, (record) => record.id, { onDelete: 'CASCADE' })
   websiteRecords: WebsiteRecord[];
 }

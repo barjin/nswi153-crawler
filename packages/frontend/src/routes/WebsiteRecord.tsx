@@ -1,10 +1,30 @@
-import { useParams } from "react-router-dom";
+import { useCallback } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { ExecutionList } from "../components/ExecutionList";
 import { WebsiteRecordData } from "../components/WebsiteRecordData";
+import { useClient } from "../utils/ApiContext";
 
 export function WebsiteRecord() {
   const { id: recordId } = useParams<{ id: string }>();
+  const api = useClient();
+  const navigate = useNavigate();
+
+  const deleteRecord = useCallback(async () => {
+    try {
+      await api?.DELETE('/records/{recordId}', {
+        params: {
+           path: {
+            recordId: parseInt(recordId!, 10),
+           }
+        }
+      });
+
+      navigate('/website-records');
+    } catch (e) {
+      console.error(e);
+    }
+  }, [api, recordId]);
 
   return (
     <>
@@ -16,7 +36,10 @@ export function WebsiteRecord() {
           <button className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-2xl">
             Execute
           </button>
-          <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 ml-1 rounded-2xl">
+          <button 
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 ml-1 rounded-2xl"
+            onClick={deleteRecord}
+          >
             Delete
           </button>
         </div>

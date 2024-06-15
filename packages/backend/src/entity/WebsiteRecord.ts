@@ -29,7 +29,7 @@ export class WebsiteRecord {
   @Column()
   label: string;
 
-  @ManyToMany(() => WebsiteRecordTag, (tag) => tag.id)
+  @ManyToMany(() => WebsiteRecordTag, (tag) => tag.id, { onDelete: 'CASCADE' })
   @JoinTable()
   tags: WebsiteRecordTag[];
 

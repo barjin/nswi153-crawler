@@ -8,8 +8,8 @@ export class Execution {
   @PrimaryGeneratedColumn({ type: 'int' })
   id!: number;
 
-  @ManyToOne(() => WebsiteRecord)
-  @JoinColumn()
+  @ManyToOne(() => WebsiteRecord, { onDelete: 'CASCADE' })
+  @JoinColumn() 
   record: WebsiteRecord;
 
   @Column({ type: 'text', default: 'waiting' })
