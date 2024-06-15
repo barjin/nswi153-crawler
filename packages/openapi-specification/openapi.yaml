@@ -311,7 +311,6 @@ components:
       description: A record of a website crawl
       type: object
       required:
-        - id
         - url
         - boundaryRegEx
         - periodicity

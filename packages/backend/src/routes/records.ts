@@ -42,12 +42,19 @@ export function getRecordsRouter(orm: EntityManager) {
     .post(async (req, res) => {
       const data: paths['/records']['post']['requestBody']['content']['application/json'] = req.body;
 
-      const tags = data.tags.map((tag) => orm.create(WebsiteRecordTag, { tag }));
-      await orm.save(tags);
+      const exisitngTags = await orm.find(WebsiteRecordTag, {
+        where: data.tags.map((tag) => ({ tag })),
+      });
 
+      const newTags = data.tags.filter((tag) => !exisitngTags.some((t) => t.tag === tag)).map((tag) => {
+        const newTag = orm.create(WebsiteRecordTag, { tag });
+        return newTag;
+      });
+
+      await orm.save(newTags);
       const record = orm.create(WebsiteRecord, {
         ...data,
-        tags,
+        tags: [...exisitngTags, ...newTags],
       });
       await orm.save(record);
 

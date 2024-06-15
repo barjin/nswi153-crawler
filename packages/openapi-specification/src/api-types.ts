@@ -139,7 +139,7 @@ export interface components {
        * Format: int64
        * @example 0
        */
-      id: number;
+      id?: number;
       /**
        * Format: uri
        * @description The URL at which the crawler should start.

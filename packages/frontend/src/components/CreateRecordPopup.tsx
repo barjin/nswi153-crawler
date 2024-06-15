@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 interface InputFieldProps {
   label: string;
   name: string;
@@ -41,7 +43,7 @@ function InputField({
 interface CreateRecordModalProps {
   showPopup: boolean;
   closePopup: () => void;
-  createNewRecord: (data: FormData) => void;
+  createNewRecord: (data: FormData) => Promise<void>;
 }
 
 export function CreateRecordPopup({
@@ -49,6 +51,8 @@ export function CreateRecordPopup({
   closePopup,
   createNewRecord,
 }: CreateRecordModalProps) {
+  const navigate = useNavigate();
+
   return !showPopup ? (
     ""
   ) : (
@@ -56,11 +60,12 @@ export function CreateRecordPopup({
       <div className="flex justify-center items-center fixed top-0 left-0 w-full h-screen bg-black/50">
         <form
           className="relative p-8 w-full max-w-2xl bg-white rounded"
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            createNewRecord(new FormData(e.currentTarget));
-            closePopup();
+            await createNewRecord(new FormData(e.currentTarget));
+            navigate('/website-records');
           }}
+
         >
           <InputField
             label="Starting point URL"

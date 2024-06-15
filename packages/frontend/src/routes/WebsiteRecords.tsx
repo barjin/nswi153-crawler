@@ -23,7 +23,7 @@ export function WebsiteRecords() {
   const api = useClient();
 
   const createNewRecord = useCallback(
-    (formData: FormData) => {
+    async (formData: FormData) => {
       const number = parseInt(formData.get("periodicity-number") as string, 10);
       const type = formData.get("periodicity-type");
 
@@ -32,28 +32,25 @@ export function WebsiteRecords() {
       else if (type === "hours") periodicity = number * 3600;
       else if (type === "days") periodicity = number * 86400;
 
-      api
-        ?.POST("/records", {
-          body: {
-            id: 0,
-            url: formData.get("url") as string,
-            boundaryRegEx: formData.get("regex") as string,
-            periodicity,
-            label: formData.get("label") as string,
-            isActive: formData.has("active"),
-            tags: (formData.get("tags") as string)
-              .split(",")
-              .map((tag) => tag.trim()),
-            lastExecutionTime: undefined,
-            lastExecutionStatus: undefined,
-          },
-        })
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      try {
+        await api
+          ?.POST("/records", {
+            body: {
+              url: formData.get("url") as string,
+              boundaryRegEx: formData.get("regex") as string,
+              periodicity,
+              label: formData.get("label") as string,
+              isActive: formData.has("active"),
+              tags: (formData.get("tags") as string)
+                .split(",")
+                .map((tag) => tag.trim()),
+              lastExecutionTime: undefined,
+              lastExecutionStatus: undefined,
+            },
+          });
+      } catch (error) {
+        console.error(error);
+      }
     },
     [api],
   );
