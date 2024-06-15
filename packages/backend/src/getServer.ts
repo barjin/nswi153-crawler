@@ -1,8 +1,9 @@
-import { MikroORM } from "@mikro-orm/sqlite";
 import express from "express";
 
-import config from "./mikro-orm.config";
+import "reflect-metadata";
+import { AppDataSource } from "./data-source"
 import { getExecutionsRouter } from "./routes/executions";
+import { getRecordsRouter } from "./routes/records";
 
 export async function getServer() {
   const app = express();
@@ -15,11 +16,15 @@ export async function getServer() {
     next();
   });
 
-  const orm = await MikroORM.init(config);
+  await AppDataSource.initialize();
   app.on("close", async () => {
-    await orm.close();
+    await AppDataSource.destroy();
   });
 
+  const orm = AppDataSource.manager;
+  
   app.use("/executions", getExecutionsRouter(orm));
+  app.use("/records", getRecordsRouter(orm));
   return app;
 }
+

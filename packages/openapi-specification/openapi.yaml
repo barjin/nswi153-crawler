@@ -370,11 +370,18 @@ components:
         id:
           type: integer
           format: int64
-        startURL:
+        executionTime:
+          description: The time at the start of the last execution of this website crawl
           type: string
-        websiteRecordId:
-          type: integer
-          format: int64
+          format: date-time
+        executionStatus:
+          description: The status of the last execution of this website crawl
+          type: string
+          enum:
+            - succeeded
+            - ongoing
+            - failed
+            - waiting
         nodes:
           description: The map of crawled pages as a graph
           type: array
