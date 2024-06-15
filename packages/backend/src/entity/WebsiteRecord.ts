@@ -44,6 +44,16 @@ export class WebsiteRecord {
     return this.executions?.sort((a, b) => b.executionTime.getTime() - a.executionTime.getTime())[0];
   }
 
+  newExecution(): Execution {
+    const execution = new Execution();
+
+    execution.executionTime = new Date();
+    execution.status = 'waiting';
+    execution.record = this;
+    return execution;
+  }
+
+
   serialize(): ResponseType<'/records/{recordId}', 'get'> {
     const lastExecution = this.getLastExecution();
 

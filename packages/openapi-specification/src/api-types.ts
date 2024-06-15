@@ -17,6 +17,13 @@ export interface paths {
      */
     post: operations["addRecord"];
   };
+  "/records/{recordId}/run": {
+    /**
+     * Run a website record by ID
+     * @description Run the website record from the database of existing website records whose ID matches the ID provided in the path.
+     */
+    post: operations["runRecord"];
+  };
   "/records/{recordId}": {
     /**
      * Get a website record by ID
@@ -295,6 +302,30 @@ export interface operations {
       };
       /** @description Invalid input */
       400: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Run a website record by ID
+   * @description Run the website record from the database of existing website records whose ID matches the ID provided in the path.
+   */
+  runRecord: {
+    parameters: {
+      path: {
+        /** @description The ID of the record that should be run */
+        recordId: number;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Execution"];
+        };
+      };
+      /** @description Record not found */
+      404: {
         content: never;
       };
     };

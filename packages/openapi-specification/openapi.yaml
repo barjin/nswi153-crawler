@@ -116,6 +116,31 @@ paths:
         "400":
           description: Invalid input
 
+  /records/{recordId}/run:
+    post:
+      tags:
+        - website-record
+      summary: Run a website record by ID
+      description: Run the website record from the database of existing website records whose ID matches the ID provided in the path.
+      operationId: runRecord
+      parameters:
+        - name: recordId
+          in: path
+          description: The ID of the record that should be run
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Execution"
+        "404":
+          description: Record not found
+
   /records/{recordId}:
     get:
       tags:

@@ -26,6 +26,22 @@ export function WebsiteRecord() {
     }
   }, [api, recordId]);
 
+  const executeRecord = useCallback(async () => {
+    try {
+      await api?.POST('/records/{recordId}/run', {
+        params: {
+           path: {
+            recordId: parseInt(recordId!, 10),
+           }
+        }
+      });
+
+      navigate('/website-records');
+    } catch (e) {
+      console.error(e);
+    }
+  }, [api, recordId]);
+
   return (
     <>
       <div className="grid grid-col-2">
@@ -33,7 +49,10 @@ export function WebsiteRecord() {
           <WebsiteRecordData />
         </div>
         <div className="col-span-1">
-          <button className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-2xl">
+          <button 
+            className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-2xl"
+            onClick={executeRecord}
+          >
             Execute
           </button>
           <button 

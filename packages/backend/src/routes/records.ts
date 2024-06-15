@@ -111,5 +111,23 @@ export function getRecordsRouter(orm: EntityManager) {
       return res.status(204).send();
     });
 
+  router
+    .route("/:recordId/run")
+    .post(async (req, res) => {
+      const id = req.params.recordId;
+      const record = await orm.findOneBy(WebsiteRecord, { id: parseInt(id, 10) });
+
+      if (!record) {
+        return res.status(404).send();
+      }
+
+      const execution = record.newExecution();
+      await orm.save(execution);
+
+      const response: ResponseType<'/records/{recordId}/run', 'post'> = execution.serialize();
+
+      return res.status(200).json(response);
+    });
+
   return router;
 }
