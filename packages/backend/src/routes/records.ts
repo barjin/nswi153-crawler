@@ -12,7 +12,8 @@ export function getRecordsRouter(orm: EntityManager) {
   router.route("/")
     .get(async (req, res) => {
       const query = req.query as QueryParamsType<'/records', 'get'>;
-      const { limit = 10, offset = 0, filter = null, filterBy = 'url', sort = 'lastExecutionTime:dsc' } = query;
+      const { limit = 10, offset = 0, filter = null, filterBy = 'url', sort = 'url:desc' } = query;
+      const [sortField, sortOrder] = sort.split(':');
 
       const websiteRecordRepo = orm.getRepository(WebsiteRecord);
       const [records, total] = await websiteRecordRepo.findAndCount({
@@ -21,16 +22,19 @@ export function getRecordsRouter(orm: EntityManager) {
             [filterBy]: Like(`%${filter}%`),
           },
         } : {}),
-        skip: offset,
-        take: limit,
+        skip: parseInt(offset as unknown as string, 10),
+        take: parseInt(limit as unknown as string, 10),
+        order: {
+          [sortField]: sortOrder.toUpperCase() as 'ASC' | 'DESC',
+        },
         relations: ['tags', 'executions'],
       });
 
       const response: Required<ResponseType<'/records', 'get'>> = {
         records: records.map((r) => r.serialize()),
         total,
-        limit,
-        offset,
+        limit: parseInt(limit as unknown as string, 10),
+        offset: parseInt(offset as unknown as string, 10),
       };
 
       return res.json(response);

@@ -240,7 +240,7 @@ export interface operations {
         /** @description Field by which the website records should be filtered. */
         filterBy?: "label" | "tags" | "url";
         /** @description Method by which the website records should be sorted. The website records can be sorted by URL or by the time of the execution of the last crawl,  in ascending or descending order. The value of the parameter should have the format \"<sorting-field>:<sorting-direction>\". */
-        sort?: "url:asc" | "url:dsc" | "lastExecutionTime:asc" | "lastExecutionTime:dsc";
+        sort?: "url:asc" | "url:desc" | "lastExecutionTime:asc" | "lastExecutionTime:desc";
         /**
          * @description Number of website records to return.
          * @default 10

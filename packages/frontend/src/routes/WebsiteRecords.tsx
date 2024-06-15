@@ -84,9 +84,9 @@ export function WebsiteRecords() {
             sort={
               `${sortType}:${sortDirection}` as
                 | "url:asc"
-                | "url:dsc"
+                | "url:desc"
                 | "lastExecutionTime:asc"
-                | "lastExecutionTime:dsc"
+                | "lastExecutionTime:desc"
             }
             filter={filterQuery}
             filterBy={filterBy as unknown as "url" | "label" | "tags"}

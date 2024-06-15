@@ -12,13 +12,6 @@ import { Execution } from "./Execution";
 import { WebsiteRecordTag } from "./WebsiteRecordTag";
 import type { ResponseType } from "../util/helperTypes";
 
-export enum ExecutionStatus {
-  succeeded,
-  ongoing,
-  failed,
-  waiting,
-}
-
 @Entity()
 export class WebsiteRecord {
   @PrimaryGeneratedColumn({ type: 'int' })
