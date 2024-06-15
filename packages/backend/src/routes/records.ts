@@ -3,36 +3,52 @@ import { Router } from "express";
 import { Like, type EntityManager } from "typeorm";
 
 import { WebsiteRecord } from "../entity/WebsiteRecord";
+import { WebsiteRecordTag } from "../entity/WebsiteRecordTag";
 import type { QueryParamsType, ResponseType } from "../util/helperTypes";
 
 export function getRecordsRouter(orm: EntityManager) {
   const router = Router();
 
-  router.route("/").get(async (req, res) => {
-    const query = req.query as QueryParamsType<'/records', 'get'>;
-    const { limit = 10, offset = 0, filter = null, filterBy = 'url', sort = 'lastExecutionTime:dsc' } = query;
+  router.route("/")
+    .get(async (req, res) => {
+      const query = req.query as QueryParamsType<'/records', 'get'>;
+      const { limit = 10, offset = 0, filter = null, filterBy = 'url', sort = 'lastExecutionTime:dsc' } = query;
 
-    const websiteRecordRepo = orm.getRepository(WebsiteRecord);
-    const [records, total] = await websiteRecordRepo.findAndCount({
-      ...(filter ? {
-        where: {
-          [filterBy]: Like(`%${filter}%`),
-        },
-      } : {}),
-      skip: offset,
-      take: limit,
-      relations: ['tags'],
+      const websiteRecordRepo = orm.getRepository(WebsiteRecord);
+      const [records, total] = await websiteRecordRepo.findAndCount({
+        ...(filter ? {
+          where: {
+            [filterBy]: Like(`%${filter}%`),
+          },
+        } : {}),
+        skip: offset,
+        take: limit,
+        relations: ['tags', 'executions'],
+      });
+
+      const response: Required<ResponseType<'/records', 'get'>> = {
+        records: records.map((r) => r.serialize()),
+        total,
+        limit,
+        offset,
+      };
+
+      return res.json(response);
+    })
+    .post(async (req, res) => {
+      const data: paths['/records']['post']['requestBody']['content']['application/json'] = req.body;
+
+      const tags = data.tags.map((tag) => orm.create(WebsiteRecordTag, { tag }));
+      await orm.save(tags);
+
+      const record = orm.create(WebsiteRecord, {
+        ...data,
+        tags,
+      });
+      await orm.save(record);
+
+      return res.status(201).json(record.serialize());
     });
-
-    const response: Required<ResponseType<'/records', 'get'>> = {
-      records: records.map((r) => r.serialize()),
-      total,
-      limit,
-      offset,
-    };
-
-    return res.json(response);
-  });
 
   router
     .route("/:recordId")

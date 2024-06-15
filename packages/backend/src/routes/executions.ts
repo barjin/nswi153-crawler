@@ -18,6 +18,7 @@ export function getExecutionsRouter(orm: EntityManager) {
       where: recordId ? { record: { id: parseInt(recordId as unknown as string, 10) } } : {},
       skip: offset,
       take: limit,
+      relations: ['record'],
     });
 
     const response: Required<ResponseType<'/executions', 'get'>> = {

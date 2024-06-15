@@ -36,24 +36,27 @@ export async function seed() {
 
   await orm.save(exampleRecord);
   await orm.save(wikipediaRecord);
+
+  for(let i = 0; i < 5; i++) {
   
-  await orm.save(orm.create(Execution, { 
-    record: exampleRecord,
-    status: "succeeded",
-    executionTime: new Date(),
-  }));
-  
-  await orm.save(orm.create(Execution, { 
-    record: exampleRecord,
-    status: "failed",
-    executionTime: new Date(new Date().getTime() - 1000 * 60 * 60 * 24),
-  }));
-  
-  await orm.save(orm.create(Execution, { 
-    record: wikipediaRecord,
-    status: "ongoing",
-    executionTime: new Date(new Date().getTime() - 2000 * 60 * 60 * 24),
-  }));
+    await orm.save(orm.create(Execution, { 
+      record: exampleRecord,
+      status: "succeeded",
+      executionTime: new Date(),
+    }));
+    
+    await orm.save(orm.create(Execution, { 
+      record: exampleRecord,
+      status: "failed",
+      executionTime: new Date(new Date().getTime() - 1000 * 60 * 60 * 24),
+    }));
+    
+    await orm.save(orm.create(Execution, { 
+      record: wikipediaRecord,
+      status: "ongoing",
+      executionTime: new Date(new Date().getTime() - 2000 * 60 * 60 * 24),
+    }));
+  }
 
   await AppDataSource.destroy();
 }

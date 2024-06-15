@@ -1,3 +1,4 @@
+import bodyParser from "body-parser";
 import express from "express";
 
 import "reflect-metadata";
@@ -15,6 +16,8 @@ export async function getServer() {
     res.setHeader("Access-Control-Allow-Headers", "*");
     next();
   });
+
+  app.use(bodyParser.json());
 
   await AppDataSource.initialize();
   app.on("close", async () => {

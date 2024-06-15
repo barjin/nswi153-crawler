@@ -43,7 +43,7 @@ export class WebsiteRecord {
   @Column()
   isActive: boolean = true;
   
-  @OneToMany(() => Execution, (execution) => execution.record, { nullable: true })
+  @OneToMany(() => Execution, (execution) => execution.record, { nullable: true, onDelete: 'CASCADE' })
   @JoinColumn()
   executions: Execution[];
 

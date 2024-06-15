@@ -193,16 +193,13 @@ export interface components {
        * @description The status of the last execution of this website crawl
        * @enum {string}
        */
-      executionStatus?: "succeeded" | "ongoing" | "failed" | "waiting";
-      /** @description The map of crawled pages as a graph */
-      nodes?: {
-          url: string;
-          title?: string;
-          /** Format: date-time */
-          crawlTime?: string;
-          /** @description List of Ids of pages that are hyperlinked from this page. */
-          links: number[];
-        }[];
+      status?: "succeeded" | "ongoing" | "failed" | "waiting";
+      /** @description The record of the website crawl */
+      record?: {
+        label?: string;
+        /** Format: int64 */
+        id?: number;
+      };
     };
   };
   responses: never;

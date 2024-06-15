@@ -13,7 +13,7 @@ export class Execution {
   record: WebsiteRecord;
 
   @Column({ type: 'text', default: 'waiting' })
-  status: paths['/executions/{executionId}']['get']['responses']['200']['content']['application/json']['executionStatus'];
+  status: paths['/executions/{executionId}']['get']['responses']['200']['content']['application/json']['status'];
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   executionTime: Date;
@@ -23,6 +23,10 @@ export class Execution {
       id: this.id,
       status: this.status,
       executionTime: this.executionTime.toISOString(),
+      record: {
+        id: this.record.id,
+        label: this.record.label,
+      },
     };
   }
 }
