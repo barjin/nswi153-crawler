@@ -66,4 +66,4 @@ export async function seed() {
   await AppDataSource.destroy();
 }
 
-seed();
+void seed();

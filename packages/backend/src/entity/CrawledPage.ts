@@ -17,6 +17,9 @@ export class CrawledPage {
   @ManyToOne(() => WebsiteRecord, { onDelete: "CASCADE" })
   record: WebsiteRecord;
 
+  @Column({ nullable: true })
+  recordId: number;
+
   @Column()
   url: string;
 

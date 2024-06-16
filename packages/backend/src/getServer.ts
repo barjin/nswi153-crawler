@@ -3,6 +3,7 @@ import express from "express";
 
 import "reflect-metadata";
 import { AppDataSource } from "./data-source";
+import { getGraphQlRouter } from "./graphql/graphql";
 import { getExecutionsRouter } from "./routes/executions";
 import { getRecordsRouter } from "./routes/records";
 
@@ -28,5 +29,6 @@ export async function getServer() {
 
   app.use("/executions", getExecutionsRouter(orm));
   app.use("/records", getRecordsRouter(orm));
+  app.use("/graphql", getGraphQlRouter(orm));
   return app;
 }
