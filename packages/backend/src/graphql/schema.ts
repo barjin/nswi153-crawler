@@ -63,6 +63,7 @@ export function getSchema(orm: EntityManager) {
   const nodeSchema = new GraphQLObjectType({
     name: "Node",
     fields: {
+      id: { type: GraphQLID },
       title: { type: GraphQLString },
       url: { type: GraphQLString },
       crawlTime: {
@@ -77,6 +78,19 @@ export function getSchema(orm: EntityManager) {
               id: node.recordId,
             },
           }),
+      },
+      links: {
+        type: new GraphQLList(GraphQLID),
+        resolve: async (node) => {
+          const crawledPage = await orm.findOne(CrawledPage, {
+            where: {
+              id: node.id,
+            },
+            relations: ["outLinks"],
+          });
+
+          return crawledPage?.outLinks.map((link) => link.id) || [];
+        },
       },
     },
   });
