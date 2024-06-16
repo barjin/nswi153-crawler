@@ -12,6 +12,7 @@
     "@nswi153-crawler/openapi-spec": "^1.0.0",
     "body-parser": "^1.20.2",
     "express": "^4.19.2",
+    "piscina": "^4.5.1",
     "reflect-metadata": "^0.1.13",
     "typeorm": "0.3.20"
   },

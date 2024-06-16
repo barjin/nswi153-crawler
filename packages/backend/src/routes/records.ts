@@ -138,7 +138,7 @@ export function getRecordsRouter(orm: EntityManager) {
     const execution = record.newExecution();
     await orm.save(execution);
 
-    void Crawler.run(execution, orm); // don't wait for the crawling to finish before sending the response
+    void Crawler.crawl(execution); // don't wait for the crawling to finish before sending the response
 
     const response: ResponseType<"/records/{recordId}/run", "post"> =
       execution.serialize();
