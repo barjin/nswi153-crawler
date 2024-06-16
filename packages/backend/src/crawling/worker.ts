@@ -80,7 +80,6 @@ export async function run({ executionId }: { executionId: Execution["id"] }) {
             currentPage.outLinks.push(urlToInstanceMap.get(href)!);
           });
 
-         
         await Promise.all(
           newDiscoveredPages.map(async (linkedPage) => orm.save(linkedPage)),
         );
