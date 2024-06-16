@@ -17,16 +17,16 @@ export async function seed() {
   await orm.save(criticalTag);
 
   const exampleRecord = orm.create(WebsiteRecord, { 
-    url: "https://www.example.com",
-    boundaryRegEx: "https://www.example.com/.*",
+    url: "https://jindrich.bar",
+    boundaryRegEx: "https://jindrich.bar/.*",
     periodicity: 60,
-    label: "Example",
+    label: "Personal webpage",
     isActive: true,
     tags: [testTag],
   });
 
   const wikipediaRecord = orm.create(WebsiteRecord, { 
-    url: "https://cs.wikipedia.org/",
+    url: "https://cs.wikipedia.org/wiki/Web_crawler",
     boundaryRegEx: "https://cs.wikipedia.org/wiki/.*",
     periodicity: 360,
     label: "Scraping Wikipedia",
@@ -53,7 +53,7 @@ export async function seed() {
     
     await orm.save(orm.create(Execution, { 
       record: wikipediaRecord,
-      status: "ongoing",
+      status: "running",
       executionTime: new Date(new Date().getTime() - 2000 * 60 * 60 * 24),
     }));
   }

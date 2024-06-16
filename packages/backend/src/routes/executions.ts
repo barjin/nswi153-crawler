@@ -19,6 +19,9 @@ export function getExecutionsRouter(orm: EntityManager) {
       skip: offset,
       take: limit,
       relations: ['record'],
+      order: {
+        id: 'DESC',
+      },
     });
 
     const response: Required<ResponseType<'/executions', 'get'>> = {

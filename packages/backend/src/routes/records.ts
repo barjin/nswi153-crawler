@@ -5,6 +5,7 @@ import { Like, type EntityManager } from "typeorm";
 import { WebsiteRecord } from "../entity/WebsiteRecord";
 import { WebsiteRecordTag } from "../entity/WebsiteRecordTag";
 import type { QueryParamsType, ResponseType } from "../util/helperTypes";
+import { CrawledPage } from "../entity/CrawledPage";
 
 export function getRecordsRouter(orm: EntityManager) {
   const router = Router();
@@ -123,9 +124,57 @@ export function getRecordsRouter(orm: EntityManager) {
 
       const execution = record.newExecution();
       await orm.save(execution);
+      
+      const urlMap = new Map<string, CrawledPage>();
 
+      const crawlEvents = await execution.run();
+      crawlEvents.on('newCrawledPage', async (page) => {
+        let pageInstance: CrawledPage | null = null;
+
+        if(urlMap.has(page.url)) {
+          pageInstance = urlMap.get(page.url);
+        } else {
+          pageInstance = orm.create(CrawledPage, page);
+          urlMap.set(page.url, pageInstance);
+        }
+
+        pageInstance!.url = page.url;
+        pageInstance!.title = page.title;
+        pageInstance!.crawledAt = page.crawledAt;
+        pageInstance!.record = record;
+
+        const newOutLinks = [];
+        if(page.outLinks) {
+          pageInstance!.outLinks = page.outLinks.map((outLink) => {
+            if(!urlMap.has(outLink)) {
+                const outLinkInstance = orm.create(CrawledPage, {
+                  url: outLink,
+                  crawledAt: null,
+                  title: '',
+                  record,
+                });
+                urlMap.set(outLink, outLinkInstance);
+                newOutLinks.push(outLinkInstance);
+            } 
+              
+            return urlMap.get(outLink);
+          });
+        }
+
+        await Promise.all(newOutLinks.map((l) => orm.save(l)));
+
+        console.log('Saving page:', pageInstance!.url, pageInstance!.title, pageInstance!.crawledAt);
+
+        await orm.save(pageInstance);
+      });
+      crawlEvents.on('done', async () => {
+        await orm.save(execution);
+      });
+      crawlEvents.on('error', async () => {
+        await orm.save(execution);
+      });
+      
       const response: ResponseType<'/records/{recordId}/run', 'post'> = execution.serialize();
-
       return res.status(200).json(response);
     });
 

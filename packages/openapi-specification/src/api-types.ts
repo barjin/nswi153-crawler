@@ -182,7 +182,7 @@ export interface components {
        * @description The status of the last execution of this website crawl
        * @enum {string}
        */
-      lastExecutionStatus?: "succeeded" | "ongoing" | "failed" | "waiting";
+      lastExecutionStatus?: "succeeded" | "running" | "failed" | "waiting";
     };
     /**
      * Execution record
@@ -200,7 +200,7 @@ export interface components {
        * @description The status of the last execution of this website crawl
        * @enum {string}
        */
-      status?: "succeeded" | "ongoing" | "failed" | "waiting";
+      status?: "succeeded" | "running" | "failed" | "waiting";
       /** @description The record of the website crawl */
       record?: {
         label?: string;

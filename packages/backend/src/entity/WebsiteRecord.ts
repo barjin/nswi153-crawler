@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 
+import { CrawledPage } from "./CrawledPage";
 import { Execution } from "./Execution";
 import { WebsiteRecordTag } from "./WebsiteRecordTag";
 import type { ResponseType } from "../util/helperTypes";
@@ -50,9 +51,13 @@ export class WebsiteRecord {
     execution.executionTime = new Date();
     execution.status = 'waiting';
     execution.record = this;
+
     return execution;
   }
 
+  @OneToMany(() => CrawledPage, (page) => page.record, { onDelete: 'CASCADE' })
+  @JoinColumn()
+  crawledPages: CrawledPage[];
 
   serialize(): ResponseType<'/records/{recordId}', 'get'> {
     const lastExecution = this.getLastExecution();

@@ -8,6 +8,7 @@
       "typescript": "4.5.2"
    },
    "dependencies": {
+      "@crawlee/cheerio": "^3.10.5",
       "@nswi153-crawler/openapi-spec": "^1.0.0",
       "body-parser": "^1.20.2",
       "express": "^4.19.2",

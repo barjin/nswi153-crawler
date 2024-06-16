@@ -383,7 +383,7 @@ components:
           type: string
           enum:
             - succeeded
-            - ongoing
+            - running
             - failed
             - waiting
     Execution:
@@ -403,7 +403,7 @@ components:
           type: string
           enum:
             - succeeded
-            - ongoing
+            - running
             - failed
             - waiting
         record:
