@@ -6,7 +6,9 @@ export function ExecutionRow({ execution }: { execution: Execution }) {
       <div className="flex flex-col flex-1">
         <div className="font-bold">{execution.record?.label}</div>
         <div>
-          <span className="font-sm">{execution.status} | {execution.executionTime}</span>
+          <span className="font-sm">
+            {execution.status} | {execution.executionTime}
+          </span>
         </div>
       </div>
     </div>

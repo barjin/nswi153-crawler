@@ -63,9 +63,8 @@ export function CreateRecordPopup({
           onSubmit={async (e) => {
             e.preventDefault();
             await createNewRecord(new FormData(e.currentTarget));
-            navigate('/website-records');
+            navigate("/website-records");
           }}
-
         >
           <InputField
             label="Starting point URL"

@@ -12,15 +12,15 @@ export function WebsiteRecord() {
 
   const deleteRecord = useCallback(async () => {
     try {
-      await api?.DELETE('/records/{recordId}', {
+      await api?.DELETE("/records/{recordId}", {
         params: {
-           path: {
+          path: {
             recordId: parseInt(recordId!, 10),
-           }
-        }
+          },
+        },
       });
 
-      navigate('/website-records');
+      navigate("/website-records");
     } catch (e) {
       console.error(e);
     }
@@ -28,15 +28,15 @@ export function WebsiteRecord() {
 
   const executeRecord = useCallback(async () => {
     try {
-      await api?.POST('/records/{recordId}/run', {
+      await api?.POST("/records/{recordId}/run", {
         params: {
-           path: {
+          path: {
             recordId: parseInt(recordId!, 10),
-           }
-        }
+          },
+        },
       });
 
-      navigate('/website-records');
+      navigate("/website-records");
     } catch (e) {
       console.error(e);
     }
@@ -49,13 +49,13 @@ export function WebsiteRecord() {
           <WebsiteRecordData />
         </div>
         <div className="col-span-1">
-          <button 
+          <button
             className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-2xl"
             onClick={executeRecord}
           >
             Execute
           </button>
-          <button 
+          <button
             className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 ml-1 rounded-2xl"
             onClick={deleteRecord}
           >

@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { AppDataSource } from "./data-source"
+import { AppDataSource } from "./data-source";
 import { Execution } from "./entity/Execution";
 import { WebsiteRecord } from "./entity/WebsiteRecord";
 import { WebsiteRecordTag } from "./entity/WebsiteRecordTag";
@@ -16,7 +16,7 @@ export async function seed() {
   await orm.save(productionTag);
   await orm.save(criticalTag);
 
-  const exampleRecord = orm.create(WebsiteRecord, { 
+  const exampleRecord = orm.create(WebsiteRecord, {
     url: "https://jindrich.bar",
     boundaryRegEx: "https://jindrich.bar/.*",
     periodicity: 60,
@@ -25,7 +25,7 @@ export async function seed() {
     tags: [testTag],
   });
 
-  const wikipediaRecord = orm.create(WebsiteRecord, { 
+  const wikipediaRecord = orm.create(WebsiteRecord, {
     url: "https://cs.wikipedia.org/wiki/Web_crawler",
     boundaryRegEx: "https://cs.wikipedia.org/wiki/.*",
     periodicity: 360,
@@ -37,25 +37,30 @@ export async function seed() {
   await orm.save(exampleRecord);
   await orm.save(wikipediaRecord);
 
-  for(let i = 0; i < 5; i++) {
-  
-    await orm.save(orm.create(Execution, { 
-      record: exampleRecord,
-      status: "succeeded",
-      executionTime: new Date(),
-    }));
-    
-    await orm.save(orm.create(Execution, { 
-      record: exampleRecord,
-      status: "failed",
-      executionTime: new Date(new Date().getTime() - 1000 * 60 * 60 * 24),
-    }));
-    
-    await orm.save(orm.create(Execution, { 
-      record: wikipediaRecord,
-      status: "running",
-      executionTime: new Date(new Date().getTime() - 2000 * 60 * 60 * 24),
-    }));
+  for (let i = 0; i < 5; i++) {
+    await orm.save(
+      orm.create(Execution, {
+        record: exampleRecord,
+        status: "succeeded",
+        executionTime: new Date(),
+      }),
+    );
+
+    await orm.save(
+      orm.create(Execution, {
+        record: exampleRecord,
+        status: "failed",
+        executionTime: new Date(new Date().getTime() - 1000 * 60 * 60 * 24),
+      }),
+    );
+
+    await orm.save(
+      orm.create(Execution, {
+        record: wikipediaRecord,
+        status: "running",
+        executionTime: new Date(new Date().getTime() - 2000 * 60 * 60 * 24),
+      }),
+    );
   }
 
   await AppDataSource.destroy();

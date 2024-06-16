@@ -33,21 +33,20 @@ export function WebsiteRecords() {
       else if (type === "days") periodicity = number * 86400;
 
       try {
-        await api
-          ?.POST("/records", {
-            body: {
-              url: formData.get("url") as string,
-              boundaryRegEx: formData.get("regex") as string,
-              periodicity,
-              label: formData.get("label") as string,
-              isActive: formData.has("active"),
-              tags: (formData.get("tags") as string)
-                .split(",")
-                .map((tag) => tag.trim()),
-              lastExecutionTime: undefined,
-              lastExecutionStatus: undefined,
-            },
-          });
+        await api?.POST("/records", {
+          body: {
+            url: formData.get("url") as string,
+            boundaryRegEx: formData.get("regex") as string,
+            periodicity,
+            label: formData.get("label") as string,
+            isActive: formData.has("active"),
+            tags: (formData.get("tags") as string)
+              .split(",")
+              .map((tag) => tag.trim()),
+            lastExecutionTime: undefined,
+            lastExecutionStatus: undefined,
+          },
+        });
       } catch (error) {
         console.error(error);
       }
@@ -99,7 +98,7 @@ export function WebsiteRecords() {
         closePopup={() =>
           setSearchParams((p) => ({ ...p, create: "false" }), { replace: true })
         }
-        createNewRecord={(data: FormData) => createNewRecord(data)}
+        createNewRecord={async (data: FormData) => createNewRecord(data)}
       />
     </>
   );

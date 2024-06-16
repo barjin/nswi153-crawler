@@ -1,19 +1,17 @@
 {
-   "extends": "../../tsconfig.json",
-   "compilerOptions": {
-      "lib": [
-         "ES6"
-      ],
-      "target": "es6",
-      "strict": false,
-      "module": "CommonJS",
-      "moduleResolution": "Node",
-      "outDir": "./dist",
-      "emitDecoratorMetadata": true,
-      "experimentalDecorators": true,
-      "sourceMap": true,
-      "esModuleInterop": true,
-      "skipLibCheck": true,
-   },
-   "include": ["src"]
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES6"],
+    "target": "es6",
+    "strict": false,
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "outDir": "./dist",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["src"]
 }

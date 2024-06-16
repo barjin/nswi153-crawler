@@ -2,7 +2,7 @@ import bodyParser from "body-parser";
 import express from "express";
 
 import "reflect-metadata";
-import { AppDataSource } from "./data-source"
+import { AppDataSource } from "./data-source";
 import { getExecutionsRouter } from "./routes/executions";
 import { getRecordsRouter } from "./routes/records";
 
@@ -25,9 +25,8 @@ export async function getServer() {
   });
 
   const orm = AppDataSource.manager;
-  
+
   app.use("/executions", getExecutionsRouter(orm));
   app.use("/records", getRecordsRouter(orm));
   return app;
 }
-

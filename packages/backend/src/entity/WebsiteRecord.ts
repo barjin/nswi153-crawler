@@ -15,7 +15,7 @@ import type { ResponseType } from "../util/helperTypes";
 
 @Entity()
 export class WebsiteRecord {
-  @PrimaryGeneratedColumn({ type: 'int' })
+  @PrimaryGeneratedColumn({ type: "int" })
   id!: number;
 
   @Column()
@@ -30,36 +30,41 @@ export class WebsiteRecord {
   @Column()
   label: string;
 
-  @ManyToMany(() => WebsiteRecordTag, (tag) => tag.id, { onDelete: 'CASCADE' })
+  @ManyToMany(() => WebsiteRecordTag, (tag) => tag.id, { onDelete: "CASCADE" })
   @JoinTable()
   tags: WebsiteRecordTag[];
 
   @Column()
   isActive: boolean = true;
-  
-  @OneToMany(() => Execution, (execution) => execution.record, { nullable: true, onDelete: 'CASCADE' })
+
+  @OneToMany(() => Execution, (execution) => execution.record, {
+    nullable: true,
+    onDelete: "CASCADE",
+  })
   @JoinColumn()
   executions: Execution[];
 
   getLastExecution(): Execution | undefined {
-    return this.executions?.sort((a, b) => b.executionTime.getTime() - a.executionTime.getTime())[0];
+    return this.executions?.sort(
+      (a, b) => b.executionTime.getTime() - a.executionTime.getTime(),
+    )[0];
   }
 
   newExecution(): Execution {
     const execution = new Execution();
 
     execution.executionTime = new Date();
-    execution.status = 'waiting';
+    execution.status = "waiting";
     execution.record = this;
 
     return execution;
   }
 
-  @OneToMany(() => CrawledPage, (page) => page.record, { onDelete: 'CASCADE' })
+  @OneToMany(() => CrawledPage, (page) => page.record, { onDelete: "CASCADE" })
   @JoinColumn()
   crawledPages: CrawledPage[];
 
-  serialize(): ResponseType<'/records/{recordId}', 'get'> {
+  serialize(): ResponseType<"/records/{recordId}", "get"> {
     const lastExecution = this.getLastExecution();
 
     return {

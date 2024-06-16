@@ -9,14 +9,16 @@ import {
 import { WebsiteRecord } from "./WebsiteRecord";
 
 @Entity()
-@Unique('tag', ['tag'])
+@Unique("tag", ["tag"])
 export class WebsiteRecordTag {
-  @PrimaryGeneratedColumn({ type: 'int' })
+  @PrimaryGeneratedColumn({ type: "int" })
   id: number;
 
   @Column()
   tag: string;
 
-  @ManyToMany(() => WebsiteRecord, (record) => record.id, { onDelete: 'CASCADE' })
+  @ManyToMany(() => WebsiteRecord, (record) => record.id, {
+    onDelete: "CASCADE",
+  })
   websiteRecords: WebsiteRecord[];
 }
