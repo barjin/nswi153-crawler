@@ -38,12 +38,12 @@ export function PaginationBar({ totalPages }: PaginationBarProps) {
         </div>
         <button
           className={`${
-            currentPage === totalPages
+            currentPage === totalPages || totalPages === 0
               ? "bg-blue-400 cursor-not-allowed"
               : "bg-blue-700 hover:bg-blue-900"
           } text-white font-bold py-2 px-4 rounded-r-2xl`}
           onClick={() => switchPage(currentPage + 1)}
-          disabled={currentPage === totalPages}
+          disabled={currentPage === totalPages || totalPages === 0}
         >
           Next
         </button>

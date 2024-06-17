@@ -52,9 +52,9 @@ paths:
             type: string
             enum:
               - url:asc
-              - url:dsc
+              - url:desc
               - lastExecutionTime:asc
-              - lastExecutionTime:dsc
+              - lastExecutionTime:desc
         - name: limit
           in: query
           description: Number of website records to return.
@@ -115,6 +115,31 @@ paths:
                 $ref: "#/components/schemas/WebsiteRecord"
         "400":
           description: Invalid input
+
+  /records/{recordId}/run:
+    post:
+      tags:
+        - website-record
+      summary: Run a website record by ID
+      description: Run the website record from the database of existing website records whose ID matches the ID provided in the path.
+      operationId: runRecord
+      parameters:
+        - name: recordId
+          in: path
+          description: The ID of the record that should be run
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Execution"
+        "404":
+          description: Record not found
 
   /records/{recordId}:
     get:
@@ -192,7 +217,7 @@ paths:
           description: Invalid ID
         "404":
           description: Record not found
-  /execution:
+  /executions:
     get:
       tags:
         - execution
@@ -249,7 +274,7 @@ paths:
                       $ref: "#/components/schemas/Execution"
         "404":
           description: There are no executions for this recordId
-  /execution/{executionId}:
+  /executions/{executionId}:
     get:
       tags:
         - execution
@@ -311,7 +336,6 @@ components:
       description: A record of a website crawl
       type: object
       required:
-        - id
         - url
         - boundaryRegEx
         - periodicity
@@ -359,7 +383,7 @@ components:
           type: string
           enum:
             - succeeded
-            - ongoing
+            - running
             - failed
             - waiting
     Execution:
@@ -370,36 +394,24 @@ components:
         id:
           type: integer
           format: int64
-        startURL:
+        executionTime:
+          description: The time at the start of the last execution of this website crawl
           type: string
-        websiteRecordId:
-          type: integer
-          format: int64
-        nodes:
-          description: The map of crawled pages as a graph
-          type: array
-          items:
-            type: object
-            required:
-              - url
-              - links
-            properties:
-              url:
-                type: string
-              title:
-                type: string
-              crawlTime:
-                type: string
-                format: date-time
-              links:
-                description: List of Ids of pages that are hyperlinked from this page.
-                type: array
-                items:
-                  type: integer
-                  format: int64
-              sourceLinks:
-                description: List of Ids of website records that crawled this given node.
-                type: array
-                items:
-                  type: integer
-                  format: int64
+          format: date-time
+        status:
+          description: The status of the last execution of this website crawl
+          type: string
+          enum:
+            - succeeded
+            - running
+            - failed
+            - waiting
+        record:
+          description: The record of the website crawl
+          type: object
+          properties:
+            label:
+              type: string
+            id:
+              type: integer
+              format: int64

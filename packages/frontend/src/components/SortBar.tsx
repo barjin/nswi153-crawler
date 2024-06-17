@@ -54,7 +54,7 @@ export function SortBar() {
             icon: <TbSortAscending />,
           },
           {
-            direction: "dsc",
+            direction: "desc",
             icon: <PiSortAscendingBold />,
           },
         ].map((sort) => {

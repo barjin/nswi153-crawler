@@ -29,8 +29,8 @@ export function RecordRow({
     periodicityText = `every ${number > 1 ? number : ""} minute${number > 1 ? "s" : ""}`;
   }
 
-  const time = lastExecutionTime.split("T");
-  const lastExecutionTimeText = `${time[0]} ${time[1].split(".")[0]}`;
+  const time = lastExecutionTime?.split("T");
+  const lastExecutionTimeText = time.toString();
 
   return (
     <div

@@ -7,7 +7,7 @@ import { SortBar } from "../components/SortBar";
 import { WebsiteRecordList } from "../components/WebsiteRecordList";
 import { useClient } from "../utils/ApiContext";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 5;
 
 export function WebsiteRecords() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -23,7 +23,7 @@ export function WebsiteRecords() {
   const api = useClient();
 
   const createNewRecord = useCallback(
-    (formData: FormData) => {
+    async (formData: FormData) => {
       const number = parseInt(formData.get("periodicity-number") as string, 10);
       const type = formData.get("periodicity-type");
 
@@ -32,10 +32,9 @@ export function WebsiteRecords() {
       else if (type === "hours") periodicity = number * 3600;
       else if (type === "days") periodicity = number * 86400;
 
-      api
-        ?.POST("/records", {
+      try {
+        await api?.POST("/records", {
           body: {
-            id: 0,
             url: formData.get("url") as string,
             boundaryRegEx: formData.get("regex") as string,
             periodicity,
@@ -47,13 +46,10 @@ export function WebsiteRecords() {
             lastExecutionTime: undefined,
             lastExecutionStatus: undefined,
           },
-        })
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.error(error);
         });
+      } catch (error) {
+        console.error(error);
+      }
     },
     [api],
   );
@@ -84,9 +80,9 @@ export function WebsiteRecords() {
             sort={
               `${sortType}:${sortDirection}` as
                 | "url:asc"
-                | "url:dsc"
+                | "url:desc"
                 | "lastExecutionTime:asc"
-                | "lastExecutionTime:dsc"
+                | "lastExecutionTime:desc"
             }
             filter={filterQuery}
             filterBy={filterBy as unknown as "url" | "label" | "tags"}
@@ -102,7 +98,7 @@ export function WebsiteRecords() {
         closePopup={() =>
           setSearchParams((p) => ({ ...p, create: "false" }), { replace: true })
         }
-        createNewRecord={(data: FormData) => createNewRecord(data)}
+        createNewRecord={async (data: FormData) => createNewRecord(data)}
       />
     </>
   );

@@ -16,6 +16,13 @@ export interface paths {
      */
     post: operations["addRecord"];
   };
+  "/records/{recordId}/run": {
+    /**
+     * Run a website record by ID
+     * @description Run the website record from the database of existing website records whose ID matches the ID provided in the path.
+     */
+    post: operations["runRecord"];
+  };
   "/records/{recordId}": {
     /**
      * Get a website record by ID
@@ -33,7 +40,7 @@ export interface paths {
      */
     delete: operations["deleteRecord"];
   };
-  "/execution": {
+  "/executions": {
     /** Get a list of all execution IDs. */
     get: {
       parameters: {
@@ -81,7 +88,7 @@ export interface paths {
       };
     };
   };
-  "/execution/{executionId}": {
+  "/executions/{executionId}": {
     /** Get a execution with a given executionId */
     get: {
       parameters: {
@@ -138,7 +145,7 @@ export interface components {
        * Format: int64
        * @example 0
        */
-      id: number;
+      id?: number;
       /**
        * Format: uri
        * @description The URL at which the crawler should start.
@@ -174,7 +181,7 @@ export interface components {
        * @description The status of the last execution of this website crawl
        * @enum {string}
        */
-      lastExecutionStatus?: "succeeded" | "ongoing" | "failed" | "waiting";
+      lastExecutionStatus?: "succeeded" | "running" | "failed" | "waiting";
     };
     /**
      * Execution record
@@ -183,20 +190,22 @@ export interface components {
     Execution: {
       /** Format: int64 */
       id?: number;
-      startURL?: string;
-      /** Format: int64 */
-      websiteRecordId?: number;
-      /** @description The map of crawled pages as a graph */
-      nodes?: {
-        url: string;
-        title?: string;
-        /** Format: date-time */
-        crawlTime?: string;
-        /** @description List of Ids of pages that are hyperlinked from this page. */
-        links: number[];
-        /** @description List of Ids of website records that crawled this given node. */
-        sourceLinks?: number[];
-      }[];
+      /**
+       * Format: date-time
+       * @description The time at the start of the last execution of this website crawl
+       */
+      executionTime?: string;
+      /**
+       * @description The status of the last execution of this website crawl
+       * @enum {string}
+       */
+      status?: "succeeded" | "running" | "failed" | "waiting";
+      /** @description The record of the website crawl */
+      record?: {
+        label?: string;
+        /** Format: int64 */
+        id?: number;
+      };
     };
   };
   responses: never;
@@ -238,9 +247,9 @@ export interface operations {
         /** @description Method by which the website records should be sorted. The website records can be sorted by URL or by the time of the execution of the last crawl,  in ascending or descending order. The value of the parameter should have the format \"<sorting-field>:<sorting-direction>\". */
         sort?:
           | "url:asc"
-          | "url:dsc"
+          | "url:desc"
           | "lastExecutionTime:asc"
-          | "lastExecutionTime:dsc";
+          | "lastExecutionTime:desc";
         /**
          * @description Number of website records to return.
          * @default 10
@@ -295,6 +304,30 @@ export interface operations {
       };
       /** @description Invalid input */
       400: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Run a website record by ID
+   * @description Run the website record from the database of existing website records whose ID matches the ID provided in the path.
+   */
+  runRecord: {
+    parameters: {
+      path: {
+        /** @description The ID of the record that should be run */
+        recordId: number;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "application/json": components["schemas"]["Execution"];
+        };
+      };
+      /** @description Record not found */
+      404: {
         content: never;
       };
     };

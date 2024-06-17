@@ -6,16 +6,18 @@ import { ExecutionRow } from "./ExecutionRow";
 import { PaginationBar } from "./PaginationBar";
 import { Loading, useClient } from "../utils/ApiContext";
 
-type ExecutionListProps = paths["/execution"]["get"]["parameters"]["query"] & {
+type ExecutionListProps = paths["/executions"]["get"]["parameters"]["query"] & {
   pagination?: boolean;
 };
 
+const PAGE_SIZE = 5;
+
 export function ExecutionList(props: ExecutionListProps) {
-  const { limit = 10, recordId } = props ?? {};
+  const { limit = PAGE_SIZE, recordId } = props ?? {};
 
   const [executions, setExecutions] = useState<
     Loading<
-      paths["/execution"]["get"]["responses"]["200"]["content"]["application/json"]
+      paths["/executions"]["get"]["responses"]["200"]["content"]["application/json"]
     >
   >({
     loading: true,
@@ -26,7 +28,7 @@ export function ExecutionList(props: ExecutionListProps) {
 
   useEffect(() => {
     api
-      ?.GET("/execution", {
+      ?.GET("/executions", {
         params: {
           query: {
             limit,
@@ -58,7 +60,7 @@ export function ExecutionList(props: ExecutionListProps) {
         : executions.data.records
             ?.slice(0, limit)
             .map((execution, i) => (
-              <ExecutionRow key={i} label={execution.startURL ?? ""} />
+              <ExecutionRow key={i} execution={execution} />
             ))}
       {props.pagination && executions.data ? (
         <PaginationBar totalPages={Math.ceil(executions.data.total! / limit)} />
