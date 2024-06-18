@@ -9,7 +9,7 @@ import type { QueryParamsType, ResponseType } from "../util/helperTypes";
 
 export function getRecordsRouter(orm: EntityManager) {
   const router = Router();
-
+  
   router
     .route("/")
     .get(async (req, res) => {
@@ -24,21 +24,37 @@ export function getRecordsRouter(orm: EntityManager) {
       const [sortField, sortOrder] = ["url", sort.split(":")[1]]; // TODO: sorting by lastExecutionTime (requires JOIN)
 
       const websiteRecordRepo = orm.getRepository(WebsiteRecord);
-      const [records, total] = await websiteRecordRepo.findAndCount({
-        ...(filter
-          ? {
-              where: {
-                [filterBy]: Like(`%${filter}%`),
-              },
-            }
-          : {}),
-        skip: parseInt(offset as unknown as string, 10),
-        take: parseInt(limit as unknown as string, 10),
-        order: {
-          [sortField]: sortOrder.toUpperCase() as "ASC" | "DESC",
-        },
-        relations: ["tags", "executions"],
-      });
+
+      let [records, total] = [null, null];
+
+      if (filterBy === 'tags' && filter !== null && filter.length > 0) {
+        [records, total] = await websiteRecordRepo
+          .createQueryBuilder("record")
+          .leftJoinAndSelect("record.tags", "tag")
+          .where("tag.tag = :tag", { tag: filter })
+          .skip(parseInt(offset as unknown as string, 10))
+          .take(parseInt(limit as unknown as string, 10))
+          .orderBy("record." + sortField, sortOrder.toUpperCase() as "ASC" | "DESC")
+          .leftJoinAndSelect("record.executions", "execution")
+          .getManyAndCount()
+      }
+      else {
+        [records, total] = await websiteRecordRepo.findAndCount({
+          ...(filter
+            ? {
+                where: {
+                  [filterBy]: Like(`%${filter}%`),
+                },
+              }
+            : {}),
+          skip: parseInt(offset as unknown as string, 10),
+          take: parseInt(limit as unknown as string, 10),
+          order: {
+            [sortField]: sortOrder.toUpperCase() as "ASC" | "DESC",
+          },
+          relations: ["tags", "executions"],
+        });
+      }
 
       const response: Required<ResponseType<"/records", "get">> = {
         records: records.map((r) => r.serialize()),
@@ -46,7 +62,7 @@ export function getRecordsRouter(orm: EntityManager) {
         limit: parseInt(limit as unknown as string, 10),
         offset: parseInt(offset as unknown as string, 10),
       };
-
+      
       return res.json(response);
     })
     .post(async (req, res) => {

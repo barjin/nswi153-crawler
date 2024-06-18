@@ -27,7 +27,7 @@ export function PaginationBar({ totalPages }: PaginationBarProps) {
             currentPage === 1
               ? "bg-blue-400 cursor-not-allowed"
               : "bg-blue-700 hover:bg-blue-900"
-          } text-white font-bold py-2 px-4 rounded-l-2xl cursor-pointer`}
+          } text-white font-bold py-2 px-4 rounded-l-2xl`}
           onClick={() => switchPage(currentPage - 1)}
           disabled={currentPage === 1}
         >

@@ -16,6 +16,7 @@
     "piscina": "^4.5.1",
     "reflect-metadata": "^0.1.13",
     "ruru": "^2.0.0-beta.13",
+    "sqlite3": "^5.1.7",
     "typeorm": "0.3.20"
   },
   "scripts": {

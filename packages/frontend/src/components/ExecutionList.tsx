@@ -58,8 +58,7 @@ export function ExecutionList(props: ExecutionListProps) {
       {executions.loading
         ? "Loading..."
         : executions.data.records
-            ?.slice(0, limit)
-            .map((execution, i) => (
+            ?.map((execution, i) => (
               <ExecutionRow key={i} execution={execution} />
             ))}
       {props.pagination && executions.data ? (
