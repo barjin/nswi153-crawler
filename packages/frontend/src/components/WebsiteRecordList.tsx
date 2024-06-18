@@ -49,7 +49,6 @@ export function WebsiteRecordList(props: WebsiteRecordListProps) {
       });
   }, [api, props]);
 
-
   return (
     <>
       {!records.data?.records
@@ -61,9 +60,7 @@ export function WebsiteRecordList(props: WebsiteRecordListProps) {
                 label={record.label ?? ""}
                 tags={record.tags?.join(", ") ?? ""}
                 periodicity={record.periodicity ?? 0}
-                lastExecutionTime={
-                  record.lastExecutionTime?.toString() ?? ""
-                }
+                lastExecutionTime={record.lastExecutionTime?.toString() ?? ""}
                 lastExecutionStatus={record.lastExecutionStatus ?? ""}
                 isActive={record.isActive ?? false}
               />

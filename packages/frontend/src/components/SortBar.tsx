@@ -38,7 +38,7 @@ export function SortBar() {
                       p.set("page", "1");
                       return p;
                     },
-                    { replace: true },
+                    { replace: true }
                   )
                 }
               />
@@ -68,7 +68,7 @@ export function SortBar() {
                 mx-2
                 scale-125
                 ${
-                    sortDirection === sort.direction
+                  sortDirection === sort.direction
                     ? "bg-blue-400"
                     : "bg-blue-100 hover:bg-blue-200"
                 }`}
@@ -79,7 +79,7 @@ export function SortBar() {
                     p.set("page", "1");
                     return p;
                   },
-                  { replace: true },
+                  { replace: true }
                 )
               }
             >

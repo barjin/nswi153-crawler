@@ -10,27 +10,28 @@ export function FilterBar({ categories }: FilterBarProps) {
 
   const [query, setQuery] = useState(searchParams.get("filter") ?? "");
   const [filterBy, setFilterBy] = useState(
-    searchParams.get("filterBy") ?? "url",
+    searchParams.get("filterBy") ?? "url"
   );
 
-  const submitFilter = useCallback((value: string) => {
-    setQuery(value);
+  const submitFilter = useCallback(
+    (value: string) => {
+      setQuery(value);
 
-    setSearchParams(
-      (p) => {
-        p.set("filter", value);
-        p.set("filterBy", filterBy);
-        return p;
-      },
-      { replace: true },
-    );
-  }, [query, setSearchParams, filterBy]);
+      setSearchParams(
+        (p) => {
+          p.set("filter", value);
+          p.set("filterBy", filterBy);
+          return p;
+        },
+        { replace: true }
+      );
+    },
+    [query, setSearchParams, filterBy]
+  );
 
   return (
     <>
-      <form
-        className="flex flex-row py-4"
-      >
+      <form className="flex flex-row py-4">
         <input
           className={`
                         shadow

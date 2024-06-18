@@ -9,7 +9,7 @@ import type { QueryParamsType, ResponseType } from "../util/helperTypes";
 
 export function getRecordsRouter(orm: EntityManager) {
   const router = Router();
-  
+
   router
     .route("/")
     .get(async (req, res) => {
@@ -27,18 +27,20 @@ export function getRecordsRouter(orm: EntityManager) {
 
       let [records, total] = [null, null];
 
-      if (filterBy === 'tags' && filter !== null && filter.length > 0) {
+      if (filterBy === "tags" && filter !== null && filter.length > 0) {
         [records, total] = await websiteRecordRepo
           .createQueryBuilder("record")
           .leftJoinAndSelect("record.tags", "tag")
           .where("tag.tag = :tag", { tag: filter })
           .skip(parseInt(offset as unknown as string, 10))
           .take(parseInt(limit as unknown as string, 10))
-          .orderBy(`record.${sortField}`, sortOrder.toUpperCase() as "ASC" | "DESC")
+          .orderBy(
+            `record.${sortField}`,
+            sortOrder.toUpperCase() as "ASC" | "DESC"
+          )
           .leftJoinAndSelect("record.executions", "execution")
-          .getManyAndCount()
-      }
-      else {
+          .getManyAndCount();
+      } else {
         [records, total] = await websiteRecordRepo.findAndCount({
           ...(filter
             ? {
@@ -62,7 +64,7 @@ export function getRecordsRouter(orm: EntityManager) {
         limit: parseInt(limit as unknown as string, 10),
         offset: parseInt(offset as unknown as string, 10),
       };
-      
+
       return res.json(response);
     })
     .post(async (req, res) => {

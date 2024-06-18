@@ -32,7 +32,7 @@ export function WebsiteRecordData(): JSX.Element {
       });
   }, [api]);
 
-  console.log(record)
+  console.log(record);
 
   const periodicity = record.data?.periodicity ?? 0;
   let periodicityText = "";

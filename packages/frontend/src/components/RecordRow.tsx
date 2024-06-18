@@ -30,7 +30,7 @@ export function RecordRow({
   }
 
   const time = lastExecutionTime?.split("T");
-  const lastExecutionTimeText = `${time[0]} ${time[1].split('.')[0]}`;
+  const lastExecutionTimeText = `${time[0]} ${time[1].split(".")[0]}`;
 
   return (
     <div
