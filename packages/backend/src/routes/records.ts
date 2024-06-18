@@ -36,7 +36,7 @@ export function getRecordsRouter(orm: EntityManager) {
           .take(parseInt(limit as unknown as string, 10))
           .orderBy(
             `record.${sortField}`,
-            sortOrder.toUpperCase() as "ASC" | "DESC"
+            sortOrder.toUpperCase() as "ASC" | "DESC",
           )
           .leftJoinAndSelect("record.executions", "execution")
           .getManyAndCount();
