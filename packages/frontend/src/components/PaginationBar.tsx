@@ -34,7 +34,7 @@ export function PaginationBar({ totalPages }: PaginationBarProps) {
           Previous
         </button>
         <div className="bg-blue-700 text-white font-bold py-2 px-4">
-          {currentPage} of {totalPages}
+          {currentPage} of {totalPages > 0 ? totalPages : 1}
         </div>
         <button
           className={`${
