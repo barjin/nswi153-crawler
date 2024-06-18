@@ -15,7 +15,7 @@ export function PaginationBar({ totalPages }: PaginationBarProps) {
         p.set("page", page.toString());
         return p;
       },
-      { replace: true }
+      { replace: true },
     );
   };
 

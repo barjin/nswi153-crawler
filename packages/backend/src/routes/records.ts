@@ -31,12 +31,12 @@ export function getRecordsRouter(orm: EntityManager) {
         [records, total] = await websiteRecordRepo
           .createQueryBuilder("record")
           .leftJoinAndSelect("record.tags", "tag")
-          .where("tag.tag = :tag", { tag: filter })
+          .where("tag.tag LIKE :tag", { tag: `%${filter}%` })
           .skip(parseInt(offset as unknown as string, 10))
           .take(parseInt(limit as unknown as string, 10))
           .orderBy(
             `record.${sortField}`,
-            sortOrder.toUpperCase() as "ASC" | "DESC"
+            sortOrder.toUpperCase() as "ASC" | "DESC",
           )
           .leftJoinAndSelect("record.executions", "execution")
           .getManyAndCount();

@@ -38,7 +38,7 @@ export function SortBar() {
                       p.set("page", "1");
                       return p;
                     },
-                    { replace: true }
+                    { replace: true },
                   )
                 }
               />
@@ -79,7 +79,7 @@ export function SortBar() {
                     p.set("page", "1");
                     return p;
                   },
-                  { replace: true }
+                  { replace: true },
                 )
               }
             >

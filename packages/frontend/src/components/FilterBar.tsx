@@ -10,7 +10,7 @@ export function FilterBar({ categories }: FilterBarProps) {
 
   const [query, setQuery] = useState(searchParams.get("filter") ?? "");
   const [filterBy, setFilterBy] = useState(
-    searchParams.get("filterBy") ?? "url"
+    searchParams.get("filterBy") ?? "url",
   );
 
   const submitFilter = useCallback(
@@ -23,10 +23,10 @@ export function FilterBar({ categories }: FilterBarProps) {
           p.set("filterBy", filterBy);
           return p;
         },
-        { replace: true }
+        { replace: true },
       );
     },
-    [query, setSearchParams, filterBy]
+    [query, setSearchParams, filterBy],
   );
 
   return (
