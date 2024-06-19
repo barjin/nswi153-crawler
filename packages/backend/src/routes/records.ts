@@ -1,6 +1,6 @@
 import type { paths } from "@nswi153-crawler/openapi-spec";
 import { Router } from "express";
-import { Like, type EntityManager } from "typeorm";
+import { type EntityManager } from "typeorm";
 
 import { Crawler } from "../crawling/Crawler";
 import { WebsiteRecord } from "../entity/WebsiteRecord";
@@ -21,42 +21,34 @@ export function getRecordsRouter(orm: EntityManager) {
         filterBy = "url",
         sort = "url:asc",
       } = query;
-      const [sortField, sortOrder] = ["url", sort.split(":")[1]]; // TODO: sorting by lastExecutionTime (requires JOIN)
+      const [sortField, sortOrder] = sort.split(":");
 
       const websiteRecordRepo = orm.getRepository(WebsiteRecord);
+      const queryBuilder = websiteRecordRepo.createQueryBuilder("record");
 
-      let [records, total] = [null, null];
+      const dbQuery = queryBuilder.leftJoinAndSelect("record.tags", "tag");
 
-      if (filterBy === "tags" && filter !== null && filter.length > 0) {
-        [records, total] = await websiteRecordRepo
-          .createQueryBuilder("record")
-          .leftJoinAndSelect("record.tags", "tag")
-          .where("tag.tag LIKE :tag", { tag: `%${filter}%` })
-          .skip(parseInt(offset as unknown as string, 10))
-          .take(parseInt(limit as unknown as string, 10))
-          .orderBy(
-            `record.${sortField}`,
-            sortOrder.toUpperCase() as "ASC" | "DESC",
-          )
-          .leftJoinAndSelect("record.executions", "execution")
-          .getManyAndCount();
-      } else {
-        [records, total] = await websiteRecordRepo.findAndCount({
-          ...(filter
-            ? {
-                where: {
-                  [filterBy]: Like(`%${filter}%`),
-                },
-              }
-            : {}),
-          skip: parseInt(offset as unknown as string, 10),
-          take: parseInt(limit as unknown as string, 10),
-          order: {
-            [sortField]: sortOrder.toUpperCase() as "ASC" | "DESC",
-          },
-          relations: ["tags", "executions"],
-        });
+      if (filter) {
+        if (filterBy === "tags") {
+          dbQuery.where("tag.tag LIKE :tag", { tag: `%${filter}%` });
+        } else {
+          dbQuery.where(`record.${filterBy} LIKE :filter`, {
+            filter: `%${filter}%`,
+          });
+        }
       }
+
+      const [records, total] = await dbQuery
+        .skip(parseInt(offset as unknown as string, 10))
+        .take(parseInt(limit as unknown as string, 10))
+        .leftJoinAndSelect("record.executions", "execution")
+        .addSelect("MAX(execution.executionTime)", "lastExecutionTime")
+        .groupBy("record.id")
+        .orderBy(
+          sortField === "url" ? "record.url" : "lastExecutionTime",
+          sortOrder.toUpperCase() as "ASC" | "DESC",
+        )
+        .getManyAndCount();
 
       const response: Required<ResponseType<"/records", "get">> = {
         records: records.map((r) => r.serialize()),
