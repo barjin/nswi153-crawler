@@ -13,26 +13,25 @@ export function FilterBar({ categories }: FilterBarProps) {
     searchParams.get("filterBy") ?? "url",
   );
 
-  const submitFilter = useCallback(() => {
-    setSearchParams(
-      (p) => {
-        p.set("filter", query);
-        p.set("filterBy", filterBy);
-        return p;
-      },
-      { replace: true },
-    );
-  }, [query, setSearchParams, filterBy]);
+  const submitFilter = useCallback(
+    (value: string) => {
+      setQuery(value);
+
+      setSearchParams(
+        (p) => {
+          p.set("filter", value);
+          p.set("filterBy", filterBy);
+          return p;
+        },
+        { replace: true },
+      );
+    },
+    [query, setSearchParams, filterBy],
+  );
 
   return (
     <>
-      <form
-        className="flex flex-row py-4"
-        onSubmit={(e) => {
-          e.preventDefault();
-          submitFilter();
-        }}
-      >
+      <form className="flex flex-row py-4">
         <input
           className={`
                         shadow
@@ -51,7 +50,9 @@ export function FilterBar({ categories }: FilterBarProps) {
           type="text"
           placeholder="Enter filter phrase..."
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            submitFilter(e.target.value);
+          }}
         />
 
         <select
@@ -65,11 +66,6 @@ export function FilterBar({ categories }: FilterBarProps) {
             </option>
           ))}
         </select>
-        <input
-          type="submit"
-          className="ml-1 bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-2xl cursor-pointer"
-          value="Search"
-        />
       </form>
     </>
   );

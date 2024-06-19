@@ -49,24 +49,20 @@ export function WebsiteRecordList(props: WebsiteRecordListProps) {
       });
   }, [api, props]);
 
-  console.log(records.data);
-
   return (
     <>
       {!records.data?.records
         ? "Loading..."
-        : records.data.records.map((execution, i) => (
-            <Link to={`/website-records/${execution.id}`} key={i}>
+        : records.data.records.map((record, i) => (
+            <Link to={`/website-records/${record.id}`} key={i}>
               <RecordRow
                 key={i}
-                label={execution.label ?? ""}
-                tags={execution.tags?.join(", ") ?? ""}
-                periodicity={execution.periodicity ?? 0}
-                lastExecutionTime={
-                  execution.lastExecutionTime?.toString() ?? ""
-                }
-                lastExecutionStatus={execution.lastExecutionStatus ?? ""}
-                isActive={execution.isActive ?? false}
+                label={record.label ?? ""}
+                tags={record.tags?.join(", ") ?? ""}
+                periodicity={record.periodicity ?? 0}
+                lastExecutionTime={record.lastExecutionTime?.toString() ?? ""}
+                lastExecutionStatus={record.lastExecutionStatus ?? ""}
+                isActive={record.isActive ?? false}
               />
             </Link>
           ))}

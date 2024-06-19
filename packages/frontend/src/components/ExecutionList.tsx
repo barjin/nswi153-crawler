@@ -57,11 +57,9 @@ export function ExecutionList(props: ExecutionListProps) {
     <>
       {executions.loading
         ? "Loading..."
-        : executions.data.records
-            ?.slice(0, limit)
-            .map((execution, i) => (
-              <ExecutionRow key={i} execution={execution} />
-            ))}
+        : executions.data.records?.map((execution, i) => (
+            <ExecutionRow key={i} execution={execution} />
+          ))}
       {props.pagination && executions.data ? (
         <PaginationBar totalPages={Math.ceil(executions.data.total! / limit)} />
       ) : null}

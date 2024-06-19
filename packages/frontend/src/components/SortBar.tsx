@@ -20,7 +20,7 @@ export function SortBar() {
           },
           {
             sortType: "lastExecutionTime",
-            label: "Last Crawl Time",
+            label: "Last Execution",
           },
         ].map((sort) => {
           return (
@@ -62,16 +62,16 @@ export function SortBar() {
             <button
               key={sort.direction}
               className={`
-                                    p-1
-                                    justify-self-end
-                                    mb-2
-                                    mx-2
-                                    scale-125
-                                    ${
-                                      sortDirection === sort.direction
-                                        ? "bg-blue-400"
-                                        : "bg-blue-100 hover:bg-blue-200"
-                                    }`}
+                p-1
+                justify-self-end
+                mb-2
+                mx-2
+                scale-125
+                ${
+                  sortDirection === sort.direction
+                    ? "bg-blue-400"
+                    : "bg-blue-100 hover:bg-blue-200"
+                }`}
               onClick={() =>
                 setSearchParams(
                   (p) => {
