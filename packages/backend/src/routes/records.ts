@@ -85,9 +85,6 @@ export function getRecordsRouter(orm: EntityManager) {
       });
       await orm.save(record);
 
-      //execution.run or method.execute
-      //Crawler.crawl
-
       return res.status(201).json(record.serialize());
     });
 
