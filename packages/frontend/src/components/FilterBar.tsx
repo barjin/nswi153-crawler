@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 
 interface FilterBarProps {
@@ -8,19 +8,15 @@ interface FilterBarProps {
 export function FilterBar({ categories }: FilterBarProps) {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [query, setQuery] = useState(searchParams.get("filter") ?? "");
-  const [filterBy, setFilterBy] = useState(
-    searchParams.get("filterBy") ?? "url",
-  );
+  const query = searchParams.get("filter") ?? "";
+  const filterBy = searchParams.get("filterBy") ?? "";
 
   const submitFilter = useCallback(
-    (value: string) => {
-      setQuery(value);
-
+    (queryInput: string | null, filterByInput: string | null) => {
       setSearchParams(
         (p) => {
-          p.set("filter", value);
-          p.set("filterBy", filterBy);
+          p.set("filter", queryInput ?? query);
+          p.set("filterBy", filterByInput ?? filterBy);
           return p;
         },
         { replace: true },
@@ -50,14 +46,12 @@ export function FilterBar({ categories }: FilterBarProps) {
           type="text"
           placeholder="Enter filter phrase..."
           value={query}
-          onChange={(e) => {
-            submitFilter(e.target.value);
-          }}
+          onChange={(e) => submitFilter(e.target.value, null)}
         />
 
         <select
           className="ml-1 bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-2xl"
-          onChange={(e) => setFilterBy(e.target.value)}
+          onChange={(e) => submitFilter(null, e.target.value)}
           value={filterBy}
         >
           {categories.map((category) => (
