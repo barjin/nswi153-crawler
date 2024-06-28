@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 
 interface FilterBarProps {
@@ -8,17 +8,11 @@ interface FilterBarProps {
 export function FilterBar({ categories }: FilterBarProps) {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [query, setQuery] = useState(searchParams.get("filter") ?? "");
-  const [filterBy, setFilterBy] = useState(
-    searchParams.get("filterBy") ?? "url",
-  );
+  const query = searchParams.get("filter") ?? "";
+  const filterBy = searchParams.get("filterBy") ?? "";
 
   const submitFilter = useCallback(
     (queryInput: string | null, filterByInput: string | null) => {
-      if (queryInput !== null) setQuery(queryInput);
-
-      if (filterByInput !== null) setFilterBy(filterByInput);
-
       setSearchParams(
         (p) => {
           p.set("filter", queryInput ?? query);

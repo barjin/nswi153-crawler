@@ -31,8 +31,12 @@ export function getRecordsRouter(orm: EntityManager) {
       if (filter) {
         if (filterBy === "tags") {
           dbQuery.where("tag.tag LIKE :tag", { tag: `%${filter}%` });
+        } else if (filterBy === "url") {
+          dbQuery.where(`record.url LIKE :filter`, {
+            filter: `%${filter}%`,
+          });
         } else {
-          dbQuery.where(`record.${filterBy} LIKE :filter`, {
+          dbQuery.where(`record.label LIKE :filter`, {
             filter: `%${filter}%`,
           });
         }
@@ -43,7 +47,7 @@ export function getRecordsRouter(orm: EntityManager) {
         .take(parseInt(limit as unknown as string, 10))
         .leftJoinAndSelect("record.executions", "execution")
         .addSelect("MAX(execution.executionTime)", "lastExecutionTime")
-        .groupBy("record.id")
+        .groupBy("record.id, tag.tag")
         .orderBy(
           sortField === "url" ? "record.url" : "lastExecutionTime",
           sortOrder.toUpperCase() as "ASC" | "DESC",
@@ -80,6 +84,9 @@ export function getRecordsRouter(orm: EntityManager) {
         tags: [...exisitngTags, ...newTags],
       });
       await orm.save(record);
+
+      //execution.run or method.execute
+      //Crawler.crawl
 
       return res.status(201).json(record.serialize());
     });
