@@ -20,7 +20,7 @@ export async function run({ executionId }: { executionId: Execution["id"] }) {
     relations: ["record"],
   });
 
-  if (execution.status !== "waiting") {
+  if (execution.status === "running") {
     return;
   }
 
