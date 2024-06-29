@@ -1,3 +1,5 @@
+import { setTimeout } from "timers/promises";
+
 import type { paths } from "@nswi153-crawler/openapi-spec";
 import { Router } from "express";
 import { type EntityManager } from "typeorm";
@@ -85,6 +87,10 @@ export function getRecordsRouter(orm: EntityManager) {
       });
       await orm.save(record);
 
+      if (data.isActive) {
+        void runExecution(orm, record);
+      }
+
       return res.status(201).json(record.serialize());
     });
 
@@ -149,15 +155,28 @@ export function getRecordsRouter(orm: EntityManager) {
       return res.status(404).send();
     }
 
-    const execution = record.newExecution();
-    await orm.save(execution);
+    void runExecution(orm, record);
 
-    void Crawler.crawl(execution); // don't wait for the crawling to finish before sending the response
-
-    const response: ResponseType<"/records/{recordId}/run", "post"> =
-      execution.serialize();
-    return res.status(200).json(response);
+    return res.status(200);
   });
 
   return router;
+}
+
+async function runExecution(orm: EntityManager, record: WebsiteRecord) {
+  const execution = record.newExecution();
+  await orm.save(execution);
+
+  void Crawler.crawl(execution).then(async () => {
+    await setTimeout(execution.record.periodicity * 1000);
+
+    // ensuring that we don't keep executing if the record is deleted
+    const recordInDatabase = await orm.findOneBy(WebsiteRecord, {
+      id: execution.record.id,
+    });
+
+    if (recordInDatabase) {
+      void runExecution(orm, record);
+    }
+  });
 }
