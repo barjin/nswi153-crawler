@@ -164,7 +164,6 @@ export function getRecordsRouter(orm: EntityManager) {
 }
 
 async function runExecution(orm: EntityManager, record: WebsiteRecord) {
-
   void startCrawl(orm, record);
 
   const interval = setInterval(async () => {
