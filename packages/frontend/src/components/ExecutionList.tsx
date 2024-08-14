@@ -23,35 +23,48 @@ export function ExecutionList(props: ExecutionListProps) {
     loading: true,
     data: null,
   });
+  const pollingPeriod = 5000; // 5s
+
   const [searchParams] = useSearchParams();
   const api = useClient();
 
   useEffect(() => {
-    api
-      ?.GET("/executions", {
-        params: {
-          query: {
-            limit,
-            recordId,
-            offset: (parseInt(searchParams.get("page") ?? "1", 10) - 1) * limit,
+    function getExecutions() {
+      api
+        ?.GET("/executions", {
+          params: {
+            query: {
+              limit,
+              recordId,
+              offset:
+                (parseInt(searchParams.get("page") ?? "1", 10) - 1) * limit,
+            },
           },
-        },
-      })
-      .then((response) => {
-        setExecutions({
-          loading: false,
-          data: response.data ?? {
-            limit: 0,
-            offset: 0,
-            total: 0,
-            records: [],
-          },
+        })
+        .then((response) => {
+          setExecutions({
+            loading: false,
+            data: response.data ?? {
+              limit: 0,
+              offset: 0,
+              total: 0,
+              records: [],
+            },
+          });
+        })
+        .catch((error) => {
+          console.error(error);
         });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [api, searchParams]);
+    }
+
+    getExecutions();
+
+    const interval = setInterval(() => {
+      getExecutions();
+    }, pollingPeriod);
+
+    return () => clearInterval(interval);
+  }, [api, limit, recordId, searchParams]);
 
   return (
     <>
