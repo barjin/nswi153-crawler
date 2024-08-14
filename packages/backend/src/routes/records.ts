@@ -164,19 +164,25 @@ export function getRecordsRouter(orm: EntityManager) {
 }
 
 async function runExecution(orm: EntityManager, record: WebsiteRecord) {
-  const execution = record.newExecution();
-  await orm.save(execution);
 
-  void Crawler.crawl(execution).then(async () => {
-    await setTimeout(execution.record.periodicity * 1000);
+  void startCrawl(orm, record);
 
+  const interval = setInterval(async () => {
     // ensuring that we don't keep executing if the record is deleted
     const recordInDatabase = await orm.findOneBy(WebsiteRecord, {
-      id: execution.record.id,
+      id: record.id,
     });
 
-    if (recordInDatabase) {
-      void runExecution(orm, record);
+    if (!recordInDatabase) {
+      return () => clearInterval(interval);
     }
-  });
+
+    void startCrawl(orm, record);
+  }, record.periodicity * 1000);
+}
+
+async function startCrawl(orm: EntityManager, record: WebsiteRecord) {
+  const execution = record.newExecution();
+  await orm.save(execution);
+  void Crawler.crawl(execution);
 }
