@@ -33,7 +33,7 @@ export function WebsiteRecords() {
       else if (type === "days") periodicity = number * 86400;
 
       try {
-        await api?.POST("/records", {
+        await api?.POST("/api/records", {
           body: {
             url: formData.get("url") as string,
             boundaryRegEx: formData.get("regex") as string,

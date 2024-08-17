@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@crawlee/cheerio": "^3.10.5",
+    "@nswi153-crawler/frontend": "^0.0.0",
     "@nswi153-crawler/openapi-spec": "^1.0.0",
     "body-parser": "^1.20.2",
     "express": "^4.19.2",
@@ -20,7 +21,7 @@
     "typeorm": "0.3.20"
   },
   "scripts": {
-    "build": "rimraf ./dist && tsc -p ./tsconfig.json",
+    "build": "rimraf ./dist && tsc -p ./tsconfig.json && mkdir -p ./dist/frontend && cp -a ../frontend/dist/. ./dist/frontend",
     "dev": "ts-node -T ./src/index.ts",
     "start": "node ./dist/index.js"
   }

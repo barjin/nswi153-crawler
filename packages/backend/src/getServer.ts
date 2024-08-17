@@ -1,11 +1,14 @@
+import path from 'path';
+
 import bodyParser from "body-parser";
-import express from "express";
+import express, { Router } from "express";
 
 import "reflect-metadata";
 import { AppDataSource } from "./data-source";
 import { getGraphQlRouter } from "./graphql/graphql";
 import { getExecutionsRouter } from "./routes/executions";
 import { getRecordsRouter } from "./routes/records";
+
 
 export async function getServer() {
   const app = express();
@@ -27,8 +30,14 @@ export async function getServer() {
 
   const orm = AppDataSource.manager;
 
-  app.use("/executions", getExecutionsRouter(orm));
-  app.use("/records", getRecordsRouter(orm));
-  app.use("/graphql", getGraphQlRouter(orm));
+  const apiRouter = Router();
+  apiRouter.use("/executions", getExecutionsRouter(orm));
+  apiRouter.use("/records", getRecordsRouter(orm));
+  apiRouter.use("/graphql", getGraphQlRouter(orm));
+
+  app.use("/api", apiRouter);
+  app.use('/assets', express.static(path.join(__dirname, 'frontend', 'assets')));
+  app.get("*", (req, res) => res.sendFile(path.join(__dirname, 'frontend', 'index.html')));
+
   return app;
 }

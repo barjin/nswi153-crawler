@@ -3,16 +3,16 @@ import createClient from "openapi-fetch";
 import { createContext, useContext } from "react";
 
 export type WebsiteRecord = Exclude<
-  paths["/records"]["get"]["responses"]["200"]["content"]["application/json"]["records"],
+  paths["/api/records"]["get"]["responses"]["200"]["content"]["application/json"]["records"],
   undefined
 >[number];
 export type Execution = Exclude<
-  paths["/executions"]["get"]["responses"]["200"]["content"]["application/json"]["records"],
+  paths["/api/executions"]["get"]["responses"]["200"]["content"]["application/json"]["records"],
   undefined
 >[number];
 
 export type SingleWebsiteRecord =
-  paths["/records/{recordId}"]["get"]["responses"]["200"]["content"]["application/json"];
+  paths["/api/records/{recordId}"]["get"]["responses"]["200"]["content"]["application/json"];
 
 export type Loading<T> =
   | {

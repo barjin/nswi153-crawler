@@ -7,9 +7,9 @@ import { RecordRow } from "./RecordRow";
 import { Loading, useClient } from "../utils/ApiContext";
 
 type WebsiteRecordListProps =
-  paths["/records"]["get"]["parameters"]["query"] & { pagination?: boolean };
+  paths["/api/records"]["get"]["parameters"]["query"] & { pagination?: boolean };
 type WebsiteRecordsResponse =
-  paths["/records"]["get"]["responses"]["200"]["content"]["application/json"];
+  paths["/api/records"]["get"]["responses"]["200"]["content"]["application/json"];
 
 export function WebsiteRecordList(props: WebsiteRecordListProps) {
   const { sort, filter, filterBy, limit, offset } = props || {};
@@ -24,7 +24,7 @@ export function WebsiteRecordList(props: WebsiteRecordListProps) {
   useEffect(() => {
     function getRecords() {
       api
-        ?.GET("/records", {
+        ?.GET("/api/records", {
           params: {
             query: {
               sort: sort ?? "url:asc",

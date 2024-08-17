@@ -10,7 +10,8 @@
     "lint:fix": "eslint . --fix",
     "build": "turbo build",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "start": "npm run -w packages/backend start"
   },
   "keywords": [],
   "author": "",

@@ -2,7 +2,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@nswi153-crawler/openapi-spec": ["packages/openapi-specification/"]
+      "@nswi153-crawler/openapi-spec": ["packages/openapi-specification/"],
+      "@nswi153-crawler/frontend": ["packages/frontend/"]
     },
     "alwaysStrict": true,
     "strict": true,

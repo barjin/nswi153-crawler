@@ -13,7 +13,7 @@ export function WebsiteRecordData(): JSX.Element {
 
   useEffect(() => {
     api
-      ?.GET("/records/{recordId}", {
+      ?.GET("/api/records/{recordId}", {
         params: {
           path: {
             recordId: Number(id),
