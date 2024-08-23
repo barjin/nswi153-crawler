@@ -6,9 +6,10 @@ import { ExecutionRow } from "./ExecutionRow";
 import { PaginationBar } from "./PaginationBar";
 import { Loading, useClient } from "../utils/ApiContext";
 
-type ExecutionListProps = paths["/api/executions"]["get"]["parameters"]["query"] & {
-  pagination?: boolean;
-};
+type ExecutionListProps =
+  paths["/api/executions"]["get"]["parameters"]["query"] & {
+    pagination?: boolean;
+  };
 
 const PAGE_SIZE = 5;
 

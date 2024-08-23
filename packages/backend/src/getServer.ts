@@ -1,4 +1,4 @@
-import path from 'path';
+import path from "path";
 
 import bodyParser from "body-parser";
 import express, { Router } from "express";
@@ -8,7 +8,6 @@ import { AppDataSource } from "./data-source";
 import { getGraphQlRouter } from "./graphql/graphql";
 import { getExecutionsRouter } from "./routes/executions";
 import { getRecordsRouter } from "./routes/records";
-
 
 export async function getServer() {
   const app = express();
@@ -36,8 +35,13 @@ export async function getServer() {
   apiRouter.use("/graphql", getGraphQlRouter(orm));
 
   app.use("/api", apiRouter);
-  app.use('/assets', express.static(path.join(__dirname, 'frontend', 'assets')));
-  app.get("*", (req, res) => res.sendFile(path.join(__dirname, 'frontend', 'index.html')));
+  app.use(
+    "/assets",
+    express.static(path.join(__dirname, "frontend", "assets")),
+  );
+  app.get("*", (req, res) =>
+    res.sendFile(path.join(__dirname, "frontend", "index.html")),
+  );
 
   return app;
 }

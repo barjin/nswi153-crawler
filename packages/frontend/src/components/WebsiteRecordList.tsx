@@ -7,7 +7,9 @@ import { RecordRow } from "./RecordRow";
 import { Loading, useClient } from "../utils/ApiContext";
 
 type WebsiteRecordListProps =
-  paths["/api/records"]["get"]["parameters"]["query"] & { pagination?: boolean };
+  paths["/api/records"]["get"]["parameters"]["query"] & {
+    pagination?: boolean;
+  };
 type WebsiteRecordsResponse =
   paths["/api/records"]["get"]["responses"]["200"]["content"]["application/json"];
 
