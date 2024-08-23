@@ -15,7 +15,7 @@ tags:
     description: Record of scheduled website crawls.
 
 paths:
-  /records:
+  /api/records:
     get:
       tags:
         - website-record
@@ -116,7 +116,7 @@ paths:
         "400":
           description: Invalid input
 
-  /records/{recordId}/run:
+  /api/records/{recordId}/run:
     post:
       tags:
         - website-record
@@ -141,7 +141,7 @@ paths:
         "404":
           description: Record not found
 
-  /records/{recordId}:
+  /api/records/{recordId}:
     get:
       tags:
         - website-record
@@ -217,7 +217,7 @@ paths:
           description: Invalid ID
         "404":
           description: Record not found
-  /executions:
+  /api/executions:
     get:
       tags:
         - execution
@@ -274,7 +274,7 @@ paths:
                       $ref: "#/components/schemas/Execution"
         "404":
           description: There are no executions for this recordId
-  /executions/{executionId}:
+  /api/executions/{executionId}:
     get:
       tags:
         - execution

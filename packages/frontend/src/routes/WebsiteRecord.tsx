@@ -12,7 +12,7 @@ export function WebsiteRecord() {
 
   const deleteRecord = useCallback(async () => {
     try {
-      await api?.DELETE("/records/{recordId}", {
+      await api?.DELETE("/api/records/{recordId}", {
         params: {
           path: {
             recordId: parseInt(recordId!, 10),
@@ -28,7 +28,7 @@ export function WebsiteRecord() {
 
   const executeRecord = useCallback(async () => {
     try {
-      await api?.POST("/records/{recordId}/run", {
+      await api?.POST("/api/records/{recordId}/run", {
         params: {
           path: {
             recordId: parseInt(recordId!, 10),

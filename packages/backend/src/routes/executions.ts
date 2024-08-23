@@ -8,7 +8,7 @@ export function getExecutionsRouter(orm: EntityManager) {
   const router = Router();
 
   router.route("/").get(async (req, res) => {
-    const query = req.query as QueryParamsType<"/executions", "get">;
+    const query = req.query as QueryParamsType<"/api/executions", "get">;
     const { limit = 10, offset = 0, recordId } = query;
 
     const executionRepo = orm.getRepository(Execution);
@@ -25,7 +25,7 @@ export function getExecutionsRouter(orm: EntityManager) {
       },
     });
 
-    const response: Required<ResponseType<"/executions", "get">> = {
+    const response: Required<ResponseType<"/api/executions", "get">> = {
       total,
       limit,
       offset,
@@ -46,7 +46,7 @@ export function getExecutionsRouter(orm: EntityManager) {
         return res.status(404).send();
       }
 
-      const response: ResponseType<"/executions/{executionId}", "get"> =
+      const response: ResponseType<"/api/executions/{executionId}", "get"> =
         execution.serialize();
 
       return res.status(200).json(response).send();

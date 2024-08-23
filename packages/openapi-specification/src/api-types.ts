@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  "/records": {
+  "/api/records": {
     /**
      * Get a list of website records
      * @description Get a list of the website records currently in the database. If additional query parameters are provided, the website records are filtered by label,  tag, and/or URL, and is sorted by URL or the time of the last website crawl, in ascending or descending order. Otherwise, the list contains all the  website records and is unsorted.
@@ -16,14 +16,14 @@ export interface paths {
      */
     post: operations["addRecord"];
   };
-  "/records/{recordId}/run": {
+  "/api/records/{recordId}/run": {
     /**
      * Run a website record by ID
      * @description Run the website record from the database of existing website records whose ID matches the ID provided in the path.
      */
     post: operations["runRecord"];
   };
-  "/records/{recordId}": {
+  "/api/records/{recordId}": {
     /**
      * Get a website record by ID
      * @description Get the website record from the database of existing website records whose ID matches the ID provided in the path.
@@ -40,7 +40,7 @@ export interface paths {
      */
     delete: operations["deleteRecord"];
   };
-  "/executions": {
+  "/api/executions": {
     /** Get a list of all execution IDs. */
     get: {
       parameters: {
@@ -88,7 +88,7 @@ export interface paths {
       };
     };
   };
-  "/executions/{executionId}": {
+  "/api/executions/{executionId}": {
     /** Get a execution with a given executionId */
     get: {
       parameters: {

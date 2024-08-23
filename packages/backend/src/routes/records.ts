@@ -15,7 +15,7 @@ export function getRecordsRouter(orm: EntityManager) {
   router
     .route("/")
     .get(async (req, res) => {
-      const query = req.query as QueryParamsType<"/records", "get">;
+      const query = req.query as QueryParamsType<"/api/records", "get">;
       const {
         limit = 10,
         offset = 0,
@@ -56,7 +56,7 @@ export function getRecordsRouter(orm: EntityManager) {
         )
         .getManyAndCount();
 
-      const response: Required<ResponseType<"/records", "get">> = {
+      const response: Required<ResponseType<"/api/records", "get">> = {
         records: records.map((r) => r.serialize()),
         total,
         limit: parseInt(limit as unknown as string, 10),
@@ -66,7 +66,7 @@ export function getRecordsRouter(orm: EntityManager) {
       return res.json(response);
     })
     .post(async (req, res) => {
-      const data: paths["/records"]["post"]["requestBody"]["content"]["application/json"] =
+      const data: paths["/api/records"]["post"]["requestBody"]["content"]["application/json"] =
         req.body;
 
       const exisitngTags = await orm.find(WebsiteRecordTag, {
@@ -109,7 +109,7 @@ export function getRecordsRouter(orm: EntityManager) {
         return res.status(404).send();
       }
 
-      const response: ResponseType<"/records/{recordId}", "get"> =
+      const response: ResponseType<"/api/records/{recordId}", "get"> =
         record.serialize();
 
       return res.status(200).json(response);
@@ -124,7 +124,7 @@ export function getRecordsRouter(orm: EntityManager) {
         return res.status(404).send();
       }
 
-      const data: paths["/records/{recordId}"]["put"]["requestBody"]["content"]["application/json"] =
+      const data: paths["/api/records/{recordId}"]["put"]["requestBody"]["content"]["application/json"] =
         req.body;
       // @ts-expect-error
       const updatedRecord = orm.merge(WebsiteRecord, record, data);

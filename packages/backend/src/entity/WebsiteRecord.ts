@@ -64,7 +64,7 @@ export class WebsiteRecord {
   @JoinColumn()
   crawledPages: CrawledPage[];
 
-  serialize(): ResponseType<"/records/{recordId}", "get"> {
+  serialize(): ResponseType<"/api/records/{recordId}", "get"> {
     const lastExecution = this.getLastExecution();
 
     return {
