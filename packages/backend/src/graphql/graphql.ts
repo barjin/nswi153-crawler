@@ -18,7 +18,7 @@ export function getGraphQlRouter(orm: EntityManager) {
 
   router.get("/playground", (_, res) => {
     res.setHeader("Content-Type", "text/html");
-    res.send(ruruHTML({ endpoint: "/graphql" }));
+    res.send(ruruHTML({ endpoint: "/api/graphql" }));
   });
 
   return router;
