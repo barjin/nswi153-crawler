@@ -26,7 +26,7 @@ export class Execution {
 
   @Column({ type: "int", nullable: true })
   nodesVisited: number;
-  
+
   @Column({ type: "int", nullable: true })
   nodesOutOfScope: number;
 
