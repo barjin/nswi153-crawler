@@ -27,6 +27,22 @@ to start the backend server and
 
 to start the frontend server.
 
+## production setup
+
+To build the production Dockerfile, run
+
+```bash
+docker build -t nswi153-crawler .
+```
+
+in the root of the project.
+
+Run the container with
+
+```bash
+docker run -p 3000:3000 nswi153-crawler
+```
+
 ---
 
 Made by Viktória Hurtišová, Viktorija Panovska and Jindřich Bär. 2024
