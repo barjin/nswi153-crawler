@@ -24,6 +24,12 @@ export class Execution {
   @Column({ default: () => "CURRENT_TIMESTAMP" })
   executionTime: Date;
 
+  @Column({ type: "int", nullable: true })
+  nodesVisited: number;
+  
+  @Column({ type: "int", nullable: true })
+  nodesOutOfScope: number;
+
   serialize() {
     return {
       id: this.id,
@@ -32,6 +38,10 @@ export class Execution {
       record: {
         id: this.record.id,
         label: this.record.label,
+      },
+      stats: {
+        nodesVisited: this.nodesVisited ?? 0,
+        nodesOutOfScope: this.nodesOutOfScope ?? 0,
       },
     };
   }
