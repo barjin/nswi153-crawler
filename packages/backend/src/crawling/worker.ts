@@ -33,7 +33,6 @@ export async function run({ executionId }: { executionId: Execution["id"] }) {
   const urlToInstanceMap = new Map<string, CrawledPage>();
   const crawler = new CheerioCrawler(
     {
-      maxRequestsPerCrawl: 10,
       requestHandler: async ({ request, $, enqueueLinks, log }) => {
         log.info(`Crawling ${request.url}`);
 

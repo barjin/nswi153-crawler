@@ -10,7 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@apollo/client": "^3.11.5",
     "@nswi153-crawler/openapi-spec": "^1.0.0",
+    "d3": "^7.9.0",
+    "graphql": "^16.9.0",
     "openapi-fetch": "^0.9.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
