@@ -36,6 +36,7 @@ export async function run({ executionId }: { executionId: Execution["id"] }) {
       maxRequestsPerCrawl: 10,
       requestHandler: async ({ request, $, enqueueLinks, log }) => {
         log.info(`Crawling ${request.url}`);
+        execution.nodesVisited++;
 
         if (!urlToInstanceMap.has(request.url)) {
           urlToInstanceMap.set(
@@ -72,6 +73,10 @@ export async function run({ executionId }: { executionId: Execution["id"] }) {
                 record: execution.record,
                 outLinks: [],
               });
+
+              if (!new RegExp(execution.record.boundaryRegEx).test(href)) {
+                execution.nodesOutOfScope++;
+              }
 
               urlToInstanceMap.set(href, linkedPage);
               newDiscoveredPages.push(linkedPage);
