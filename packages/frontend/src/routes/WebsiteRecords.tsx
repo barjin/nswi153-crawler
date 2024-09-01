@@ -89,6 +89,7 @@ export function WebsiteRecords() {
             limit={10}
             offset={offset}
             pagination={true}
+            canSelect={false}
           />
         </div>
       </div>
