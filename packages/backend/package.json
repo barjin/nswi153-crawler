@@ -11,6 +11,7 @@
     "@nswi153-crawler/frontend": "^0.0.0",
     "@nswi153-crawler/openapi-spec": "^1.0.0",
     "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
     "express": "^4.19.2",
     "getopts": "^2.3.0",
     "graphql": "^16.8.2",
