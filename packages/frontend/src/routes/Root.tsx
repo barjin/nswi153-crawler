@@ -12,7 +12,7 @@ function Root() {
   return (
     <>
       <ApiContext.Provider value={{ client: api }}>
-        <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr_300px] bg-slate-500">
+        <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr_200px] bg-slate-500">
           <div className="col-start-1 lg:col-start-2 col-span-1 h-screen border-r border-slate-100 shadow-md p-4 bg-white">
             <Outlet />
           </div>
