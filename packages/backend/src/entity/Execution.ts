@@ -18,7 +18,7 @@ export class Execution {
   @JoinColumn()
   record: WebsiteRecord;
 
-  @Column({ type: "text", default: "waiting" })
+  @Column({ type: "text" })
   status: paths["/api/executions/{executionId}"]["get"]["responses"]["200"]["content"]["application/json"]["status"];
 
   @Column({ default: () => "CURRENT_TIMESTAMP" })

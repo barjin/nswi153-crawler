@@ -31,6 +31,7 @@ export class CrawledPage {
   @Column({
     type: "text",
     nullable: true,
+    charset: "utf8mb4",
   })
   title: string;
 
