@@ -1,8 +1,6 @@
 import { useState } from 'react';
 
-import { data } from '../components/data';
 import { Graph } from "../components/Graph";
-import { NetworkDiagram } from '../components/NetworkDiagram';
 import { WebsiteRecordListVisualization } from "../components/WebsiteRecordListVisualization";
 
 
@@ -18,7 +16,7 @@ export function Visualization() {
         setSelectedVisOption(event.target.value);
     };
 
-    const [selected, setSelected] = useState([]);
+    const [selected, setSelected] = useState<string[]>([]);
 
     
     const GetSelected = () => {

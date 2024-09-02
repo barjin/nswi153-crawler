@@ -1,8 +1,9 @@
-import { useEffect, useState, useRef } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as d3 from 'd3';
+import { useEffect, useState, useRef } from 'react';
 
-import { GraphData } from "./GraphData";
 import { drawNetwork } from './drawNetwork';
+import { GraphData } from "./GraphData";
 
 
 interface GraphProps {
@@ -28,7 +29,7 @@ export interface Link {
   target: string;
 }
 
-export function Graph ({selected, activity, vis}: GraphProps) {
+export function Graph ({selected, vis}: GraphProps) {
   const [nodesData, setNodesData] = useState<Node[]>([]);  // State to store the fetched data
   const handleDataFetched = (data: any) => {
     if (data && data.nodes) {
@@ -66,19 +67,19 @@ export function Graph ({selected, activity, vis}: GraphProps) {
   const generateDomainLinks = (nodesFiltered: Node[], inputNodes: Node[]): Link[] => {
     const domainIdMap = new Map<string, string>();
     
-    //creates map [domain, id]
+    // creates map [domain, id]
     nodesFiltered.forEach((node) => {
       const domain = new URL(node.url).hostname;
       domainIdMap.set(domain, node.id);
     });
 
-    //creates map [id, domain]
+    // creates map [id, domain]
     const idNodeMap = new Map<string, string>();
     inputNodes.forEach((node) => {
       idNodeMap.set(node.id, new URL(node.url).hostname);
     });
     
-    //creates map [domain, domain]
+    // creates map [domain, domain]
     const domainMap = new Map<string, Set<string>>();
     inputNodes.forEach((node) => {
       const from = idNodeMap.get(node.id);
@@ -119,7 +120,7 @@ export function Graph ({selected, activity, vis}: GraphProps) {
 
 
     // Set up simulation for force-directed graph
-    const simulation = d3.forceSimulation(nodes)
+    const simulation = d3.forceSimulation(nodes as any)
       .force(
         "link",
         d3.forceLink(links).id((d: any) => d.id) // Links
@@ -133,7 +134,7 @@ export function Graph ({selected, activity, vis}: GraphProps) {
       });
       const zoom = d3.zoom()
       .scaleExtent([0.1, 10]) // Allow zoom between 0.1x and 10x
-      .on('zoom', (event) => {
+      .on('zoom', (event: any) => {
         context.save();
         context.clearRect(0, 0, width, height);
         context.translate(event.transform.x, event.transform.y);
@@ -142,27 +143,27 @@ export function Graph ({selected, activity, vis}: GraphProps) {
         context.restore();
       });
   
-    d3.select(canvas).call(zoom).on('dblclick.zoom', null); // Attach zoom behavior to canvas
+    d3.select(canvas).call(zoom as any).on('dblclick.zoom', null); // Attach zoom behavior to canvas
   
     // Set up drag behavior for nodes
     const drag = d3.drag()
-      .on('start', (event, d) => {
+      .on('start', (event: any, d: any) => {
         if (!event.active) simulation.alphaTarget(0.3).restart(); // Restart simulation on drag
         d.fx = d.x; // Fix the position of the node being dragged
         d.fy = d.y;
       })
-      .on('drag', (event, d) => {
+      .on('drag', (event: any, d: any) => {
         d.fx = event.x; // Update fixed position during drag
         d.fy = event.y;
       })
-      .on('end', (event, d) => {
+      .on('end', (event: any, d: any) => {
         if (!event.active) simulation.alphaTarget(0); // Stop simulation after dragging
         d.fx = null; // Release the fixed position
         d.fy = null;
       });
   
     // Apply drag behavior to nodes
-    d3.select(canvas).call(drag);
+    d3.select(canvas).call(drag as any);
         }, [width, height, nodes, links]); // Dependencies array
 
   return (

@@ -1,14 +1,11 @@
-import d3, { scaleOrdinal, schemeCategory10 } from 'd3';
-import { Link, Node } from './data';
-
 export const RADIUS = 7;
 
 export const drawNetwork = (
   context: CanvasRenderingContext2D,
   width: number,
   height: number,
-  nodes: Node[],
-  links: Link[]
+  nodes: any[],
+  links: any[],
 ) => {
   context.clearRect(0, 0, width, height); // Clear the canvas
 

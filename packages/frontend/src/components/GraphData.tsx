@@ -23,7 +23,7 @@ const GET_NODES_BY_IDS = gql`
 `;
 
 export function GraphData({ids, onDataFetched}: GraphDataProps) {
-    const {loading, error, data} = useQuery(GET_NODES_BY_IDS, {
+    const {loading, error} = useQuery(GET_NODES_BY_IDS, {
         variables: {ids},
         skip: ids.length === 0,
         onCompleted: (data) => {
