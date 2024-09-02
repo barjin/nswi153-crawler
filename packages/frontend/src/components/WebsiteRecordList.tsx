@@ -9,13 +9,14 @@ import { Loading, useClient } from "../utils/ApiContext";
 type WebsiteRecordListProps =
   paths["/api/records"]["get"]["parameters"]["query"] & {
     pagination?: boolean;
+    canSelect?: boolean;
   };
 type WebsiteRecordsResponse =
   paths["/api/records"]["get"]["responses"]["200"]["content"]["application/json"];
 
 export function WebsiteRecordList(props: WebsiteRecordListProps) {
   const { sort, filter, filterBy, limit, offset } = props || {};
-  const pollingPeriod = 10000; // 10s
+  const pollingPeriod = 5000; // 5s
 
   const [records, setRecords] = useState<Loading<WebsiteRecordsResponse>>({
     loading: true,
@@ -70,12 +71,14 @@ export function WebsiteRecordList(props: WebsiteRecordListProps) {
             <Link to={`/website-records/${record.id}`} key={i}>
               <RecordRow
                 key={i}
+                id={record.id ?? 0}
                 label={record.label ?? ""}
                 tags={record.tags?.join(", ") ?? ""}
                 periodicity={record.periodicity ?? 0}
                 lastExecutionTime={record.lastExecutionTime?.toString() ?? ""}
                 lastExecutionStatus={record.lastExecutionStatus ?? ""}
                 isActive={record.isActive ?? false}
+                canSelect={props.canSelect ?? false}
               />
             </Link>
           ))}
