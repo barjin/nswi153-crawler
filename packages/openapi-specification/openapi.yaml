@@ -415,3 +415,13 @@ components:
             id:
               type: integer
               format: int64
+        stats:
+          description: The statistics of the last execution of this website crawl
+          type: object
+          properties:
+            nodesVisited:
+              type: integer
+              format: int64
+            nodesOutOfScope:
+              type: integer
+              format: int64

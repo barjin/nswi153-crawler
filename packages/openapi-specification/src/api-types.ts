@@ -3,6 +3,7 @@
  * Do not make direct changes to the file.
  */
 
+
 export interface paths {
   "/api/records": {
     /**
@@ -206,6 +207,13 @@ export interface components {
         /** Format: int64 */
         id?: number;
       };
+      /** @description The statistics of the last execution of this website crawl */
+      stats?: {
+        /** Format: int64 */
+        nodesVisited?: number;
+        /** Format: int64 */
+        nodesOutOfScope?: number;
+      };
     };
   };
   responses: never;
@@ -233,6 +241,7 @@ export type $defs = Record<string, never>;
 export type external = Record<string, never>;
 
 export interface operations {
+
   /**
    * Get a list of website records
    * @description Get a list of the website records currently in the database. If additional query parameters are provided, the website records are filtered by label,  tag, and/or URL, and is sorted by URL or the time of the last website crawl, in ascending or descending order. Otherwise, the list contains all the  website records and is unsorted.
@@ -245,11 +254,7 @@ export interface operations {
         /** @description Field by which the website records should be filtered. */
         filterBy?: "label" | "tags" | "url";
         /** @description Method by which the website records should be sorted. The website records can be sorted by URL or by the time of the execution of the last crawl,  in ascending or descending order. The value of the parameter should have the format \"<sorting-field>:<sorting-direction>\". */
-        sort?:
-          | "url:asc"
-          | "url:desc"
-          | "lastExecutionTime:asc"
-          | "lastExecutionTime:desc";
+        sort?: "url:asc" | "url:desc" | "lastExecutionTime:asc" | "lastExecutionTime:desc";
         /**
          * @description Number of website records to return.
          * @default 10
