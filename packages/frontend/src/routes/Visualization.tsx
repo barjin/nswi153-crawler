@@ -1,5 +1,8 @@
 import { useState } from 'react';
+
+import { data } from '../components/data';
 import { Graph } from "../components/Graph";
+import { NetworkDiagram } from '../components/NetworkDiagram';
 import { WebsiteRecordListVisualization } from "../components/WebsiteRecordListVisualization";
 
 
@@ -15,53 +18,49 @@ export function Visualization() {
         setSelectedVisOption(event.target.value);
     };
 
-    const [parameters, setParameters] = useState({
-        selected: [],
-        action: '',
-        vis: '',
-      });
+    const [selected, setSelected] = useState([]);
+
     
     const GetSelected = () => {
         const urlSearchParams = new URLSearchParams(window.location.search);
         const selectedParam = urlSearchParams.get('selected') || '';
         const s = selectedParam ? selectedParam.split(',') : []; // Split by comma to create an array
-        setParameters({
-            selected: s, 
-            action: selectedOptionActivity, 
-            vis: selectedOptionVis
-        });
+        setSelected(s);
     };
 
     return (
         <>
-        <div className="h-full grid grid-cols-3 gap-4">
+        <div className="h-full grid grid-cols-4 gap-4">
+            <div className="col-span-1 justify-self-stretch">
+                <h1 className="text-2xl font-bold text-slate-900 mb-4">
+                    Website records
+                </h1>
+            </div>
             <div className="col-span-1">
-                Select Records to display in Graph
-                <WebsiteRecordListVisualization/>
-            </div> 
-                <div className="col-span-2">
-                    <div className="grid grid grid-cols-3 gap-4">
-
-                        <div className="col-span-1">
-                            <input type="radio" value="live" checked={selectedOptionActivity === 'live'} onChange={handleActionOptionChange}/>
-                            <label style={{ marginLeft: '20px' }}>Live</label>
-                            <input type="radio" value="static" checked={selectedOptionActivity === 'static'}  onChange={handleActionOptionChange} style={{ marginLeft: '20px' }}/>
-                            <label style={{ marginLeft: '20px' }}>Static</label>
-                        </div>
-                        <div className="col-span-1">
-                            <input type="radio" value="websites" checked={selectedOptionVis === 'websites'} onChange={handleVisOptionChange}/>
-                            <label style={{ marginLeft: '20px' }}>Websites</label>
-                            <input type="radio" value="domains" checked={selectedOptionVis === 'domains'}  onChange={handleVisOptionChange} style={{ marginLeft: '20px' }}/>
-                            <label style={{ marginLeft: '20px' }}>Domains</label>
-                        </div>
-                        <div className="col-span-1">
-                            <button onClick={GetSelected}>Render</button>
-                    </div>
-                </div>
-                <div className="col-start-2 col-span-2">
-                    <Graph selected={parameters.selected} activity={parameters.action} vis={parameters.vis}/>
+                <div className="bg-blue-200 flex flex-row items-center py-2 pb-3 px-4 mb-2 rounded">
+                    <input type="radio" value="live" checked={selectedOptionActivity === 'live'} onChange={handleActionOptionChange}/>
+                    <label className="ms-5">Live</label>
+                    <input className="ms-5"type="radio" value="static" checked={selectedOptionActivity === 'static'}  onChange={handleActionOptionChange}/>
+                    <label className="ms-5">Static</label>
                 </div>
             </div>
+            <div className="col-span-1">
+                <div className="bg-blue-200 flex flex-row items-center py-2 pb-3 px-4 mb-2 rounded">
+                    <input type="radio" value="websites" checked={selectedOptionVis === 'websites'} onChange={handleVisOptionChange}/>
+                    <label className="ms-5">Websites</label>
+                    <input className="ms-5" type="radio" value="domains" checked={selectedOptionVis === 'domains'}  onChange={handleVisOptionChange}/>
+                    <label className="ms-5">Domains</label>
+                </div>
+            </div>
+            <div className="col-span-1">
+                <button className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-2xl" onClick={GetSelected}>Render graph</button>
+            </div>
+            <div className="col-span-1">
+                <WebsiteRecordListVisualization/>
+            </div> 
+                <div className="col-start-2 col-span-3">
+                    <Graph selected={selected} activity={selectedOptionActivity} vis={selectedOptionVis}/>
+                </div>
         </div>
         </>            
     );
