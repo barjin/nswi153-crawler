@@ -206,6 +206,13 @@ export interface components {
         /** Format: int64 */
         id?: number;
       };
+      /** @description The statistics of the last execution of this website crawl */
+      stats?: {
+        /** Format: int64 */
+        nodesVisited?: number;
+        /** Format: int64 */
+        nodesOutOfScope?: number;
+      };
     };
   };
   responses: never;

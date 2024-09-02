@@ -7,3 +7,24 @@ services:
     restart: always
     ports:
       - 3000:3000
+    depends_on:
+      - db
+    environment:
+      - ENV=docker
+    env_file:
+      - .env
+    networks:
+      - default
+
+  db:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - 3306:3306
+    env_file:
+      - .env
+    command: --sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
+    networks:
+      default:
+        aliases:
+          - db

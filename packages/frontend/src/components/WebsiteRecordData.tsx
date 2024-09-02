@@ -30,9 +30,7 @@ export function WebsiteRecordData(): JSX.Element {
       .catch((error) => {
         console.error(error);
       });
-  }, [api]);
-
-  console.log(record);
+  }, [api, id]);
 
   const periodicity = record.data?.periodicity ?? 0;
   let periodicityText = "";
