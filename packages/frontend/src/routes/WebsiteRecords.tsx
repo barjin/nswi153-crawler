@@ -64,8 +64,13 @@ export function WebsiteRecords() {
         </div>
         <div className="col-span-1 justify-self-end">
           <Link to="/website-records?create=true" replace={true}>
-            <button className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-2xl">
+            <button className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-2xl mr-4">
               Create New Record
+            </button>
+          </Link>
+          <Link to="/visualization" replace={true}>
+            <button className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-2xl">
+              Visualization
             </button>
           </Link>
         </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
 import "./index.css";
 import { Executions } from "./routes/Executions.tsx";
@@ -9,6 +10,12 @@ import { Home } from "./routes/Home.tsx";
 import Root from "./routes/Root.tsx";
 import { WebsiteRecord } from "./routes/WebsiteRecord.tsx";
 import { WebsiteRecords } from "./routes/WebsiteRecords.tsx";
+import { Visualization } from "./routes/Visualization.tsx";
+
+const client = new ApolloClient({
+  uri: 'http://localhost:3000/api/graphql',
+  cache: new InMemoryCache(),
+});
 
 const router = createBrowserRouter([
   {
@@ -35,6 +42,10 @@ const router = createBrowserRouter([
             path: "/executions",
             element: <Executions />,
           },
+          {
+            path: "/visualization",
+            element: <Visualization />
+          },
         ],
       },
     ],
@@ -42,7 +53,9 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>,
+  <ApolloProvider client={client}>
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>
+  </ApolloProvider>,
 );
