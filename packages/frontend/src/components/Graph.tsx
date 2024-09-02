@@ -30,6 +30,9 @@ export interface Link {
 
 export function Graph ({selected, activity, vis}: GraphProps) {
   const [nodesData, setNodesData] = useState<Node[]>([]);  // State to store the fetched data
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null); // State to store the selected node data
+  const [popupPosition, setPopupPosition] = useState<{ x: number, y: number } | null>(null); // State for popup position
+
   const handleDataFetched = (data: any) => {
     if (data && data.nodes) {
         setNodesData(data.nodes);  // Store the fetched nodes data
@@ -117,6 +120,20 @@ export function Graph ({selected, activity, vis}: GraphProps) {
     const context = canvas.getContext("2d"); // Get the 2D drawing context
     if (!context) return; // Return if the context is not available
 
+    const handleClick = (event: MouseEvent) => {
+      const [x, y] = d3.pointer(event, canvas); // Get the pointer position
+      // Find the node that was clicked based on proximity to (x, y)
+      const clickedNode = nodes.find(node => Math.hypot(node.x - x, node.y - y) < 10); // Adjust the threshold as needed
+      if (clickedNode) {
+        setSelectedNode(clickedNode); // Set the clicked node data to the state
+        setPopupPosition({ x: event.clientX, y: event.clientY }); // Set popup position
+      } else {
+        setSelectedNode(null); // Hide popup if no node is clicked
+        setPopupPosition(null); // Hide popup if no node is clicked
+      }
+    };
+
+    canvas.addEventListener('click', handleClick); // Add event listener for clicks
 
     // Set up simulation for force-directed graph
     const simulation = d3.forceSimulation(nodes)
@@ -178,12 +195,34 @@ export function Graph ({selected, activity, vis}: GraphProps) {
   }
 
   return (
-    <div>
+    <div style={{ position: 'relative' }}>
       <p>{selected && selected.length > 0
             ? ''
             : 'No items selected'}</p>
         <GraphData ids={selected} onDataFetched={handleDataFetched}/>
         {exportGraph(700, 700, nodesData)}
+        {selectedNode && popupPosition && ( // Render the popup if a node is selected and a position is set
+        <div
+          style={{
+            position: 'absolute',
+            left: popupPosition.x,
+            top: popupPosition.y,
+            backgroundColor: 'white',
+            border: '1px solid #ccc',
+            padding: '10px',
+            zIndex: 1000,
+            pointerEvents: 'none'  // Makes sure the popup doesn't interfere with mouse events
+          }}
+        >
+          <h3>Node Details</h3>
+          <p><strong>ID:</strong> {selectedNode.id}</p>
+          <p><strong>URL:</strong> {selectedNode.url}</p>
+          <p><strong>Title:</strong> {selectedNode.title}</p>
+          <p><strong>Crawl Time:</strong> {selectedNode.crawlTime}</p>
+          <p><strong>Owner:</strong> {selectedNode.owner.label} ({selectedNode.owner.identifier})</p>
+          <p><strong>Links:</strong> {selectedNode.links.join(', ')}</p>
+        </div>
+      )}
     </div>
   );
 };
