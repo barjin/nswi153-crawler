@@ -1,7 +1,8 @@
 import { gql, useQuery } from '@apollo/client';
 
 interface GraphDataProps {
-    ids: string[]
+    ids: string[];
+    onDataFetched: (data: any) => void;
 };
 
 // Define your GraphQL query with a variable for IDs
@@ -21,23 +22,17 @@ const GET_NODES_BY_IDS = gql`
   }
 `;
 
-export function GraphData({ids}: GraphDataProps) {
+export function GraphData({ids, onDataFetched}: GraphDataProps) {
     const {loading, error, data} = useQuery(GET_NODES_BY_IDS, {
         variables: {ids},
         skip: ids.length === 0,
+        onCompleted: (data) => {
+            onDataFetched(data);
+        },
     });
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
-    return (
-        <div>
-            <h3>Data</h3>
-            <ul>
-                {data === undefined ? "Nothing to show - no webpages selected" : data.nodes.map((node: any) => (
-                    <li>{node.id}, {node.url}, {node.owner.identifier}</li>
-                ))}
-            </ul>
-        </div>
-    );
+    return null;
 }
