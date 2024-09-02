@@ -7,17 +7,17 @@ import { DataSource } from "typeorm";
 
 const dotenvPath = findConfig(".env", { dir: __dirname });
 
-if(dotenvPath) {
+if (dotenvPath) {
   dotenv.config({
     path: dotenvPath,
   });
-} else if (process.env.ENV !== 'docker') {
+} else if (process.env.ENV !== "docker") {
   throw new Error("No .env file found");
 }
 
 export const AppDataSource = new DataSource({
   type: "mysql",
-  host: process.env.ENV === 'docker' ? "db" : "localhost",
+  host: process.env.ENV === "docker" ? "db" : "localhost",
   port: 3306,
   username: "root",
   password: process.env.MYSQL_ROOT_PASSWORD,
