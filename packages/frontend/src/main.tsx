@@ -13,7 +13,7 @@ import { WebsiteRecord } from "./routes/WebsiteRecord.tsx";
 import { WebsiteRecords } from "./routes/WebsiteRecords.tsx";
 
 const client = new ApolloClient({
-  uri: 'http://localhost:3000/api/graphql',
+  uri: "http://localhost:3000/api/graphql",
   cache: new InMemoryCache(),
 });
 
@@ -44,7 +44,7 @@ const router = createBrowserRouter([
           },
           {
             path: "/visualization",
-            element: <Visualization />
+            element: <Visualization />,
           },
         ],
       },

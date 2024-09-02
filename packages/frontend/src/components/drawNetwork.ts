@@ -11,7 +11,7 @@ export const drawNetwork = (
 
   // Draw links
   context.globalAlpha = 0.6;
-  context.strokeStyle = '#999';
+  context.strokeStyle = "#999";
   context.lineWidth = 1;
   links.forEach((link) => {
     context.beginPath();

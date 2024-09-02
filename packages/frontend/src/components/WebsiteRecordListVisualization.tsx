@@ -9,59 +9,59 @@ type WebsiteRecordsResponse =
   paths["/api/records"]["get"]["responses"]["200"]["content"]["application/json"];
 
 export function WebsiteRecordListVisualization() {
-    const pollingPeriod = 10000; // 10s
+  const pollingPeriod = 10000; // 10s
 
-    const [records, setRecords] = useState<Loading<WebsiteRecordsResponse>>({
-        loading: true,
-        data: null,
-      });
+  const [records, setRecords] = useState<Loading<WebsiteRecordsResponse>>({
+    loading: true,
+    data: null,
+  });
 
-    const api = useClient();
+  const api = useClient();
 
-    useEffect(() => {
-      function getRecords() {
-        api
-          ?.GET("/api/records", {
-            params: {
-              query: {
-                sort: "url:asc",
-                filter: "",
-                filterBy: "url",
-                limit: 100,
-                offset: 0,
-              },
+  useEffect(() => {
+    function getRecords() {
+      api
+        ?.GET("/api/records", {
+          params: {
+            query: {
+              sort: "url:asc",
+              filter: "",
+              filterBy: "url",
+              limit: 100,
+              offset: 0,
             },
-          })
-          .then((response) => {
-            setRecords({
-              loading: false,
-              data: response.data ?? {
-                limit: 0,
-                offset: 0,
-                total: 0,
-                records: [],
-              },
-            });
-          })
-          .catch((error) => {
-            console.error(error);
+          },
+        })
+        .then((response) => {
+          setRecords({
+            loading: false,
+            data: response.data ?? {
+              limit: 0,
+              offset: 0,
+              total: 0,
+              records: [],
+            },
           });
-      }
-  
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
+    getRecords();
+
+    const interval = setInterval(() => {
       getRecords();
-  
-      const interval = setInterval(() => {
-        getRecords();
-      }, pollingPeriod);
-  
-      return () => clearInterval(interval);
-    }, [api]);
-    return (
-        <>
-        {!records.data?.records
+    }, pollingPeriod);
+
+    return () => clearInterval(interval);
+  }, [api]);
+  return (
+    <>
+      {!records.data?.records
         ? "Loading..."
         : records.data.records.map((record, i) => (
-              <RecordRow
+            <RecordRow
               key={i}
               id={record.id ?? 0}
               label={record.label ?? ""}
@@ -71,7 +71,7 @@ export function WebsiteRecordListVisualization() {
               lastExecutionStatus={record.lastExecutionStatus ?? ""}
               isActive={record.isActive ?? false}
               canSelect={true}
-              />
+            />
           ))}
       {records.data ? (
         <PaginationBar
@@ -80,6 +80,6 @@ export function WebsiteRecordListVisualization() {
       ) : (
         ""
       )}
-        </>            
-    );
+    </>
+  );
 }

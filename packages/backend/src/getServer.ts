@@ -10,7 +10,6 @@ import { getGraphQlRouter } from "./graphql/graphql";
 import { getExecutionsRouter } from "./routes/executions";
 import { getRecordsRouter } from "./routes/records";
 
-
 export async function getServer() {
   const app = express();
 
