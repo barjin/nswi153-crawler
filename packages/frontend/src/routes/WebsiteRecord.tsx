@@ -24,7 +24,7 @@ export function WebsiteRecord() {
     } catch (e) {
       console.error(e);
     }
-  }, [api, recordId]);
+  }, [api, recordId, navigate]);
 
   const executeRecord = useCallback(async () => {
     try {
@@ -40,7 +40,7 @@ export function WebsiteRecord() {
     } catch (e) {
       console.error(e);
     }
-  }, [api, recordId]);
+  }, [api, recordId, navigate]);
 
   return (
     <>
