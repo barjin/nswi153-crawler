@@ -24,6 +24,7 @@ const GET_NODES_BY_IDS = gql`
 export function GraphData({ids}: GraphDataProps) {
     const {loading, error, data} = useQuery(GET_NODES_BY_IDS, {
         variables: {ids},
+        skip: ids.length === 0,
     });
 
     if (loading) return <p>Loading...</p>;
@@ -33,7 +34,7 @@ export function GraphData({ids}: GraphDataProps) {
         <div>
             <h3>Data</h3>
             <ul>
-                {data.nodes.map((node: any) => (
+                {data === undefined ? "Nothing to show - no webpages selected" : data.nodes.map((node: any) => (
                     <li>{node.id}, {node.url}, {node.owner.identifier}</li>
                 ))}
             </ul>
