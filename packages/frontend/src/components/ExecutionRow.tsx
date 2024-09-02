@@ -17,6 +17,8 @@ export function ExecutionRow({ execution }: { execution: Execution }) {
           <span>{execution.status}</span>
           &nbsp;|&nbsp;
           <span>{executionTimeText}</span>
+          &nbsp;|&nbsp;
+          <span>{execution.stats?.nodesVisited ?? 0}</span> pages visited
         </span>
       </div>
     </div>
