@@ -62,13 +62,15 @@ export function WebsiteRecordListVisualization() {
         ? "Loading..."
         : records.data.records.map((record, i) => (
               <RecordRow
-                key={i}
-                label={record.label ?? ""}
-                tags={record.tags?.join(", ") ?? ""}
-                periodicity={record.periodicity ?? 0}
-                lastExecutionTime={record.lastExecutionTime?.toString() ?? ""}
-                lastExecutionStatus={record.lastExecutionStatus ?? ""}
-                isActive={record.isActive ?? false}
+              key={i}
+              id={record.id ?? 0}
+              label={record.label ?? ""}
+              tags={record.tags?.join(", ") ?? ""}
+              periodicity={record.periodicity ?? 0}
+              lastExecutionTime={record.lastExecutionTime?.toString() ?? ""}
+              lastExecutionStatus={record.lastExecutionStatus ?? ""}
+              isActive={record.isActive ?? false}
+              canSelect={true}
               />
           ))}
       {records.data ? (
